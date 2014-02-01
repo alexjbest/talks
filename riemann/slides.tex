@@ -111,6 +111,7 @@ If we split our network into two nonempty parts (a partition) there should be lo
 \end{tikzpicture}
 \end{column}
 \end{columns}
+\note{many applications in CS of course, and not just practical network stuff, recently (~10 yesrs) given back to maths}
 \end{frame}
 
 \begin{frame}{Ramanujan graphs}
@@ -119,7 +120,7 @@ If we split our network into two nonempty parts (a partition) there should be lo
 \end{block}
 \end{frame}
 
-% Sarnark wolf prize
+% Sarnak wolf prize
 \begin{frame}{The Ihara zeta function}
 \begin{block}{}
 \end{block}
@@ -133,26 +134,54 @@ If we split our network into two nonempty parts (a partition) there should be lo
 \end{frame}
 
 \section[Number theory again]{Back to number theory}
-\begin{frame}{The Dedekind zeta function}
-Dedekind wanted to use the 
-\begin{block}{}
-\end{block}
-\end{frame}
 \note{didn't want to talk about number theory so much as I wanted to focus more on why you might care about zeta functions even if you don't care about the structure of the primes.}
+\begin{frame}{The Dedekind zeta function}
+Richard Dedekind (1831--1916) wanted to use analysis to study more general fields called number fields.
+
+\pause \begin{block}{Number fields}
+A \emph{number field} is a field that is also a finite dimensional $\mathbb{Q}$-vector space.
+\end{block}
+
+\pause e.g. $\{a+bi\mid a,b\in\mathbb{Q}\}$, \pause $\{a+b\sqrt{2}\mid a,b\in\mathbb{Q}\}$, \pause $\{a+b\sqrt{2} +c\sqrt{3}+d\sqrt{2}\sqrt{3}\mid a,b,c,d\in\mathbb{Q}\}$.
+
+\pause In a general number field the idea of a prime element doesn't work out so well, however if we consider nice subgroups of the field (ideals) then everything works out well, so we should deal with ideals instead of elements!
+\pause For example we  have unique factorisation of ideals into prime ideals.
+\end{frame}
+
+\begin{frame}{The Dedekind zeta function}
+So Dedekind defined for a number field $K$
+\begin{block}{The Dedekind zeta function}\note{what do we want to write here}
+\[\zeta_K(s) = \pause \sum_{I\subset \mathcal{O}_K} \frac{1}{N(I)^s}\]
+where $N(I)$ is the \emph{norm} of $I$ (its size).
+\end{block}
+\pause $\mathbb{Q}$ is a number field too, and it turns out that the ideals of $\mathbb{Q}$ correspond one to one with the set of natural numbers!
+We also have that the norm for these ideals is simply the natural number they correspond to.
+\pause Therefore
+\[\zeta(s) = \zeta_\mathbb{Q}(s)\]
+and the Dedekind zeta is a direct generalisation of our original zeta.
+\note{in fact we have an Euler product for this function too! and of course its RH tells us about the primes of the number field. don't get into as not so many people know ant!}
+\end{frame}
 
 \section{Conclusion}
 \begin{frame}{Closing remarks}
 \begin{itemize}
-\item Zeta functions can be used to pack up useful information into one big package (a complex function).
-\pause\item The properties of this package can be used to discover and prove statements about the objects you started with.
-\pause\item We can also see the link different objects via their zeta functions.
-\pause\item A huge number of papers have been written that assume the Riemann hypothsis, so a proof of it would imply hundreds of other results true.
+\item Zeta functions can be used to pack up lots of useful information into one big package (a complex function).
+\pause\item The properties of this package can tell us about the objects we started with.
+\pause\item We can also see links between different objects via their zeta functions.
+\pause\item Due to the abundant computational evidence (over ten trillion non-trivial zeroes found so far, all on the critical line) a huge number of papers have been written that assume the Riemann hypothesis is true.
+So a proof of the (generalised) hypothesis would imply hundreds of other results true also.
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Sources used}
+I used some of the following when preparing this talk, and so they are possibly good places to look to learn more about the topic:
+\begin{enumerate}
+\item ``What is... an expander?'' -- Peter Sarnak
+\item Wikipedia -- Enough said
+\item http://graphtheoryinlatex.blogspot.com/ -- Pretty pictures
+\end{enumerate}
 \end{frame}
 
 \end{document}
 
-% Sources:
-% http://graphtheoryinlatex.blogspot.com/
-% Sarnark: What is... an expander.
 
