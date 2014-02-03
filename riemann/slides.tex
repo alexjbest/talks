@@ -46,15 +46,15 @@
 \begin{columns}
 \begin{column}{.575\textwidth}
 \begin{itemize}
-\item In 1859 Bernhard Riemann, a well known analyst, publishes a paper on counting the primes using analysis.
+\item In 1859 Bernhard Riemann, a well known analyst, publishes a paper on his work counting the primes using analysis.
 \item<2-> In the paper he considers
 \[
 \zeta(s) = \sum_{n=1}^{\infty} \frac{1}{n^s}.
 \]
-\note{this is the only paper on number theory he every publishes}
+\note{this is the only paper on number theory he every publishes, a thankyou to the berlin academy for accepting him as a corresponding member, miracle he published it all given its sketchy nature he rarely published unpolished work}
 \item<3-> Here the notation $\zeta$ for this function is used for the first time.
 \item<4-> Along the way he (essentially) makes four hypotheses.
-\note{these are not the hypotheses we are going to talk about, bar one, which I am confident you can guess}
+\note{these are not the hypotheses we are going to talk about, bar one. Riemann himself disregarded the hypothesis and seemingly barely did any work on it after the paper was published.}
 \end{itemize}
 \end{column}
 \begin{column}{.425\textwidth}
@@ -64,7 +64,10 @@
 \end{frame}
 
 \begin{frame}{The Riemann zeta function: What Riemann did}
-In his paper Riemann takes the function $\zeta\colon \{\sigma + it \in\mathbb{C}\mid \sigma > 1\} \to \mathbb{C}$ and extends it to all of $\mathbb{C}$.
+Already Euler had (more or less) noticed that 
+\[\zeta(s) = \sum_{n=1}^{\infty}\frac{1}{n^s} = \prod_{p \text{ prime}}\frac{1}{1-p^s}.\]
+\pause In his paper Riemann uses this to take the function $\zeta\colon \{\sigma + it \in\mathbb{C}\mid \sigma > 1\} \to \mathbb{C}$ and extend it to all of $\mathbb{C}$.
+\pause He defines an analytic function from $\mathbb{C} \to \mathbb{C}$ which matches the series definition given above when the series converges (when $\operatorname{Re}(s) > 1$).
 \end{frame}
 
 %plots
@@ -111,7 +114,7 @@ If we split our network into two nonempty parts (a partition) there should be lo
 \end{tikzpicture}
 \end{column}
 \end{columns}
-\note{many applications in CS of course, and not just practical network stuff, recently (~10 yesrs) given back to maths}
+\note{many applications in CS of course, and not just practical network stuff more theoretical ideas too, recently (~10 years) these ideas have found more uses within mathematics.}
 \end{frame}
 
 \begin{frame}{Ramanujan graphs}
@@ -177,6 +180,8 @@ So a proof of the (generalised) hypothesis would imply hundreds of other results
 I used some of the following when preparing this talk, and so they are possibly good places to look to learn more about the topic:
 \begin{enumerate}
 \item ``What is... an expander?'' -- Peter Sarnak
+\item ``Problems of the Millennium: The Riemann Hypothesis'' -- Peter Sarnak
+\item ``Problems of the Millennium: The Riemann Hypothesis'' (Official Millennium prize problem description) -- Enrico Bombieri
 \item Wikipedia -- Enough said
 \item http://graphtheoryinlatex.blogspot.com/ -- Pretty pictures
 \end{enumerate}
