@@ -10,7 +10,6 @@
 
 \DeclareTextFontCommand{\emph}{\bfseries}
 
-
 \hypersetup{pdfstartview={Fit}}
 
 \author{Alex J. Best}
@@ -27,12 +26,13 @@
 \begin{frame}
 \frametitle{In this talk:}
 \tableofcontents
-\note{somebody (joshua if there) asked if I could prove the RH during this talk, and I am happy to announce that I will prove _a_ RH for you} % Maybe too hard?!
+\note{somebody (joshua if there) asked if I could prove the RH during this talk, and I am happy to announce that I will prove _a_ RH for you, apologies no fractals?} % Maybe too hard?!
 \end{frame}
 
 \section{The original hypothesis}
 
 \begin{frame}{The Riemann zeta function: Euler's work}
+A brief history of $\zeta$:
 \begin{itemize}
 \item In 1735 Euler solves the \emph{Basel problem} by finding that
 \[\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}.\]
@@ -45,6 +45,7 @@
 \begin{frame}{The Riemann zeta function: Along comes Riemann}
 \begin{columns}
 \begin{column}{.575\textwidth}
+A brief history of $\zeta$:
 \begin{itemize}
 \item In 1859 Bernhard Riemann, a well known analyst, publishes a paper on his work counting the primes using analysis.
 \item<2-> In the paper he considers
@@ -64,12 +65,12 @@
 \end{frame}
 
 \begin{frame}{The Riemann zeta function: What Riemann did}
-Already Euler had (more or less) noticed that 
+In his work Euler had (more or less) found that 
 \[\zeta(s) = \sum_{n=1}^{\infty}\frac{1}{n^s} = \prod_{p \text{ prime}}\frac{1}{1-p^s}.\]
 \pause In his paper Riemann uses this to take the function $\zeta\colon \{\sigma + it \in\mathbb{C}\mid \sigma > 1\} \to \mathbb{C}$ and extend it to all of $\mathbb{C}$.
-\pause He defines an analytic function from $\mathbb{C} \to \mathbb{C}$ which matches the series definition given above when the series converges (when $\operatorname{Re}(s) > 1$).
+\pause He defines an \emph{analytic} function from $\mathbb{C} \to \mathbb{C}$ which matches the series definition given above when the series converges (when $\operatorname{Re}(s) > 1$).
 \pause Riemann also discovers a \emph{functional equation} for the zeta function by showing that
-\[ \frac{1}{\pi^{s/2}} \Gamma\left(\frac{s}{2}\right)\zeta(s) = \frac{1}{\pi^{(1-s)/2}} \Gamma\left(\frac{s}{2}\right) \zeta(1-s).\]
+\[ \pi^{-s/2} \Gamma\left(\frac{s}{2}\right)\zeta(s) = \pi^{-(1-s)/2} \Gamma\left(\frac{1-s}{2}\right) \zeta(1-s).\]
 \note{details of this aren't important to us, but this sort of self similarity is a feature in common of many of the functions we will meet.}
 \end{frame}
 
@@ -82,6 +83,38 @@ Already Euler had (more or less) noticed that
 \end{center}
 \end{frame}
 
+\begin{frame}{The Riemann zeta function: The hypothesis}
+The zeta function has ``trivial'' zeroes at the negative even integers, but also ``non-trivial'' zeroes lying on the line $\operatorname{Re}(s) = \frac{1}{2}$.
+\pause\begin{block}{The Riemann Hypothesis (RH)}
+All non-trivial zeroes of the Riemann zeta function lie on the \emph{critical line}
+\[\left\{s\in \mathbb{C} \colon \operatorname{Re}(s) = \frac{1}{2}\right\}.\]
+\end{block}\note{Riemann himself couldn't make nice plots like we can and instead defined another function with the same non-trivial zeroes as the zeta}
+\pause {\bf Why do we care?} \note{Riemann considered it very likely that all the zeroes of the function lay on the critical line, but didn't seem particularly interested in trying to prove it}
+\begin{itemize}
+\pause \item It is a natural function to consider, and knowing the zeroes of a complex function are key to understanding it. \note{those who came to bartels talk on what is an elliptic curve and why should I care, the take away there was really, its the least complicated class of curve thats complicated enough that we dont understand it, and I guess you could say something similar about riemann's zeta}
+\pause \item The location of the zeroes of $\zeta(s)$ relates in a strong way to the distribution of the primes.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{The Riemann zeta function: Why number theorists care}
+\note{the primes are the basic building blocks of the natural numbers, so knowing their behaviour is very useful. It is pretty much impossible given a prime to tell when the next one occurs, however it is possible to work out formulae that approximate how the number of primes grows as we move further through the naturals. In fact Riemanns paper was entitled on the number of primes less than a given magnitude.}
+\begin{block}{The prime counting function $\pi(x)$}
+We define
+\[ \pi(x) = |\{p \in \mathbb{N} \colon p \text{ prime, }p\le x\}|.\]
+\end{block} \note{Riemanns paper initiated use of complex analysis to study this function.}
+
+\pause Gauss noticed that $\pi(x)$ is approximated well by
+\[\operatorname{Li}(x) = \int_{0}^{x} \frac{\mathrm{d} t}{\log t}\]
+which was later confirmed by some of Chebyshev's work.
+
+\pause The Riemann hypothesis is actually equivalent to the statement that there exists $c_2 > c_1 > 0$ such that
+\[\operatorname{Li}(x) + c_1\sqrt{x}\log(x) \le \pi(x) \le \operatorname{Li}(x) + c_2\sqrt{x}\log(x)\]
+eventually.
+These are the best possible bounds! \note{Shown by Koch, of snowflake fame}
+\end{frame}
+
+\note{I've talked for some time now about RH so I suppose I should move onto some others}
+
 \section{Zeta functions for graphs}
 \note{now time for something completely different, the links should become clear shortly.}
 
@@ -89,10 +122,11 @@ Already Euler had (more or less) noticed that
 \begin{columns}
 \begin{column}{.618\textwidth}
 
-Suppose we want to design a communications network (for computers, people, phones, etc.) by linking together $n$ entities with wires, such that each object has only $k$ wires from it.
+Suppose we want to design a communications network (for computers, people, phones, etc.) by linking together $n$ entities with wires, such that each object has only $k$ wires from it (this is called \emph{$k$-regular}).
 
 \pause We shall call our entities \emph{nodes} and wires \emph{edges}, as in graph theory.
 
+~\\
 \note{There are several properties of such a network we could want}
 \pause For today we will think of our goal as the following:
 
@@ -135,7 +169,14 @@ If we split our network into two nonempty parts (a partition) there should be lo
 
 % Sarnak wolf prize
 \begin{frame}{The Ihara zeta function}
-\begin{block}{}
+Take a graph $G$ as described above ($k$-regular for some $k$, finite and connected).
+We define:
+\begin{block}{A prime in $G$}
+
+\end{block}
+% Length!!
+\pause \begin{block}{The Ihara zeta function of $G$}
+\[\zeta_G(u) = \prod_{P\text{ a prime of } G} \left(1-u^{\nu(p)}\right)^{-1}.\]
 \end{block}
 \end{frame}
 
@@ -157,7 +198,7 @@ A \emph{number field} is a field that is also a finite dimensional $\mathbb{Q}$-
 
 \pause e.g. $\{a+bi\mid a,b\in\mathbb{Q}\}$, \pause $\{a+b\sqrt{2}\mid a,b\in\mathbb{Q}\}$, \pause $\{a+b\sqrt{2} +c\sqrt{3}+d\sqrt{2}\sqrt{3}\mid a,b,c,d\in\mathbb{Q}\}$.
 
-\pause In a general number field the idea of a prime element doesn't work out so well, however if we consider nice subgroups of the field (ideals) then everything works out well, so we should deal with ideals instead of elements!
+\pause In a general number field the idea of a prime element doesn't work out so well, however if we consider nice subgroups of the field (ideals of the ring of integers) then everything works out well, so we should deal with ideals instead of elements!
 \pause For example we  have unique factorisation of ideals into prime ideals.
 \end{frame}
 
@@ -167,13 +208,11 @@ So Dedekind defined for a number field $K$
 \[\zeta_K(s) = \pause \sum_{I\subset \mathcal{O}_K} \frac{1}{N(I)^s}\]
 where $N(I)$ is the \emph{norm} of $I$ (its size).
 \end{block}
-\pause $\mathbb{Q}$ is a number field too, and it turns out that the ideals of $\mathbb{Q}$ correspond one to one with the set of natural numbers!
-We also have that the norm for these ideals is simply the natural number they correspond to.
+\pause $\mathbb{Q}$ is a number field too, and it turns out that the ideals of $\mathbb{Q}$ correspond one to one with the set of natural numbers with the norm for these ideals simply being the natural number they correspond to.
 \pause Therefore
-\[\zeta(s) = \zeta_\mathbb{Q}(s)\]
-and the Dedekind zeta is a direct generalisation of our original zeta.
-\pause The analogue of the Riemann hypothesis for the Dedekind zeta is very direct, 
-\pause The similarities don't end there, a proof of these hypotheses for all number fields (known as the \emph{extended} Riemann hypothesis would asymptotically tell us about the number of prime ideals of bounded norm, exactly the same as for the natural primes.
+\[\zeta(s) = \zeta_\mathbb{Q}(s).\]\note{the Dedekind zeta is a direct generalisation of our original zeta}
+\note{The analogue of the Riemann hypothesis for the Dedekind zeta is exactly the same.}
+\pause A proof of these hypotheses for all number fields (known as the \emph{extended} Riemann hypothesis) would give approximations for the number of prime ideals of bounded norm, exactly the same as for the original hypothesis.
 \note{in fact we have an Euler product for this function too! and of course its RH tells us about the primes of the number field. don't get into as not so many people know ant!}
 \end{frame}
 
@@ -194,6 +233,7 @@ I used some of the following when preparing this talk, and so they are possibly 
 \item ``What is... an expander?'' -- Peter Sarnak
 \item ``Problems of the Millennium: The Riemann Hypothesis'' -- Peter Sarnak
 \item ``Problems of the Millennium: The Riemann Hypothesis'' (Official Millennium prize problem description) -- Enrico Bombieri
+\item ``Zeta Functions of Graphs: A Stroll through the Garden'' -- Audrey Terras
 \item Wikipedia -- Enough said
 \item http://graphtheoryinlatex.blogspot.com/ -- Pretty pictures
 \end{enumerate}
