@@ -38,7 +38,7 @@
 \[\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}.\]
 \pause \item He also discovered more general formulae for $\sum_{n=1}^{\infty} n^{-2k}$ in terms of the Bernoulli numbers $B_{2k}$ for all natural $k$.
 \note{nowadays we see this as evaluating $\zeta(2)$.}
-\pause \item In fact, a nice form for \[\sum_{n=1}^{\infty} n^{-2k-1},\] is still unknown today. %TODO check
+\pause \item In fact, a nice form for \[\sum_{n=1}^{\infty} n^{-2k-1},\] is still unknown today.
 \end{itemize}
 \end{frame}
 
@@ -54,7 +54,7 @@
 \note{this is the only paper on number theory he every publishes, a thankyou to the berlin academy for accepting him as a corresponding member, miracle he published it all given its sketchy nature he rarely published unpolished work}
 \item<3-> Here the notation $\zeta$ for this function is used for the first time.
 \item<4-> Along the way he (essentially) makes four hypotheses.
-\note{these are not the hypotheses we are going to talk about, bar one. Riemann himself disregarded the hypothesis and seemingly barely did any work on it after the paper was published.}
+\note{these are not the hypotheses we are going to talk about, bar one, which we will get to in a minute. Riemann himself disregarded the hypothesis and seemingly barely did any work on it after the paper was published.}
 \end{itemize}
 \end{column}
 \begin{column}{.425\textwidth}
@@ -68,9 +68,19 @@ Already Euler had (more or less) noticed that
 \[\zeta(s) = \sum_{n=1}^{\infty}\frac{1}{n^s} = \prod_{p \text{ prime}}\frac{1}{1-p^s}.\]
 \pause In his paper Riemann uses this to take the function $\zeta\colon \{\sigma + it \in\mathbb{C}\mid \sigma > 1\} \to \mathbb{C}$ and extend it to all of $\mathbb{C}$.
 \pause He defines an analytic function from $\mathbb{C} \to \mathbb{C}$ which matches the series definition given above when the series converges (when $\operatorname{Re}(s) > 1$).
+\pause Riemann also discovers a \emph{functional equation} for the zeta function by showing that
+\[ \frac{1}{\pi^{s/2}} \Gamma\left(\frac{s}{2}\right)\zeta(s) = \frac{1}{\pi^{(1-s)/2}} \Gamma\left(\frac{s}{2}\right) \zeta(1-s).\]
+\note{details of this aren't important to us, but this sort of self similarity is a feature in common of many of the functions we will meet.}
 \end{frame}
 
-%plots
+\begin{frame}{The Riemann zeta function: What does it look like?}
+\begin{center}
+\only<1>{$f(s) = s$:\\[0.7em]\includegraphics[height=0.75\textheight]{img/id}}
+\only<2>{$\zeta(s)$:\\[0.7em]\includegraphics[height=0.75\textheight]{img/wide}}
+\only<3>{$\zeta(s)$:\\[0.7em]\includegraphics[height=0.75\textheight]{img/close}}
+\only<4>{$\zeta(s)$:\\[0.7em]\includegraphics[angle=90,width=\textwidth]{img/zeroes}}
+\end{center}
+\end{frame}
 
 \section{Zeta functions for graphs}
 \note{now time for something completely different, the links should become clear shortly.}
@@ -162,6 +172,8 @@ We also have that the norm for these ideals is simply the natural number they co
 \pause Therefore
 \[\zeta(s) = \zeta_\mathbb{Q}(s)\]
 and the Dedekind zeta is a direct generalisation of our original zeta.
+\pause The analogue of the Riemann hypothesis for the Dedekind zeta is very direct, 
+\pause The similarities don't end there, a proof of these hypotheses for all number fields (known as the \emph{extended} Riemann hypothesis would asymptotically tell us about the number of prime ideals of bounded norm, exactly the same as for the natural primes.
 \note{in fact we have an Euler product for this function too! and of course its RH tells us about the primes of the number field. don't get into as not so many people know ant!}
 \end{frame}
 
