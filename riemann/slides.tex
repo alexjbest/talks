@@ -25,8 +25,9 @@
 
 \begin{frame}
 \frametitle{In this talk:}
+\note{will talk first about the riemann zeta and millenium prize problem associated with it, and then about functions defined in similar ways to the classical zeta and the meanings of associated hypotheses for them.}
 \tableofcontents
-\note{somebody (joshua if there) asked if I could prove the RH during this talk, and I am happy to announce that I will prove _a_ RH for you, apologies no fractals?} % Maybe too hard?!
+\note{apologies no fractals?} % Maybe too hard?!
 \end{frame}
 
 \section{The original hypothesis}
@@ -111,6 +112,7 @@ which was later confirmed by some of Chebyshev's work.
 \[\operatorname{Li}(x) + c_1\sqrt{x}\log(x) \le \pi(x) \le \operatorname{Li}(x) + c_2\sqrt{x}\log(x)\]
 eventually.
 These are the best possible bounds! \note{Shown by Koch, of snowflake fame}
+\note{even though RH is unsolved, other properties of zeta are useful, for example no zeroes on Re = 1 gives classic prime number theorem pi(x) ~ x/log x.}
 \end{frame}
 
 \note{I've talked for some time now about RH so I suppose I should move onto some others}
@@ -118,7 +120,7 @@ These are the best possible bounds! \note{Shown by Koch, of snowflake fame}
 \section{Zeta functions for graphs}
 \note{now time for something completely different, the links should become clear shortly.}
 
-\begin{frame}{Ramanujan graphs}
+\begin{frame}{Expander graphs}
 \begin{columns}
 \begin{column}{.618\textwidth}
 
@@ -161,10 +163,29 @@ If we split our network into two nonempty parts (a partition) there should be lo
 \note{many applications in CS of course, and not just practical network stuff more theoretical ideas too, recently (~10 years) these ideas have found more uses within mathematics.}
 \end{frame}
 
-\begin{frame}{Ramanujan graphs}
-\begin{block}{The Cheeger constant}
-
+\begin{frame}{The spectrum}
+Given such a graph $G$ we can fix a numbering of the vertices and form:
+\begin{block}{The adjacency matrix}
+Is an $n\times n$ matrix $A_G = (a_{ij})$ of 1's and 0's given by
+\[a_{ij} = 1 \iff \text{ there is an edge between vertex $i$ and vertex $j$}.\]
 \end{block}
+\note{do an example from the previous slide}
+\pause What are the eigenvalues of this matrix?\note{talk through ex, clearly have k, d is always one, not so interesting, so we instead look at this so called second eigenvalue} 
+\pause So we define $\lambda(G)$ to be the next largest eigenvalue after $d$, i.e.
+\[\lambda(G) = \max_{|\lambda_i| < d} |\lambda_i|.\]
+
+\end{frame}
+
+\begin{frame}{Ramanujan graphs}
+It turns out that for fixed $\epsilon$ only finitely many graphs do not satisfy 
+\[\lambda(G) \ge 2\sqrt{k-1} - \epsilon.\]
+\pause This set of graphs must be pretty special, so we name them
+\begin{block}{Ramanujan graphs}
+A graph $G$ as above which satisfies
+\[\lambda(G) \le 2\sqrt{k-1}.\]
+\end{block}
+These are highly optimal from our point of view!
+\pause Ramanujan graphs are only known to exist for $k = p^n + 1$.
 \end{frame}
 
 % Sarnak wolf prize
@@ -180,11 +201,31 @@ We define:
 \end{block}
 \end{frame}
 
+\begin{frame}
+The Ihara zeta function has slightly different behaviour than the classical zeta, there are poles instead of zeroes!
+\pause So we might conjecture
+\begin{block}{RH for graphs}
+
+\end{block}
+\pause Is this true?
+\begin{block}{Theorem}
+A graph $G$ satisfies the RH for graphs $\iff$ it is Ramanujan.
+\end{block}
+\end{frame}
+
 \section[More zetas]{More assorted zetas}
 
-\begin{frame}{The zeta function of a scheme}
-\begin{block}{}
-\end{block}
+% Do geodesics
+
+\begin{frame}{What else has a zeta function?}
+\note{maybe a better question is what doesn't!}
+\begin{itemize}
+\pause\item Dynamical systems, the Ruelle zeta is actually a generalisation of the Ihara zeta function we just saw.
+\pause\item Function fields (that the analogue of RH is true was proved by Andr\'e Weil in the 40's).
+\pause\item Curves over finite fields.
+\pause\item Fractal strings.
+\pause\item Schemes (over finite type over $\mathbb{Z}$).
+\end{itemize}
 \end{frame}
 
 \section[Number theory again]{Back to number theory}
@@ -206,9 +247,10 @@ A \emph{number field} is a field that is also a finite dimensional $\mathbb{Q}$-
 So Dedekind defined for a number field $K$
 \begin{block}{The Dedekind zeta function}\note{what do we want to write here}
 \[\zeta_K(s) = \pause \sum_{I\subset \mathcal{O}_K} \frac{1}{N(I)^s}\]
-where $N(I)$ is the \emph{norm} of $I$ (its size).
+where $N(I)$ is the \emph{norm} of $I$ ($ = |\mathcal{O}/I|$). \note{its size}
 \end{block}
-\pause $\mathbb{Q}$ is a number field too, and it turns out that the ideals of $\mathbb{Q}$ correspond one to one with the set of natural numbers with the norm for these ideals simply being the natural number they correspond to.
+\pause $\mathbb{Q}$ is a number field too, and it turns out that the ideals of $\mathbb{Q}$ correspond one to one with the set of natural numbers.
+We then have $N((n)) = |\mathbb{Z}/(n)| = n$.
 \pause Therefore
 \[\zeta(s) = \zeta_\mathbb{Q}(s).\]\note{the Dedekind zeta is a direct generalisation of our original zeta}
 \note{The analogue of the Riemann hypothesis for the Dedekind zeta is exactly the same.}
@@ -236,6 +278,7 @@ I used some of the following when preparing this talk, and so they are possibly 
 \item ``Zeta Functions of Graphs: A Stroll through the Garden'' -- Audrey Terras
 \item Wikipedia -- Enough said
 \item http://graphtheoryinlatex.blogspot.com/ -- Pretty pictures
+\item ``Fractal Geometry, Complex Dimensions and Zeta Functions'' -- Lapidus and van Frankenhuijsen (not used in talk but still cool)
 \end{enumerate}
 \end{frame}
 
