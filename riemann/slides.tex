@@ -10,8 +10,6 @@
 
 \DeclareTextFontCommand{\emph}{\bfseries}
 
-\hypersetup{pdfstartview={Fit}}
-
 \author{Alex J. Best}
 \institute{WMS Talks}
 \date{4/2/2014}
@@ -25,9 +23,9 @@
 
 \begin{frame}
 \frametitle{In this talk:}
-\note{will talk first about the riemann zeta and millenium prize problem associated with it, and then about functions defined in similar ways to the classical zeta and the meanings of associated hypotheses for them.}
+\note{will talk first about the riemann zeta and millenium prize problem associated with it, and then about functions defined in similar ways to the classical zeta and the meanings of associated hypotheses for them.apologies no fractals?}
 \tableofcontents
-\note{apologies no fractals?} % Maybe too hard?!
+\note{a few people joked that I would prove RH so I am bowing slightly to peer pressure and have squeezed in the idea of the proof of _a_ RH}
 \end{frame}
 
 \section{The original hypothesis}
@@ -166,18 +164,19 @@ If we split our network into two nonempty parts (a partition) there should be lo
 \begin{frame}{The spectrum}
 Given such a graph $G$ we can fix a numbering of the vertices and form:
 \begin{block}{The adjacency matrix}
-Is an $n\times n$ matrix $A_G = (a_{ij})$ of 1's and 0's given by
-\[a_{ij} = 1 \iff \text{ there is an edge between vertex $i$ and vertex $j$}.\]
+Is an $n\times n$ matrix $A_G = (a_{i,j})$ of 1's and 0's given by
+\[a_{i,j} = 1 \iff \text{ there is an edge between vertex $i$ and vertex $j$}.\]
 \end{block}
-\note{do an example from the previous slide}
-\pause What are the eigenvalues of this matrix?\note{talk through ex, clearly have k, d is always one, not so interesting, so we instead look at this so called second eigenvalue} 
+\note{do an example like K4?}
+\pause What are the eigenvalues of this matrix?\note{talk through ex, clearly have k is always one, not so interesting, so we instead look at this so called second eigenvalue}
+
 \pause So we define $\lambda(G)$ to be the next largest eigenvalue after $d$, i.e.
 \[\lambda(G) = \max_{|\lambda_i| < d} |\lambda_i|.\]
 
 \end{frame}
 
 \begin{frame}{Ramanujan graphs}
-It turns out that for fixed $\epsilon$ only finitely many graphs do not satisfy 
+It turns out (Alon, Boppara) that for fixed $\epsilon > 0$ only finitely many graphs do not satisfy 
 \[\lambda(G) \ge 2\sqrt{k-1} - \epsilon.\]
 \pause This set of graphs must be pretty special, so we name them
 \begin{block}{Ramanujan graphs}
@@ -185,6 +184,7 @@ A graph $G$ as above which satisfies
 \[\lambda(G) \le 2\sqrt{k-1}.\]
 \end{block}
 These are highly optimal from our point of view!
+
 \pause Ramanujan graphs are only known to exist for $k = p^n + 1$.
 \end{frame}
 
@@ -198,19 +198,33 @@ We define:
 % Length!!
 \pause \begin{block}{The Ihara zeta function of $G$}
 \[\zeta_G(u) = \prod_{P\text{ a prime of } G} \left(1-u^{\nu(p)}\right)^{-1}.\]
+\end{block}\note{how on earth would we compute this?!}
+\end{frame}
+
+\begin{frame}{The Ihara determinant formula}
+Though we have defined $\zeta_G(u)$ in a very similar way to $\zeta(s)$ the resulting function is a lot simpler!
+
+\pause In fact we always have the following expression for $\zeta_G$:
+\begin{block}{The Ihara determinant formula}
+\[\zeta_G(u)^{-1}  = (1-u^2)^{(k-2)|V|/2}\det(I(1-(k-1)u^2) - Au).\]
+\note{first power is the rank of the fundamental group of G}
 \end{block}
 \end{frame}
 
-\begin{frame}
-The Ihara zeta function has slightly different behaviour than the classical zeta, there are poles instead of zeroes!
+\begin{frame}{The Riemann hypothesis for graphs}
+The Ihara zeta function has slightly different behaviour than the classical zeta, there are poles instead of zeroes! \note{indeed in the above formula we see the inverse of zeta_G which would indeed behave more like zeta}
 \pause So we might conjecture
 \begin{block}{RH for graphs}
-
+In the strip $0<\operatorname{Re}(u) < 1$ the only poles of $\zeta_G(u)$ are on the line $\operatorname{Re}(u) = \frac{1}{2}$.
 \end{block}
-\pause Is this true?
-\begin{block}{Theorem}
+\pause Is this true? \note{maybe you can guess where we are going with this}
+\pause\begin{block}{Theorem}
 A graph $G$ satisfies the RH for graphs $\iff$ it is Ramanujan.
 \end{block}
+\end{frame}
+
+\begin{frame}{The sketchiest rough idea of a proof you will ever see}
+{\bf Proof:}
 \end{frame}
 
 \section[More zetas]{More assorted zetas}
@@ -220,7 +234,7 @@ A graph $G$ satisfies the RH for graphs $\iff$ it is Ramanujan.
 \begin{frame}{What else has a zeta function?}
 \note{maybe a better question is what doesn't!}
 \begin{itemize}
-\pause\item Dynamical systems, the Ruelle zeta is actually a generalisation of the Ihara zeta function we just saw.
+\pause\item Dynamical systems, the Ruelle zeta is actually a generalisation of the Ihara zeta function we saw earlier.
 \pause\item Function fields (that the analogue of RH is true was proved by Andr\'e Weil in the 40's).
 \pause\item Curves over finite fields.
 \pause\item Fractal strings.
