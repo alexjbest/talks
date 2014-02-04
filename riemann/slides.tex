@@ -1,4 +1,5 @@
 \documentclass{beamer}
+%\documentclass[handout,notes=show]{beamer}
 
 \usetheme{Frankfurt}
 \usecolortheme{dolphin}
@@ -23,9 +24,11 @@
 
 \begin{frame}
 \frametitle{In this talk:}
-\note{will talk first about the riemann zeta and millenium prize problem associated with it, and then about functions defined in similar ways to the classical zeta and the meanings of associated hypotheses for them.apologies no fractals?}
+\note{Will talk first about the Riemann zeta and millennium prize problem associated with it, and then about functions defined in similar ways to the classical zeta and the meanings of associated hypotheses for them.
+
+Apologies no fractals?}
 \tableofcontents
-\note{a few people joked that I would prove RH so I am bowing slightly to peer pressure and have squeezed in the idea of the proof of _a_ RH}
+\note{A few people joked that I would prove RH so I am bowing slightly to peer pressure and have squeezed in the idea of the proof of a RH}
 \end{frame}
 
 \section{The original hypothesis}
@@ -36,7 +39,7 @@ A brief history of $\zeta$:
 \item In 1735 Euler solves the \emph{Basel problem} by finding that
 \[\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}.\]
 \pause \item He also discovered more general formulae for $\sum_{n=1}^{\infty} n^{-2k}$ in terms of the Bernoulli numbers $B_{2k}$ for all natural $k$.
-\note{nowadays we see this as evaluating $\zeta(2)$.}
+\note{Nowadays we see this as evaluating $\zeta(2)$.}
 \pause \item In fact, a nice form for \[\sum_{n=1}^{\infty} n^{-2k-1},\] is still unknown today.
 \end{itemize}
 \end{frame}
@@ -46,12 +49,12 @@ A brief history of $\zeta$:
 \begin{column}{.575\textwidth}
 A brief history of $\zeta$:
 \begin{itemize}
-\item In 1859 Bernhard Riemann, a well known analyst, publishes a paper on his work counting the primes using analysis.
+\item In 1859 Bernhard Riemann, a well known analyst, publishes a paper on his work counting the primes using methods from analysis.
 \item<2-> In the paper he considers
 \[
 \zeta(s) = \sum_{n=1}^{\infty} \frac{1}{n^s}.
 \]
-\note{this is the only paper on number theory he every publishes, a thankyou to the berlin academy for accepting him as a corresponding member, miracle he published it all given its sketchy nature he rarely published unpolished work}
+\note{This is the only paper on number theory he every publishes, a thank you to the Berlin academy for accepting him as a corresponding member, miracle he published it all given its sketchy nature he rarely published unpolished work.}
 \item<3-> Here the notation $\zeta$ for this function is used for the first time.
 \item<4-> Along the way he (essentially) makes four hypotheses.
 \note{these are not the hypotheses we are going to talk about, bar one, which we will get to in a minute. Riemann himself disregarded the hypothesis and seemingly barely did any work on it after the paper was published.}
@@ -70,7 +73,7 @@ In his work Euler had (more or less) found that
 \pause He defines an \emph{analytic} function from $\mathbb{C} \to \mathbb{C}$ which matches the series definition given above when the series converges (when $\operatorname{Re}(s) > 1$).
 \pause Riemann also discovers a \emph{functional equation} for the zeta function by showing that
 \[ \pi^{-s/2} \Gamma\left(\frac{s}{2}\right)\zeta(s) = \pi^{-(1-s)/2} \Gamma\left(\frac{1-s}{2}\right) \zeta(1-s).\]
-\note{details of this aren't important to us, but this sort of self similarity is a feature in common of many of the functions we will meet.}
+\note{Details of this aren't important to us, but this sort of self similarity is a feature in common of many of the functions we will meet.}
 \end{frame}
 
 \begin{frame}{The Riemann zeta function: What does it look like?}
@@ -88,19 +91,19 @@ The zeta function has ``trivial'' zeroes at the negative even integers, but also
 All non-trivial zeroes of the Riemann zeta function lie on the \emph{critical line}
 \[\left\{s\in \mathbb{C} \colon \operatorname{Re}(s) = \frac{1}{2}\right\}.\]
 \end{block}\note{Riemann himself couldn't make nice plots like we can and instead defined another function with the same non-trivial zeroes as the zeta}
-\pause {\bf Why do we care?} \note{Riemann considered it very likely that all the zeroes of the function lay on the critical line, but didn't seem particularly interested in trying to prove it}
+\pause {\bf Why do we care?} \note{Riemann considered it very likely that all the zeroes of the function lay on the critical line, but didn't seem particularly interested in trying to prove it.}
 \begin{itemize}
-\pause \item It is a natural function to consider, and knowing the zeroes of a complex function are key to understanding it. \note{those who came to bartels talk on what is an elliptic curve and why should I care, the take away there was really, its the least complicated class of curve thats complicated enough that we dont understand it, and I guess you could say something similar about riemann's zeta}
+\pause \item It is a natural function to consider, and knowing the zeroes of a complex function are key to understanding it. \note{Those who came to Bartel's talk on what is an elliptic curve and why should I care, one of the take away messages there was, its the least complicated class of curve that's complicated enough that we don't understand it, and I guess you could say something similar about Riemann's zeta}
 \pause \item The location of the zeroes of $\zeta(s)$ relates in a strong way to the distribution of the primes.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{The Riemann zeta function: Why number theorists care}
-\note{the primes are the basic building blocks of the natural numbers, so knowing their behaviour is very useful. It is pretty much impossible given a prime to tell when the next one occurs, however it is possible to work out formulae that approximate how the number of primes grows as we move further through the naturals. In fact Riemanns paper was entitled on the number of primes less than a given magnitude.}
+\note{The primes are the basic building blocks of the natural numbers, so knowing their behaviour is very useful. It is pretty much impossible given a prime to tell when the next one occurs, however it is possible to work out formulae that approximate how the number of primes grows as we move further through the naturals. In fact Riemann's paper was entitled on the number of primes less than a given magnitude.}
 \begin{block}{The prime counting function $\pi(x)$}
 We define
 \[ \pi(x) = |\{p \in \mathbb{N} \colon p \text{ prime, }p\le x\}|.\]
-\end{block} \note{Riemanns paper initiated use of complex analysis to study this function.}
+\end{block} \note{Riemann's paper initiated use of complex analysis to study this function.}
 
 \pause Gauss noticed that $\pi(x)$ is approximated well by
 \[\operatorname{Li}(x) = \int_{0}^{x} \frac{\mathrm{d} t}{\log t}\]
@@ -109,28 +112,27 @@ which was later confirmed by some of Chebyshev's work.
 \pause The Riemann hypothesis is actually equivalent to the statement that there exists $c_2 > c_1 > 0$ such that
 \[\operatorname{Li}(x) + c_1\sqrt{x}\log(x) \le \pi(x) \le \operatorname{Li}(x) + c_2\sqrt{x}\log(x)\]
 eventually.
-These are the best possible bounds! \note{Shown by Koch, of snowflake fame}
-\note{even though RH is unsolved, other properties of zeta are useful, for example no zeroes on Re = 1 gives classic prime number theorem pi(x) ~ x/log x.}
+These are the best possible bounds! \note{Shown by Koch, of snowflake fame.\\}
+\note{Even though RH is unsolved, other properties of zeta are useful, for example no zeroes on $Re = 1$ gives the classic prime number theorem $\pi(x) \sim x/\log x$.}
+\note{I've talked for some time now about RH so I suppose I should move onto some others.}
 \end{frame}
 
-\note{I've talked for some time now about RH so I suppose I should move onto some others}
-
 \section{Zeta functions for graphs}
-\note{now time for something completely different, the links should become clear shortly.}
-
 \begin{frame}{Expander graphs}
+\note{Now time for something completely different, the links should become clear shortly.\\}
 \begin{columns}
 \begin{column}{.618\textwidth}
 
 Suppose we want to design a communications network (for computers, people, phones, etc.) by linking together $n$ entities with wires, such that each object has only $k$ wires from it (this is called \emph{$k$-regular}).
 
 \pause We shall call our entities \emph{nodes} and wires \emph{edges}, as in graph theory.
+The set of nodes is $V$ and edges $E$.
 
 ~\\
-\note{There are several properties of such a network we could want}
+\note{There are several properties of such a network we could want.}
 \pause For today we will think of our goal as the following:
 
-If we split our network into two nonempty parts (a partition) there should be lots of edges between the two halves. \note{so lots of messages can get through simultaneously}
+If we split our network into two non-empty parts (a partition) there should be lots of edges between the two halves. \note{The idea is that lots of messages can get through simultaneously.}
 \end{column}
 \begin{column}{.3819\textwidth}
 
@@ -158,7 +160,7 @@ If we split our network into two nonempty parts (a partition) there should be lo
 \end{tikzpicture}
 \end{column}
 \end{columns}
-\note{many applications in CS of course, and not just practical network stuff more theoretical ideas too, recently (~10 years) these ideas have found more uses within mathematics.}
+\note{Many applications in CS of course, and not just practical network stuff more theoretical ideas too, recently these concepts have found more uses within mathematics.}
 \end{frame}
 
 \begin{frame}{The spectrum}
@@ -167,12 +169,16 @@ Given such a graph $G$ we can fix a numbering of the vertices and form:
 Is an $n\times n$ matrix $A_G = (a_{i,j})$ of 1's and 0's given by
 \[a_{i,j} = 1 \iff \text{ there is an edge between vertex $i$ and vertex $j$}.\]
 \end{block}
-\note{do an example like K4?}
-\pause What are the eigenvalues of this matrix?\note{talk through ex, clearly have k is always one, not so interesting, so we instead look at this so called second eigenvalue}
+\note{Do an example like K4?\\}
+\pause What is the set of eigenvalues (the \emph{spectrum}) of this matrix?\note{All real! Talk through ex, clearly have $k$ is always one, not so interesting, so we instead look at this so called second eigenvalue.}
 
 \pause So we define $\lambda(G)$ to be the next largest eigenvalue after $d$, i.e.
-\[\lambda(G) = \max_{|\lambda_i| < d} |\lambda_i|.\]
+\[\lambda(G) = \max_{|\lambda_i| < k} |\lambda_i|.\]
 
+\pause The gap between this value and $k$ is very important for optimisation problems of this nature. The larger the better!
+\note{Why? Because (Tanner, Alon, Milman):
+\[(k-\lambda(G))/2 \le \min_{\emptyset \subset F \subset V} |\partial F|/\min(|F|, n- |F|) \le \sqrt{2k(k-\lambda(G))}.\]
+Middle is Cheeger constant.}
 \end{frame}
 
 \begin{frame}{Ramanujan graphs}
@@ -183,56 +189,66 @@ It turns out (Alon, Boppara) that for fixed $\epsilon > 0$ only finitely many gr
 A graph $G$ as above which satisfies
 \[\lambda(G) \le 2\sqrt{k-1}.\]
 \end{block}
-These are highly optimal from our point of view!
+These are highly optimal from our point of view! \note{Even their existence is counter intuitive!}
 
-\pause Ramanujan graphs are only known to exist for $k = p^n + 1$.
+\pause Only in 2013 were Ramanujan graphs shown to exist for $k \ne p^n + 1$ (Marcus, Speilman, Srivastava).
+\note{Peter Sarnak won the 2014 Wolf Prize in mathematics in part for his work on Ramanujan graphs which ``had a huge impact on combinatorics and computer science''.}
 \end{frame}
 
-% Sarnak wolf prize
 \begin{frame}{The Ihara zeta function}
+\note{So where do zeta functions come in?\\}
 Take a graph $G$ as described above ($k$-regular for some $k$, finite and connected).
 We define:
 \begin{block}{A prime in $G$}
-
+A prime in $G$ is a \emph{path} in $G$ that is
+\begin{itemize}
+\pause\item \emph{closed},
+\pause\item \emph{backtrackless},
+\pause\item \emph{tailless} and
+\pause\item defined up to rotation.
+\end{itemize}
 \end{block}
-% Length!!
-\pause \begin{block}{The Ihara zeta function of $G$}
-\[\zeta_G(u) = \prod_{P\text{ a prime of } G} \left(1-u^{\nu(p)}\right)^{-1}.\]
-\end{block}\note{how on earth would we compute this?!}
+\pause \begin{block}{The Ihara zeta function of $G$}\note{Note differences between this and Riemann zeta.\\}
+\[\zeta_G(u) = \prod_{P\text{ a prime of } G} \left(1-u^{\operatorname{length}(p)}\right)^{-1}.\]
+\end{block}\note{How on earth would we compute this?!}
 \end{frame}
 
 \begin{frame}{The Ihara determinant formula}
-Though we have defined $\zeta_G(u)$ in a very similar way to $\zeta(s)$ the resulting function is a lot simpler!
+Though we have defined $\zeta_G(u)$ in a similar way to $\zeta(s)$ the resulting function is a lot simpler!
 
 \pause In fact we always have the following expression for $\zeta_G$:
 \begin{block}{The Ihara determinant formula}
-\[\zeta_G(u)^{-1}  = (1-u^2)^{(k-2)|V|/2}\det(I(1-(k-1)u^2) - Au).\]
-\note{first power is the rank of the fundamental group of G}
+\[\zeta_G(u)^{-1} = (1-u^2)^{|E| - |V|}\det((1-(k-1)u^2)I - Au).\]
 \end{block}
+\note{First power is the rank of the fundamental group of $G$, actually $(k-2)|V|/2$}
 \end{frame}
 
 \begin{frame}{The Riemann hypothesis for graphs}
-The Ihara zeta function has slightly different behaviour than the classical zeta, there are poles instead of zeroes! \note{indeed in the above formula we see the inverse of zeta_G which would indeed behave more like zeta}
+The Ihara zeta function has slightly different behaviour than the classical zeta, there are poles instead of zeroes! \note{Indeed in the above formula we see the inverse of $\zeta_G$ which would indeed behave more like zeta.}
 \pause So we might conjecture
 \begin{block}{RH for graphs}
 In the strip $0<\operatorname{Re}(u) < 1$ the only poles of $\zeta_G(u)$ are on the line $\operatorname{Re}(u) = \frac{1}{2}$.
 \end{block}
-\pause Is this true? \note{maybe you can guess where we are going with this}
+\pause When is this true? \note{Maybe you can guess where we are going with this.}
 \pause\begin{block}{Theorem}
 A graph $G$ satisfies the RH for graphs $\iff$ it is Ramanujan.
 \end{block}
 \end{frame}
 
 \begin{frame}{The sketchiest rough idea of a proof you will ever see}
+
 {\bf Proof:}
+We are looking for zeroes of $\zeta_G(u)^{-1}$ which is given by the Ihara determinant formula as
+\[(1-u^2)^{|E| - |V|}\det(I(1-(k-1)u^2) - Au)\]
+which is given by
+\[(1-u^2)^{|E| - |V|}\prod_{\lambda}(I(1-(k-1)u^2) - \lambda u).\]
+
 \end{frame}
 
 \section[More zetas]{More assorted zetas}
 
-% Do geodesics
-
 \begin{frame}{What else has a zeta function?}
-\note{maybe a better question is what doesn't!}
+\note{Maybe a better question is what doesn't!\\}
 \begin{itemize}
 \pause\item Dynamical systems, the Ruelle zeta is actually a generalisation of the Ihara zeta function we saw earlier.
 \pause\item Function fields (that the analogue of RH is true was proved by Andr\'e Weil in the 40's).
@@ -240,12 +256,13 @@ A graph $G$ satisfies the RH for graphs $\iff$ it is Ramanujan.
 \pause\item Fractal strings.
 \pause\item Schemes (over finite type over $\mathbb{Z}$).
 \end{itemize}
+\note{If spare time do some stuff on geodesics!}
 \end{frame}
 
 \section[Number theory again]{Back to number theory}
 \note{didn't want to talk about number theory so much as I wanted to focus more on why you might care about zeta functions even if you don't care about the structure of the primes.}
 \begin{frame}{The Dedekind zeta function}
-Richard Dedekind (1831--1916) wanted to use analysis to study more general fields called number fields.
+Richard Dedekind (1831--1916) wanted to use analysis to study more general fields than just $\mathbb{Q}$, specifically he was interested in number fields.
 
 \pause \begin{block}{Number fields}
 A \emph{number field} is a field that is also a finite dimensional $\mathbb{Q}$-vector space.
@@ -253,23 +270,25 @@ A \emph{number field} is a field that is also a finite dimensional $\mathbb{Q}$-
 
 \pause e.g. $\{a+bi\mid a,b\in\mathbb{Q}\}$, \pause $\{a+b\sqrt{2}\mid a,b\in\mathbb{Q}\}$, \pause $\{a+b\sqrt{2} +c\sqrt{3}+d\sqrt{2}\sqrt{3}\mid a,b,c,d\in\mathbb{Q}\}$.
 
-\pause In a general number field the idea of a prime element doesn't work out so well, however if we consider nice subgroups of the field (ideals of the ring of integers) then everything works out well, so we should deal with ideals instead of elements!
-\pause For example we  have unique factorisation of ideals into prime ideals.
+\pause In a general number field the idea of a prime element doesn't work out so well, however if we consider nice subgroups of the field (ideals of the ring of integers) as elements then everything works out nicely.
+\pause For example we have unique factorisation of ideals into prime ideals.
+
+\pause So we should deal with ideals instead of elements!
 \end{frame}
 
 \begin{frame}{The Dedekind zeta function}
 So Dedekind defined for a number field $K$
 \begin{block}{The Dedekind zeta function}\note{what do we want to write here}
 \[\zeta_K(s) = \pause \sum_{I\subset \mathcal{O}_K} \frac{1}{N(I)^s}\]
-where $N(I)$ is the \emph{norm} of $I$ ($ = |\mathcal{O}/I|$). \note{its size}
+where $N(I)$ is the \emph{norm} of $I$ ($ = |\mathcal{O}_K/I|$). \note{its size}
 \end{block}
 \pause $\mathbb{Q}$ is a number field too, and it turns out that the ideals of $\mathbb{Q}$ correspond one to one with the set of natural numbers.
-We then have $N((n)) = |\mathbb{Z}/(n)| = n$.
+We then have $N((n)) = |\mathbb{Z}/(n)|= |\mathbb{Z}/n\mathbb{Z}| = n$.
 \pause Therefore
 \[\zeta(s) = \zeta_\mathbb{Q}(s).\]\note{the Dedekind zeta is a direct generalisation of our original zeta}
 \note{The analogue of the Riemann hypothesis for the Dedekind zeta is exactly the same.}
 \pause A proof of these hypotheses for all number fields (known as the \emph{extended} Riemann hypothesis) would give approximations for the number of prime ideals of bounded norm, exactly the same as for the original hypothesis.
-\note{in fact we have an Euler product for this function too! and of course its RH tells us about the primes of the number field. don't get into as not so many people know ant!}
+\note{In fact we have an Euler product for this function too! And of course its RH tells us about the primes of the number field. Don't get into as not so many people know ant!}
 \end{frame}
 
 \section{Conclusion}
