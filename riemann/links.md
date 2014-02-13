@@ -12,6 +12,7 @@ Other zetas
 * What are zeta functions of graphs and what are they good for? - Terras (http://math.ucsd.edu/~aterras/snowbird.pdf)
 * Zeroes of zeta functions and symmetry - Katz and Sarnak (http://www.ams.org/journals/bull/1999-36-01/S0273-0979-99-00766-1/S0273-0979-99-00766-1.pdf)
 * The Riemann hypothesis in various settings - Terry Tao (http://terrytao.wordpress.com/2013/07/19/the-riemann-hypothesis-in-various-settings/)
+* Some aspects and applications of the Riemann hypothesis over finite fields - E. Kowalski (http://www.math.ethz.ch/~kowalski/exponential-sums-rism.pdf)
 
 Expanders/Ramanujan graphs
 --------------------------
