@@ -5,7 +5,7 @@ Riemann zeta
 ------------
 * Millenium problems: RH - Bombieri (http://www.claymath.org/sites/default/files/official_problem_description.pdf)
 * Open problems: RH (http://www.openquestions.com/oq-ma014.htm)
-* The dynamical key to the RH (http://www.dhushara.com/DarkHeart/key/key2.htm)
+* A dynamical key to the RH (http://www.dhushara.com/DarkHeart/key/key2.htm)
 
 Other zetas
 -----------
