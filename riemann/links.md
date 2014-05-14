@@ -4,6 +4,7 @@ Interesting links
 Riemann zeta
 ------------
 * Millenium problems: RH - Bombieri (http://www.claymath.org/sites/default/files/official_problem_description.pdf)
+* Open problems: RH (http://www.openquestions.com/oq-ma014.htm)
 
 Other zetas
 -----------
