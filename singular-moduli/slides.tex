@@ -10,6 +10,10 @@
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\cl}{cl}
+\DeclareMathOperator{\p}{\mathfrak{p}}
+\DeclareMathOperator{\pp}{\mathfrak{P}}
 \DeclareTextFontCommand{\emph}{\bfseries}
 
 \author{Alex J. Best}
@@ -23,7 +27,9 @@
 
 \frame{\titlepage
 \note{
-Although I am no longer at Warwick I was here for a few years and I'd like to thank the organisers for giving me the excuse to come back and see many old friends, but also for chance to tell you about this very interesting topic.
+Although I am no longer at Warwick I was here for a few years and I'd like to
+thank the organisers for giving me the excuse to come back and see you all,
+and also for the chance to tell you about this very interesting topic.
 }
 }
 
@@ -31,24 +37,122 @@ Although I am no longer at Warwick I was here for a few years and I'd like to th
 \frametitle{In this talk:}
 \note{
 Will talk about some special values of a special function, their properties and the surprising consequences.
+I will prove very little, instead try and give a flavour of a few topics that I find interesting.
 }
 \tableofcontents
 \end{frame}
 
+\begin{frame}
+\note{
+}
+Observations (Hermite, 1859):
+\[
+\begin{aligned}
+\action<1->{
+e^{\pi\sqrt{43}} &\approx 884736743.999777466 \\}
+\action<4->{
+&\approx 12^3(9^2 - 1)^3 + 744 - 10^{-4}\cdot 2.225\ldots \\}
+\action<2->{
+e^{\pi\sqrt{67}} &\approx 147197952743.999998662454 \\}
+\action<4->{
+&\approx 12^3(21^2 - 1)^3 + 744 - 10^{-6}\cdot 1.337\ldots \\}
+\action<3->{
+e^{\pi\sqrt{163}} &\approx 262537412640768743.99999999999925007\\}
+\action<4->{
+&\approx 12^3(231^2 - 1)^3 + 744 - 10^{-13}\cdot 7.499\ldots}
+\end{aligned}
+\]
+\end{frame}
+
 \section{Background}
 
-\begin{frame}{}
+\begin{frame}{Some definitions}
 \note{
 After Alex's (excellent?) talk will go easy on the background, but if anything remains unclear please do stop me and ask.
 }
-\begin{itemize}
-\item .
-\pause \item .
-\end{itemize}
+\begin{block}{Definition}
+A finite Galois extension $L|K$ is \emph{abelian} extension if $\Gal(L|K)$ is abelian.\\
+\end{block}
+\pause
+Examples: \\%TODO
+\pause
+Non-examples: \\%TODO
+
+%TODO ring of integers of a number field, introduced to fix problem of non-unique factorisation
 \end{frame}
+
+\begin{frame}{The ideal class group}
+\note{definition central to ANT}
+
+\begin{block}{Definition}
+The \emph{ideal class group} of a number field $K$ is the quotient
+\[
+\cl(\mathbf{Z}_K) = I(\mathbf{Z}_K)/P(\mathbf{Z}_K).
+\]
+\end{block}
+\pause
+$\cl(\mathbf{Z}_L)$ \emph{measures} how far $\mathbf{Z}_K$ is from having unique factorisation.
+\end{frame}
+
+\section{The Hilbert class field}
+\begin{frame}{The Hilbert class field (of an imaginary quadratic field)}
+\note{This definition is specific to imaginary quadratic fields, for more general fields we need another condition that turns out to be vacuous here so I left it out to keep things simple.
+
+Explain what maximal means in this context.
+}
+Let $K$ be an \emph{imaginary quadratic} number field, i.e. $K = \mathbf{Q}(\sqrt{-n})$ for some $n \in \mathbf{Z}_{\ge 1}$.
+\pause
+\begin{block}{Definition}
+An extension $L|K$ is \emph{unramified} if for all prime ideals $\p$ of $\mathbf{Z}_K$ we have a factorisation
+\[
+\p\mathbf{Z}_L = \pp_1\pp_2\cdots \pp_n
+\]
+into \emph{distinct} prime ideals $\pp_i$ of $\mathbf{Z}_L$.
+\end{block}
+\pause
+\begin{block}{Definition}
+The \emph{Hilbert class field} of $K$ is the maximal unramified abelian extension of $K$.
+\end{block}
+\end{frame}
+
+\begin{frame}{The Hilbert class field (of an imaginary quadratic field)}
+\note{
+Why do we care?
+}
+\begin{block}{Definition}
+The \emph{Hilbert class field} of $K$ is the maximal unramified abelian extension of $K$.
+\end{block}
+\begin{block}{Examples}
+\end{block}
+\end{frame}
+
+\begin{frame}{The Artin reciprocity theorem for the Hilbert class field}
+\note{what a mouthful, this explains the name hilbert _class_ field, this theorem as stated is true for all number fields!}
+\begin{block}{Theorem}
+If $K$ is a number field and $L$ is its Hilbert class field then
+\[
+\cl(\mathbf{Z}_K) \cong \Gal(L|K).
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}{The $j$-invariant}
+\note{
+}
+Letting $q = e^{2\pi i z}$ we have
+\begin{align*}
+j(z) = \frac{1}{q} &+ 744 + 196884q + 21493760q^2 \\
+&+ 864299970q^3 + 20245856256q^4 + \cdots.\
+\end{align*}
+\end{frame}
+
+\section{Singular moduli}
+
+\section{Modern work}
 
 \section{Conclusion}
 \begin{frame}{Closing remarks}
+\note{just specific values of a well studied function}
 \begin{itemize}
 \item Singular moduli are not particularly complex objects in and of themselves.
 \pause \item But their relation between different areas of mathematics ensures that they are still a research topic to this day.
@@ -56,10 +160,10 @@ After Alex's (excellent?) talk will go easy on the background, but if anything r
 \end{frame}
 
 \begin{frame}{Sources}
-I used some of the following when preparing this talk, and so they are possibly good places to look to learn more about the topic:
-\begin{enumerate}
+I used some of the following when preparing this talk, and so they are probably good places to look to learn more about the topic:
+\begin{itemize}
 \item ``Primes of the form $x^2 + ny^2$'' -- David A. Cox
-\end{enumerate}
+\end{itemize}
 \end{frame}
 
 \end{document}
