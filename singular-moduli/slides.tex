@@ -4,14 +4,21 @@
 
 \usetheme{Frankfurt}
 \usecolortheme{dolphin}
+\beamertemplatenavigationsymbolsempty
 
 \usepackage{amsmath, amssymb, amsfonts, tikz}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
+\usepackage{tikz}
+\usetikzlibrary{calc}
 
 \DeclareMathOperator{\Gal}{Gal}
 \DeclareMathOperator{\cl}{cl}
+\DeclareMathOperator{\CC}{\mathbf{C}}
+\DeclareMathOperator{\ZZ}{\mathbf{Z}}
+\DeclareMathOperator{\QQ}{\mathbf{Q}}
+\DeclareMathOperator{\RR}{\mathbf{R}}
 \DeclareMathOperator{\p}{\mathfrak{p}}
 \DeclareMathOperator{\pp}{\mathfrak{P}}
 \DeclareTextFontCommand{\emph}{\bfseries}
@@ -27,8 +34,8 @@
 
 \frame{\titlepage
 \note{
-Although I am no longer at Warwick I was here for a few years and I'd like to
-thank the organisers for giving me the excuse to come back and see you all,
+so if you dont know me already perhaps i should explain that i was at warwick until this academic year and so I'd
+like to start by thanking the organisers for giving me the excuse to come back and see you all,
 and also for the chance to tell you about this very interesting topic.
 }
 }
@@ -83,7 +90,20 @@ Non-examples: \\%TODO
 
 \begin{frame}{The ideal class group}
 \note{definition central to ANT}
-
+Given a number field $K$ we let
+\[
+I(\mathbf{Z}_K) = \{\}
+\]
+be the set of \emph{fractional} ideals of $\mathbf{Z}_K$.
+\pause
+This is an (abelian) group!
+\pause
+The set
+\[
+P(\mathbf{Z}_K)= \{a\mathbf{Z}_K : a\in K\}
+\]
+of \emph{principal} ideals is a subgroup.
+\pause
 \begin{block}{Definition}
 The \emph{ideal class group} of a number field $K$ is the quotient
 \[
@@ -91,7 +111,7 @@ The \emph{ideal class group} of a number field $K$ is the quotient
 \]
 \end{block}
 \pause
-$\cl(\mathbf{Z}_L)$ \emph{measures} how far $\mathbf{Z}_K$ is from having unique factorisation.
+$\cl(\mathbf{Z}_K)$ \emph{measures} how far $\mathbf{Z}_K$ is from having unique factorisation.
 \end{frame}
 
 \section{The Hilbert class field}
@@ -123,6 +143,24 @@ Why do we care?
 The \emph{Hilbert class field} of $K$ is the maximal unramified abelian extension of $K$.
 \end{block}
 \begin{block}{Examples}
+\begin{table}
+\centering
+\begin{tabular}{| l | l | l |}
+  \hline
+  $K$ & Hilbert class field $L$ & $\Gal(L|K)$ \\
+  \hline
+  $\mathbf{Q}(\sqrt{-1})$ & $\mathbf{Q}(\sqrt{-1})$ & 1\\
+  \pause
+  $\mathbf{Q}(\sqrt{-31})$ & $\mathbf{Q}(\sqrt{-31})[x]/(x^3 + x - 1)$ & $C_3$\\
+  \pause
+  $\mathbf{Q}(\sqrt{-159})$ & $\begin{aligned} \mathbf{Q}&(\sqrt{-159})[x]/(x^{10} - 3x^9 + 6x^8\\
+  &- 6x^7 + 3x^6 + 3x^5 - 9x^4 \\
+  &+ 13x^3 - 12x^2 + 6x - 1)\end{aligned}$ & $C_{10}$\\
+  \pause
+  $\mathbf{Q}(\sqrt{-163})$ & $\mathbf{Q}(\sqrt{-163})$ & 1\\
+  \hline
+\end{tabular}
+\end{table}
 \end{block}
 \end{frame}
 
@@ -131,24 +169,158 @@ The \emph{Hilbert class field} of $K$ is the maximal unramified abelian extensio
 \begin{block}{Theorem}
 If $K$ is a number field and $L$ is its Hilbert class field then
 \[
-\cl(\mathbf{Z}_K) \cong \Gal(L|K).
+\cl(\ZZ_K) \cong \Gal(L|K).
 \]
 \end{block}
+\begin{center}
+\begin{tikzpicture}[node distance = 1.7cm, auto]
+  \node (Q) {$\mathbf{Q}$};
+  \node (K) [above of=Q] {$K$};
+  \node (L) [above of=K] {$L$};
+  \draw[-] (Q) to node {} (K);
+  \draw[-] (K) to node [swap] {$\Gal(L|K)$} (L);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+%TODO example ? big extension must be ramified
+
+\begin{frame}{Lattices}
+\begin{block}{Definition}
+A \emph{lattice} is an additive subgroup of $\CC$ that is isomorphic to $\ZZ^2$.
+\end{block}
+\begin{figure}
+\centering
+  \begin{tikzpicture}[scale=0.8, every node/.style={scale=0.7}]
+    \coordinate (Origin)   at (0,0);
+    \coordinate (XAxisMin) at (-3,0);
+    \coordinate (XAxisMax) at (5,0);
+    \coordinate (YAxisMin) at (0,-2);
+    \coordinate (YAxisMax) at (0,5);
+    \draw [thin, gray,-latex] (XAxisMin) -- (XAxisMax);% Draw x axis
+    \draw [thin, gray,-latex] (YAxisMin) -- (YAxisMax);% Draw y axis
+
+    \clip (-3,-2) rectangle (5cm,5cm); % Clips the picture...
+    \pgftransformcm{1}{0.6}{0.7}{1}{\pgfpoint{0cm}{0cm}}
+          % This is actually the transformation matrix entries that
+          % gives the slanted unit vectors. You might check it on
+           % MATLAB etc. . I got it by guessing.
+    \coordinate (Bone) at (0,2);
+    \coordinate (Btwo) at (2,-2);
+    \draw[style=help lines,dashed] (-10,-10) grid[step=2cm] (10,10);
+          % Draws a grid in the new coordinates.
+          %\filldraw[fill=gray, fill opacity=0.3, draw=black] (0,0) rectangle (2,2);
+              % Puts the shaded rectangle
+    \foreach \x in {-5,-4,...,5}{% Two indices running over each
+      \foreach \y in {-5,-4,...,5}{% node on the grid we have drawn 
+        \node[draw,circle,inner sep=2pt,fill] at (2*\x,2*\y) {};
+            % Places a dot at those points
+      }
+    }
+    %\draw [thin,-latex,red, fill=gray, fill opacity=0.3] (0,0)
+        % -- ($2*(0,2)+(2,-2)$)
+        % -- ($3*(0,2)+2*(2,-2)$) -- ($(0,2)+(2,-2)$) -- cycle;
+  \end{tikzpicture}
+\end{figure}
 \end{frame}
 
 \begin{frame}{The $j$-invariant}
 \note{
+The hyper-alert among you might have recognised the number 744 from the first slides
 }
-Letting $q = e^{2\pi i z}$ we have
+Every lattice is homothetic to one of the form $\ZZ + \ZZ\tau$ for some $\tau \in \CC$ with positive imaginary part.
+
+We can define $j$ on the upper half plane by $j(\tau) = j(\ZZ + \ZZ\tau)$.
+Letting $q = e^{2\pi i \tau}$ we have
 \begin{align*}
-j(z) = \frac{1}{q} &+ 744 + 196884q + 21493760q^2 \\
+j(\tau) = q^{-1} &+ 744 + 196884q + 21493760q^2 \\
 &+ 864299970q^3 + 20245856256q^4 + \cdots.\
 \end{align*}
 \end{frame}
 
 \section{Singular moduli}
+\begin{frame}{Singular moduli}
+\begin{block}{Definition}
+The values $j(\tau)$ for $\tau$ imaginary quadratic are called \emph{singular moduli}.
+\end{block}
+\visible<2->
+{
+\begin{block}{Examples}
+\[j(i) = 1728,\ j(e^{2\pi i 2}) = 0.\]
+\end{block}
+}
+\end{frame}
+
+\begin{frame}{(A corollary of) The first main theorem of class field theory}
+\begin{block}{Theorem}
+If $K$ is an imaginary quadratic field, $\ZZ_K = \ZZ + \ZZ\tau$ then:
+\begin{enumerate}
+\item $j(\tau)$ is an algebraic integer.
+\pause\item The Hilbert class field of $K$ is $K(j(\tau))$.
+\end{enumerate}
+\end{block}
+\pause
+\begin{block}{A (partial) converse (Schneider)}
+If $\tau$ is an algebraic number that is not imaginary quadratic then $j(\tau)$ is transcendental.
+\end{block}
+\end{frame}
+
+\begin{frame}{Explaining Hermite's observations}
+\begin{gather*}
+K = \QQ(\sqrt{-d}) \text{ with } \cl(\ZZ_K) = 1,\ \ZZ_K = \ZZ+\ZZ\tau.\\
+\visible<2->{\Downarrow}\\
+\visible<2->{\text{The Hilbert class field of $K$ is $K$}.}\\
+\visible<3->{\Downarrow}\\
+\visible<3->{j(\tau)\in \ZZ_K.}\\
+\visible<4->{\Downarrow}\\
+\visible<4->{e^{-2\pi i \tau} + 744 + 196884 e^{2\pi i \tau} + \ldots\in \ZZ_K\cap \RR}\visible<5->{ = \ZZ.}
+\end{gather*}
+\end{frame}
+
+\begin{frame}{Explaining Hermite's observations}
+So if $d= 163$ we have $\tau = (1 + \sqrt{-163})/2$
+\visible<2->{and so
+\begin{align*}
+j(\tau) &= e^{-\pi i (1 + i\sqrt{163})} + 744 + 196884 e^{\pi i (1+i\sqrt{163})} + \ldots\\
+&= -e^{\pi\sqrt{163}} + 744 - 196884 e^{-\pi\sqrt{163}} + \ldots
+\end{align*}
+is an integer.
+}
+
+\visible<3->{The trailing terms are tiny here giving
+\[
+e^{\pi\sqrt{163}} \approx -j(\tau) + 744.
+\]
+}
+\end{frame}
+
+\begin{frame}{The class number 1 problem}
+\begin{block}{Theorem (Stark-Heegner)}
+The only imaginary quadratic number fields with trivial class group are $\QQ(\sqrt{-d})$ for
+\[d\in\{1,2,3,7,11,19,43,67,163\}.\]
+\end{block}
+\pause
+So we expect $e^{\pi\sqrt{19}}$ to be close to an integer too:
+\[
+e^{\pi\sqrt{19}} = .
+\]
+\pause The value is not as close as $e^{-\pi\sqrt{d}}$ has larger absolute value for smaller $d$.
+\end{frame}
 
 \section{Modern work}
+\begin{frame}{A formula of Gross-Zagier}
+We have that $j() = $ and $j() = $ and so
+\[
+j(\sqrt{}) - j(\sqrt{}) = .
+\]
+
+
+\end{frame}
+
+\begin{frame}{A formula of Gross-Zagier}
+\begin{block}{Theorem (Gross-Zagier, '84)}
+\end{block}
+\end{frame}
 
 \section{Conclusion}
 \begin{frame}{Closing remarks}
