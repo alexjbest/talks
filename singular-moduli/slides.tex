@@ -333,7 +333,7 @@ j\colon\{\text{lattices}\} \to \CC
 such that $j(L) = j(L') \iff L$ and $L'$ are homothetic.
 
 \visible<2->{We can define $j$ on the upper half plane by $j(\tau) = j(\ZZ + \ZZ\tau)$.
-Letting $q = e^{2\pi i \tau}$ we have
+Letting $q = e^{2\pi i \tau}$ it turns out that
 \begin{align*}
 j(\tau) = q^{-1} &+ 744 + 196884q + 21493760q^2 \\
 &+ 864299970q^3 + 20245856256q^4 + \cdots.\
@@ -373,7 +373,7 @@ If $K$ is an imaginary quadratic field, $\ZZ_K = \ZZ + \ZZ\tau$ then:
 \end{enumerate}
 \end{block}
 \pause
-\begin{block}{A (partial) converse (Schneider)}
+\begin{block}{A (kind of) converse (Schneider)}
 If $\tau$ is an algebraic number that is not imaginary quadratic then $j(\tau)$ is transcendental.
 \end{block}
 \end{frame}
@@ -400,7 +400,7 @@ j(\tau) &= e^{-\pi i (1 + i\sqrt{163})} + 744 + 196884 e^{\pi i (1+i\sqrt{163})}
 is an integer.
 }
 
-\visible<3->{The trailing terms are tiny here giving
+\visible<3->{The trailing terms are tiny (of order $10^{-13}$) here giving
 \[
 e^{\pi\sqrt{163}} \approx -j(\tau) + 744.
 \]
@@ -413,18 +413,19 @@ The only imaginary quadratic number fields with trivial class group are $\QQ(\sq
 \[d\in\{1,2,3,7,11,19,43,67,163\}.\]
 \end{block}
 \pause
-So we expect $e^{\pi\sqrt{19}}$ to be close to an integer too:
+So we might expect $e^{\pi\sqrt{19}}$ to be close to an integer too, however
 \[
-e^{\pi\sqrt{19}} = .
+e^{\pi\sqrt{19}} = 885479.77768\ldots
 \]
-\pause The value is not as close as $e^{-\pi\sqrt{d}}$ has larger absolute value for smaller $d$.
+isn't really.
+\pause The value is not as close to the corresponding singular modulus as $e^{-\pi\sqrt{d}}$ has larger absolute value for smaller $d$.
 \end{frame}
 
 \section{Modern work}
 \begin{frame}{A formula of Gross-Zagier}
-We have that $j() = $ and $j() = $ and so
+We have that $j((1+\sqrt{-67})/2) = 12^3(21^2 - 1)^3$ and $j((1+\sqrt{-163})/2) = 12^3(231^2 - 1)^3$ and so
 \[
-j(\sqrt{}) - j(\sqrt{}) = .
+j\left(\frac{1+\sqrt{-163}}{2}\right) - j\left(\frac{1+\sqrt{-67}}{2}\right) = 2^{15}\cdot 3^7\cdot 5^3 \cdot 7^2\cdot 13\cdot 139\cdot 331.
 \]
 
 
@@ -432,6 +433,14 @@ j(\sqrt{}) - j(\sqrt{}) = .
 
 \begin{frame}{A formula of Gross-Zagier}
 \begin{block}{Theorem (Gross-Zagier, '84)}
+Letting $\epsilon(n) = $ we get
+\[
+N(j(\tau_1) - j(\tau_2))^2 = \prod_{x^2 \equiv D \pmod{4}} F\left(\frac{D-x^2}{4}\right)
+\]
+where
+\[
+F(m) = \prod_{\substack{n,n' > 0\\ nn' = m}} n^{-\epsilon(n)}.
+\]
 \end{block}
 \end{frame}
 
