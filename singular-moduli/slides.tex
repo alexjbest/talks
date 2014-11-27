@@ -224,18 +224,125 @@ A \emph{lattice} is an additive subgroup of $\CC$ that is isomorphic to $\ZZ^2$.
 \end{figure}
 \end{frame}
 
+\begin{frame}{Homothety}
+\begin{block}{Definition}
+Two lattices $L$ and $L'$ are called \emph{homothetic} if $L = \lambda L'$ for some $\lambda \in \CC^*$.
+\end{block}
+\visible<2->{
+  \begin{tikzpicture}[scale=0.43, every node/.style={scale=0.4}]
+    \coordinate (Origin)   at (0,0);
+    \coordinate (XAxisMin) at (-3,0);
+    \coordinate (XAxisMax) at (5,0);
+    \coordinate (YAxisMin) at (0,-2);
+    \coordinate (YAxisMax) at (0,5);
+    \draw [thin, gray,-latex] (XAxisMin) -- (XAxisMax);% Draw x axis
+    \draw [thin, gray,-latex] (YAxisMin) -- (YAxisMax);% Draw y axis
+
+    \clip (-3,-2) rectangle (5cm,5cm); % Clips the picture...
+    \pgftransformscale{0.5}
+          % This is actually the transformation matrix entries that
+          % gives the slanted unit vectors. You might check it on
+           % MATLAB etc. . I got it by guessing.
+    \coordinate (Bone) at (0,2);
+    \coordinate (Btwo) at (2,-2);
+    \draw[style=help lines,dashed] (-10,-10) grid[step=2cm] (10,10);
+          % Draws a grid in the new coordinates.
+          %\filldraw[fill=gray, fill opacity=0.3, draw=black] (0,0) rectangle (2,2);
+              % Puts the shaded rectangle
+    \foreach \x in {-5,-4,...,5}{% Two indices running over each
+      \foreach \y in {-5,-4,...,5}{% node on the grid we have drawn 
+        \node[draw,circle,inner sep=2pt,fill] at (2*\x,2*\y) {};
+            % Places a dot at those points
+      }
+    }
+    %\draw [thin,-latex,red, fill=gray, fill opacity=0.3] (0,0)
+        % -- ($2*(0,2)+(2,-2)$)
+        % -- ($3*(0,2)+2*(2,-2)$) -- ($(0,2)+(2,-2)$) -- cycle;
+  \end{tikzpicture}\ 
+  \begin{tikzpicture}[scale=0.43, every node/.style={scale=0.4}]
+    \coordinate (Origin)   at (0,0);
+    \coordinate (XAxisMin) at (-3,0);
+    \coordinate (XAxisMax) at (5,0);
+    \coordinate (YAxisMin) at (0,-2);
+    \coordinate (YAxisMax) at (0,5);
+    \draw [thin, gray,-latex] (XAxisMin) -- (XAxisMax);% Draw x axis
+    \draw [thin, gray,-latex] (YAxisMin) -- (YAxisMax);% Draw y axis
+
+    \clip (-3,-2) rectangle (5cm,5cm); % Clips the picture...
+          % This is actually the transformation matrix entries that
+          % gives the slanted unit vectors. You might check it on
+           % MATLAB etc. . I got it by guessing.
+    \coordinate (Bone) at (0,2);
+    \coordinate (Btwo) at (2,-2);
+    \draw[style=help lines,dashed] (-10,-10) grid[step=2cm] (10,10);
+          % Draws a grid in the new coordinates.
+          %\filldraw[fill=gray, fill opacity=0.3, draw=black] (0,0) rectangle (2,2);
+              % Puts the shaded rectangle
+    \foreach \x in {-5,-4,...,5}{% Two indices running over each
+      \foreach \y in {-5,-4,...,5}{% node on the grid we have drawn 
+        \node[draw,circle,inner sep=2pt,fill] at (2*\x,2*\y) {};
+            % Places a dot at those points
+      }
+    }
+    %\draw [thin,-latex,red, fill=gray, fill opacity=0.3] (0,0)
+        % -- ($2*(0,2)+(2,-2)$)
+        % -- ($3*(0,2)+2*(2,-2)$) -- ($(0,2)+(2,-2)$) -- cycle;
+  \end{tikzpicture}\ 
+  \begin{tikzpicture}[scale=0.43, every node/.style={scale=0.4}]
+    \coordinate (Origin)   at (0,0);
+    \coordinate (XAxisMin) at (-3,0);
+    \coordinate (XAxisMax) at (5,0);
+    \coordinate (YAxisMin) at (0,-2);
+    \coordinate (YAxisMax) at (0,5);
+    \draw [thin, gray,-latex] (XAxisMin) -- (XAxisMax);% Draw x axis
+    \draw [thin, gray,-latex] (YAxisMin) -- (YAxisMax);% Draw y axis
+
+    \clip (-3,-2) rectangle (5cm,5cm); % Clips the picture...
+    \pgftransformrotate{45}
+          % This is actually the transformation matrix entries that
+          % gives the slanted unit vectors. You might check it on
+           % MATLAB etc. . I got it by guessing.
+    \coordinate (Bone) at (0,2);
+    \coordinate (Btwo) at (2,-2);
+    \draw[style=help lines,dashed] (-10,-10) grid[step=2cm] (10,10);
+          % Draws a grid in the new coordinates.
+          %\filldraw[fill=gray, fill opacity=0.3, draw=black] (0,0) rectangle (2,2);
+              % Puts the shaded rectangle
+    \foreach \x in {-5,-4,...,5}{% Two indices running over each
+      \foreach \y in {-5,-4,...,5}{% node on the grid we have drawn 
+        \node[draw,circle,inner sep=2pt,fill] at (2*\x,2*\y) {};
+            % Places a dot at those points
+      }
+    }
+    %\draw [thin,-latex,red, fill=gray, fill opacity=0.3] (0,0)
+        % -- ($2*(0,2)+(2,-2)$)
+        % -- ($3*(0,2)+2*(2,-2)$) -- ($(0,2)+(2,-2)$) -- cycle;
+  \end{tikzpicture}
+}
+\visible<3->{Every lattice is homothetic to one of the form $\ZZ + \ZZ\tau$ for some $\tau \in \CC$ with positive imaginary part.}
+\end{frame}
+
 \begin{frame}{The $j$-invariant}
 \note{
 The hyper-alert among you might have recognised the number 744 from the first slides
 }
-Every lattice is homothetic to one of the form $\ZZ + \ZZ\tau$ for some $\tau \in \CC$ with positive imaginary part.
+The $j$-invariant is a function
+\[
+j\colon\{\text{lattices}\} \to \CC
+\]
+such that $j(L) = j(L') \iff L$ and $L'$ are homothetic.
 
-We can define $j$ on the upper half plane by $j(\tau) = j(\ZZ + \ZZ\tau)$.
+\visible<2->{We can define $j$ on the upper half plane by $j(\tau) = j(\ZZ + \ZZ\tau)$.
 Letting $q = e^{2\pi i \tau}$ we have
 \begin{align*}
 j(\tau) = q^{-1} &+ 744 + 196884q + 21493760q^2 \\
 &+ 864299970q^3 + 20245856256q^4 + \cdots.\
-\end{align*}
+\end{align*}}
+\end{frame}
+
+\begin{frame}{The $j$-invariant}
+\begin{figure}
+\end{figure}
 \end{frame}
 
 \section{Singular moduli}
@@ -246,7 +353,11 @@ The values $j(\tau)$ for $\tau$ imaginary quadratic are called \emph{singular mo
 \visible<2->
 {
 \begin{block}{Examples}
-\[j(i) = 1728,\ j(e^{2\pi i 2}) = 0.\]
+\begin{align*}
+j(i) &= 1728,\\
+j\left(\frac{1 + \sqrt{-3}}{2}\right) &= 0,\\
+j\left(\frac{1 + \sqrt{-15}}{2}\right) &= \frac{-191025 - 85995 \sqrt{5}}{2}.
+\end{align*}
 \end{block}
 }
 \end{frame}
