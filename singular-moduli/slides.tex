@@ -73,36 +73,38 @@ e^{\pi\sqrt{163}} &\approx 262537412640768743.99999999999925007\\}
 
 \section{Background}
 
-\begin{frame}{Some definitions}
+\begin{frame}{Abelian extensions}
 \note{
 After Alex's (excellent?) talk will go easy on the background, but if anything remains unclear please do stop me and ask.
 }
 \begin{block}{Definition}
-A finite Galois extension $L|K$ is \emph{abelian} extension if $\Gal(L|K)$ is abelian.\\
+A finite Galois extension $L|K$ is an \emph{abelian} extension if $\Gal(L|K)$ is abelian.\\
 \end{block}
-\pause
-Examples: \\%TODO
-\pause
-Non-examples: \\%TODO
+\visible<2->{
+Examples: \[\QQ(\sqrt{2})|\QQ,\] \visible<3->{\[\QQ(i,\zeta_7)|\QQ(i).\]}\\
+}
+\visible<4->{
+Non-examples: \[\QQ(\sqrt[3]{2},\zeta_3)|\QQ,\] \visible<5->{\[\QQ(\sqrt[3]{2})|\QQ.\]}\\
+}
 
 %TODO ring of integers of a number field, introduced to fix problem of non-unique factorisation
 \end{frame}
 
 \begin{frame}{The ideal class group}
 \note{definition central to ANT}
-Given a number field $K$ we let
+Given a number field $K$ we let $I(\mathbf{Z}_K)$ be the set
 \[
-I(\mathbf{Z}_K) = \{\}
+\{ M \text{ subgroup of } K : \ZZ_K M \subset M,\ \exists a \in \ZZ_k \text{ s.t. } aM \subset \ZZ_K, M\ne 0\}
 \]
-be the set of \emph{fractional} ideals of $\mathbf{Z}_K$.
+of (non-zero) \emph{fractional} ideals of $\mathbf{Z}_K$.
 \pause
-This is an (abelian) group!
+This is an (abelian) group under multiplication!
 \pause
 The set
 \[
-P(\mathbf{Z}_K)= \{a\mathbf{Z}_K : a\in K\}
+P(\mathbf{Z}_K)= \{a\mathbf{Z}_K : a\in K^*\}
 \]
-of \emph{principal} ideals is a subgroup.
+of (non-zero) \emph{principal} ideals is a subgroup.
 \pause
 \begin{block}{Definition}
 The \emph{ideal class group} of a number field $K$ is the quotient
@@ -149,15 +151,12 @@ The \emph{Hilbert class field} of $K$ is the maximal unramified abelian extensio
   \hline
   $K$ & Hilbert class field $L$ & $\Gal(L|K)$ \\
   \hline
-  $\mathbf{Q}(\sqrt{-1})$ & $\mathbf{Q}(\sqrt{-1})$ & 1\\
-  \pause
-  $\mathbf{Q}(\sqrt{-31})$ & $\mathbf{Q}(\sqrt{-31})[x]/(x^3 + x - 1)$ & $C_3$\\
-  \pause
-  $\mathbf{Q}(\sqrt{-159})$ & $\begin{aligned} \mathbf{Q}&(\sqrt{-159})[x]/(x^{10} - 3x^9 + 6x^8\\
+  $\mathbf{Q}(\sqrt{-1})$ & $\mathbf{Q}(\sqrt{-1})$ & $1$\\
+  \visible<2->{$\mathbf{Q}(\sqrt{-31})$} & \visible<2->{$\mathbf{Q}(\sqrt{-31})[x]/(x^3 + x - 1)$} & \visible<2->{$C_3$}\\
+  \visible<3->{$\mathbf{Q}(\sqrt{-159})$} & \visible<3->{$\begin{aligned} \mathbf{Q}&(\sqrt{-159})[x]/(x^{10} - 3x^9 + 6x^8\\
   &- 6x^7 + 3x^6 + 3x^5 - 9x^4 \\
-  &+ 13x^3 - 12x^2 + 6x - 1)\end{aligned}$ & $C_{10}$\\
-  \pause
-  $\mathbf{Q}(\sqrt{-163})$ & $\mathbf{Q}(\sqrt{-163})$ & 1\\
+  &+ 13x^3 - 12x^2 + 6x - 1)\end{aligned}$} & \visible<3->{$C_{10}$}\\
+  \visible<4->{$\mathbf{Q}(\sqrt{-163})$} & \visible<4->{$\mathbf{Q}(\sqrt{-163})$} & \visible<4->{$1$}\\
   \hline
 \end{tabular}
 \end{table}
@@ -186,6 +185,7 @@ If $K$ is a number field and $L$ is its Hilbert class field then
 %TODO example ? big extension must be ramified
 
 \begin{frame}{Lattices}
+\note{equiv reln}
 \begin{block}{Definition}
 A \emph{lattice} is an additive subgroup of $\CC$ that is isomorphic to $\ZZ^2$.
 \end{block}
@@ -352,13 +352,11 @@ j(\tau) = q^{-1} &+ 744 + 196884q + 21493760q^2 \\
 \begin{block}{Definition}
 The values $j(\tau)$ for $\tau$ imaginary quadratic are called \emph{singular moduli}.
 \end{block}
-\visible<2->
-{
-\begin{block}{Examples}
+\visible<2->{\begin{block}{Examples}
 \begin{align*}
 j(i) &= 1728,\\
-j\left(\frac{1 + \sqrt{-3}}{2}\right) &= 0,\\
-j\left(\frac{1 + \sqrt{-15}}{2}\right) &= \frac{-191025 - 85995 \sqrt{5}}{2}.
+\visible<3->{j\left(\frac{1 + \sqrt{-3}}{2}\right) &= 0,\\}
+\visible<4->{j\left(\frac{1 + \sqrt{-15}}{2}\right) &= \frac{-191025 - 85995 \sqrt{5}}{2}.}
 \end{align*}
 \end{block}
 }
@@ -433,7 +431,7 @@ j\left(\frac{1+\sqrt{-163}}{2}\right) - j\left(\frac{1+\sqrt{-67}}{2}\right) = 2
 
 \begin{frame}{A formula of Gross-Zagier}
 \begin{block}{Theorem (Gross-Zagier, '84)}
-Letting $\epsilon(n) = $ we get
+Letting $\epsilon(n) = $ we have that
 \[
 N(j(\tau_1) - j(\tau_2))^2 = \prod_{x^2 \equiv D \pmod{4}} F\left(\frac{D-x^2}{4}\right)
 \]
@@ -461,5 +459,3 @@ I used some of the following when preparing this talk, and so they are probably 
 \end{frame}
 
 \end{document}
-
-
