@@ -50,21 +50,19 @@ I will prove very little, instead try and give a flavour of a few topics that I 
 \end{frame}
 
 \begin{frame}
-\note{
-}
 Observations (Hermite, 1859):
 \[
 \begin{aligned}
 \action<1->{
-e^{\pi\sqrt{43}} &\approx 884736743.999777466 \\}
+e^{\pi\sqrt{43}} &\approx 884736743.999777466 \\ }
 \action<4->{
-&\approx 12^3(9^2 - 1)^3 + 744 - 10^{-4}\cdot 2.225\ldots \\}
+&\approx 12^3(9^2 - 1)^3 + 744 - 10^{-4}\cdot 2.225\ldots \\ }
 \action<2->{
-e^{\pi\sqrt{67}} &\approx 147197952743.999998662454 \\}
+e^{\pi\sqrt{67}} &\approx 147197952743.999998662454 \\ }
 \action<4->{
-&\approx 12^3(21^2 - 1)^3 + 744 - 10^{-6}\cdot 1.337\ldots \\}
+&\approx 12^3(21^2 - 1)^3 + 744 - 10^{-6}\cdot 1.337\ldots \\ }
 \action<3->{
-e^{\pi\sqrt{163}} &\approx 262537412640768743.99999999999925007\\}
+e^{\pi\sqrt{163}} &\approx 262537412640768743.99999999999925007\\ }
 \action<4->{
 &\approx 12^3(231^2 - 1)^3 + 744 - 10^{-13}\cdot 7.499\ldots}
 \end{aligned}
@@ -78,7 +76,7 @@ e^{\pi\sqrt{163}} &\approx 262537412640768743.99999999999925007\\}
 After Alex's (excellent?) talk will go easy on the background, but if anything remains unclear please do stop me and ask.
 }
 \begin{block}{Definition}
-A finite Galois extension $L|K$ is an \emph{abelian} extension if $\Gal(L|K)$ is abelian.\\
+An \emph{abelian} extension $L|K$ is finite Galois extension where $\Gal(L|K)$ is abelian.\\
 \end{block}
 \visible<2->{
 Examples: \[\QQ(\sqrt{2})|\QQ,\] \visible<3->{\[\QQ(i,\zeta_7)|\QQ(i).\]}\\
@@ -86,8 +84,24 @@ Examples: \[\QQ(\sqrt{2})|\QQ,\] \visible<3->{\[\QQ(i,\zeta_7)|\QQ(i).\]}\\
 \visible<4->{
 Non-examples: \[\QQ(\sqrt[3]{2},\zeta_3)|\QQ,\] \visible<5->{\[\QQ(\sqrt[3]{2})|\QQ.\]}\\
 }
+\end{frame}
 
-%TODO ring of integers of a number field, introduced to fix problem of non-unique factorisation
+\begin{frame}{Rings of integers}
+\begin{block}{Definition}
+The \emph{ring of integers} $\ZZ_K$ of a number field $K$ is the subring of all elements of $K$ satisfying a monic polynomial with coefficients in $\ZZ$.
+\end{block}
+\visible<2->{Examples:}
+\begin{itemize}
+\item<2->{\[\ZZ_{\QQ} = \ZZ.\]}
+\item<3->{\[K = \QQ(\zeta_n),\ \ZZ_{K} = \ZZ[\zeta_n].\]}
+\item<4->{
+$K = \QQ(\sqrt{d}),\,d$ squarefree then \[\ZZ_K = \begin{cases}
+\ZZ[\sqrt{d}] &\text{ if }d \equiv 2,3\pmod{4},\\
+\ZZ[(1+\sqrt{d})/2] &\text{ if }d \equiv 1\pmod{4}.
+\end{cases}
+\]
+}
+\end{itemize}
 \end{frame}
 
 \begin{frame}{The ideal class group}
@@ -114,6 +128,25 @@ The \emph{ideal class group} of a number field $K$ is the quotient
 \end{block}
 \pause
 $\cl(\mathbf{Z}_K)$ \emph{measures} how far $\mathbf{Z}_K$ is from having unique factorisation.
+\end{frame}
+
+\begin{frame}{The ideal class group}
+\begin{block}{Examples}
+\begin{table}
+\centering
+\begin{tabular}{| l | l |}
+  \hline
+  $K$ & $\cl(\ZZ_K)$ \\
+  \hline
+  $\mathbf{Q}(\sqrt{-1})$ & $1$\\
+  \visible<2->{$\mathbf{Q}(\sqrt{-5})$} & \visible<2->{$C_2$}\\
+  \visible<3->{$\mathbf{Q}(\sqrt{-31})$} & \visible<3->{$C_3$}\\
+  \visible<4->{$\mathbf{Q}(\sqrt{-159})$} & \visible<4->{$C_{10}$}\\
+  \visible<5->{$\mathbf{Q}(\sqrt{-163})$} & \visible<5->{$1$}\\
+  \hline
+\end{tabular}
+\end{table}
+\end{block}
 \end{frame}
 
 \section{The Hilbert class field}
@@ -356,7 +389,8 @@ The values $j(\tau)$ for $\tau$ imaginary quadratic are called \emph{singular mo
 \begin{align*}
 j(i) &= 1728,\\
 \visible<3->{j\left(\frac{1 + \sqrt{-3}}{2}\right) &= 0,\\}
-\visible<4->{j\left(\frac{1 + \sqrt{-15}}{2}\right) &= \frac{-191025 - 85995 \sqrt{5}}{2}.}
+\visible<4->{j\left(\frac{1 + \sqrt{-15}}{2}\right) &= \frac{-191025 - 85995 \sqrt{5}}{2},\\}
+\visible<5->{j\left(\sqrt{-14}\right) &= 2^3\left(323 +228\sqrt{2} + (231 + 161\sqrt{2})\sqrt{\sqrt{2} - 1}\right)^3.}
 \end{align*}
 \end{block}
 }
@@ -421,24 +455,37 @@ isn't really.
 
 \section{Modern work}
 \begin{frame}{A formula of Gross-Zagier}
-We have that $j((1+\sqrt{-67})/2) = 12^3(21^2 - 1)^3$ and $j((1+\sqrt{-163})/2) = 12^3(231^2 - 1)^3$ and so
+We have that $j((1+\sqrt{-67})/2) = -12^3(21^2 - 1)^3$ and $j((1+\sqrt{-163})/2) = -12^3(231^2 - 1)^3$ and so
 \[
-j\left(\frac{1+\sqrt{-163}}{2}\right) - j\left(\frac{1+\sqrt{-67}}{2}\right) = 2^{15}\cdot 3^7\cdot 5^3 \cdot 7^2\cdot 13\cdot 139\cdot 331.
+j\left(\frac{1+\sqrt{-163}}{2}\right) - j\left(\frac{1+\sqrt{-67}}{2}\right) = -2^{15}\cdot 3^7\cdot 5^3 \cdot 7^2\cdot 13\cdot 139\cdot 331.
 \]
-
-
+\pause
+\[
+j\left(\frac{1+\sqrt{-163}}{2}\right) - 1728 = -2^6\cdot3^6\cdot7^2\cdot11^2\cdot19^2\cdot127^2\cdot163.
+\]
+\pause
+\begin{block}{Definition}
+The discriminant of an imaginary quadratic number $\tau$ is the discriminant of its minimal polynomial over $\ZZ$.
+i.e. if $a\tau^2 + b\tau + c = 0$ then the discriminant of $\tau$ is $b^2 - 4ac$.
+\end{block}
 \end{frame}
 
 \begin{frame}{A formula of Gross-Zagier}
 \begin{block}{Theorem (Gross-Zagier, '84)}
-Letting $\epsilon(n) = $ we have that
+Given imaginary quadratic integers $\tau_1,\tau_2$ of discriminant $d_1,d_2$ we have
 \[
-N(j(\tau_1) - j(\tau_2))^2 = \prod_{x^2 \equiv D \pmod{4}} F\left(\frac{D-x^2}{4}\right)
+N(j(\tau_1) - j(\tau_2))^2 = \pm\prod_{ \substack{x,n,n'\in\ZZ \\ n,n'> 0 \\ x^2 +4nn' = d_1d_2}} n^{\epsilon(n')}.
 \]
 where
 \[
-F(m) = \prod_{\substack{n,n' > 0\\ nn' = m}} n^{-\epsilon(n)}.
+\epsilon(p) = \begin{cases}
+1 &\text{ if } (d_1,1) = 1,\ d_1\text{ is a square }\mod{p},\\
+-1 &\text{ if } (d_1,1) = 1,\ d_1\text{ is not a square }\mod{p},\\
+1 &\text{ if } (d_2,1) = 1,\ d_2\text{ is a square }\mod{p},\\
+-1 &\text{ if } (d_2,1) = 1,\ d_2\text{ is not a square }\mod{p},
+\end{cases}
 \]
+for $p$ prime and $\epsilon$ is defined multiplicatively.
 \end{block}
 \end{frame}
 
