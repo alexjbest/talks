@@ -1,0 +1,102 @@
+\documentclass[notheorems]{beamer}
+%\documentclass[handout]{beamer}
+%\documentclass[handout,notes=show]{beamer}
+
+
+\usetheme{metropolis}
+%\usecolortheme{dolphin}
+% No navigation bars
+\beamertemplatenavigationsymbolsempty{}
+
+\usepackage{amsmath, amssymb, amsfonts, tikz}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+
+\usepackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{conjecture}[theorem]{Conjecture}
+%% Definition-like environments, normal text
+%% Numbering is in sync with theorems, etc
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+%% Remark-like environments, normal text
+%% Numbering is in sync with theorems, etc
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+%% Example-like environments, normal text
+%% Numbering is in sync with theorems, etc
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{question}[theorem]{Question}
+\newcommand{\terminology}[1]{\textbf{#1}}
+
+\newcommand{\NN}{\mathbf{N}}
+\newcommand{\ZZ}{\mathbf{Z}}
+\newcommand{\QQ}{\mathbf{Q}}
+\newcommand{\RR}{\mathbf{R}}
+\newcommand{\lt}{<}
+\newcommand{\gt}{>}
+\newcommand{\amp}{&}
+\newcommand{\diff}{\mathrm{d}}
+
+\usepackage{enumitem}
+
+
+
+\author{Alex J. Best}
+\institute{Boston University}
+\date{5/28/2018}
+\title{Hi! \includegraphics[width=1em]{happy.png}}
+
+
+\begin{document}
+
+\maketitle
+
+%\begin{frame}
+%\frametitle{Table of Contents}
+%\tableofcontents[currentsection]
+%\end{frame}
+
+\begin{frame}{Coleman integration}
+    If \(C/\RR\) is a curve, \(P,Q \in C\), \(\omega \in \Omega^1_C\) (e.g. \(\frac{x \diff x}{y}\)), we have a path integral
+    \[\int_P^Q \omega\in \RR\text{.}\]
+    \pause%
+
+    What about if \(C/\QQ_p\)?
+
+    Coleman defined
+    \[\int^Q_P \omega\in \QQ_p\,\includegraphics[width=2em]{explode.png}\]
+    \pause%
+    a ``path'' integral, with cool properties \includegraphics[width=2em]{cool.png}.
+
+    \pause%
+
+    These can be explicitly computed in many cases! \includegraphics[width=2em]{keyboard.png}
+\end{frame}
+
+\begin{frame}{Applications}
+    \textbf{Rational points:}
+    We can sometimes find \(\omega\) so that
+    \[\operatorname{Zeroes}\left( \int_{p_0}^x \omega\right) \supseteq C(\QQ)\text{ }\includegraphics[width=2em]{detective.png}\]
+
+    \pause {\bf Heights:} \\
+    Coleman-Gross introduced a height pairing on abelian varieties, it be decomposed as a sum of local terms, one of which is
+    \[h_p(D_1,D_2) = \int_{D_2} \omega_{D_1}\,\includegraphics[width=2em]{pair.png}\]
+
+    \pause {\bf \(p\)-adic BSD:} \\
+    Using the above height pairing one can define a \(p\)-adic regulator so that for a modular abelian variety \(A/\QQ\) conjecturally
+    \[\mathcal L^* (A,0)  = \epsilon_p(A)\frac{|\underline{\mathrm{III}}(A/\QQ)|\operatorname{Reg}_{\gamma}(A/\QQ)\prod_v c_v}{|A(\QQ)_{\text{tors}}||A^ \vee(\QQ)_{\text{tors}}|}\text{ } \includegraphics[width=2em]{dizzy.png}\]
+
+\end{frame}
+
+\end{document}
