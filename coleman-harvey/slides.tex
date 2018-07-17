@@ -7,6 +7,7 @@
 % No navigation bars
 %\beamertemplatenavigationsymbolsempty{}
 \metroset{block=fill}
+\metroset{numbering=none}
 
 
 \usepackage{amsmath, amssymb, amsfonts, graphicx}
@@ -121,18 +122,18 @@
 % Did you check vs. Tuitmans runtime
 
 \begin{frame}{Motivation}
-    (Explicit) Coleman integration is a central tool in (non-abelian) Chabauty and useful in several other areas of arithmetic geometry, but, algorithms lag behind the related ones for zeta functions.
+    (Explicit) Coleman integration is a central tool in (non-abelian) Chabauty and can be applied to find: heights, torsion points and  regulators also, but, algorithms lag behind the related ones for zeta functions.
     \pause%
 
     Longer term goals:
     \begin{itemize}[<+->]
-        \item Adapt descendents of Kedlaya's algorithm to compute (iterated) Coleman integrals, e.g.:
+        \item Adapt descendants of Kedlaya's algorithm to compute (iterated) Coleman integrals, e.g.:
             \begin{itemize}[<+->]
                 \item Larger characteristic (Harvey)
                 \item Average polynomial time (Harvey)
                 \item Effectiver average polynomial time (Harvey-Sutherland)
             \end{itemize}
-        \item Applications to rational points, combining congruence information for many primes, 1-step (Mordell-Weil) seiving.
+        \item Applications to rational points, combining congruence information for many primes, 1-step (Mordell-Weil) sieving.
             %\item Can't tell which prime is best, try them all? Especially helpful on a large scale.
     \end{itemize}
     %We make a first step in this direction by showing that it is possible to do Coleman integration in \(\sqrt p\) time.
@@ -142,87 +143,89 @@
 
 \begin{frame}{Coleman integration}
     % While this is the motivation understanding the details of Coleman is really not the heart of our algorithm
-    Throughout we take \(X/\QQ_p\) a genus \(g\) odd degree hyperelliptic curve, and \(p\) an odd prime.
-    We pick a lift of the Frobenius map, \(\phi^*\colon X \to X\).
+    Throughout we take \(X/\ZZ_p\) a genus \(g\) odd degree hyperelliptic curve, and \(p\) an odd prime.
+    We pick a lift of the Frobenius map, \(\phi^*\colon X \to X\), and write \(A^\dagger\) (resp.\ \(A_{\text{loc}}(X)\)) for overconvergent (resp.\ locally analytic) functions on \(X\).
+    \pause%
     \begin{theorem}[{Coleman}]\label{thm-coleman-harvey-int}
         \hypertarget{p-2914}{}%
-        There is a \(\QQ_p\)-linear map \(\int_b^x\colon \Omega_{A^\dagger}^1\otimes \QQ_p \to A_\mathrm{loc} (X)\) satisfying:\leavevmode%
-        \begin{enumerate}
-            \item\hypertarget{li-600}{}\hypertarget{p-2916}{}%
-                \[\diff \circ \int_b^x = \mathrm{id}\colon \Omega_{A^\dagger}^1\otimes \QQ_p \to \Omega_{A^\dagger}^1\otimes \QQ_p\,\leftarrow\text{(FTC)}\]%
-            \item\hypertarget{li-601}{}\hypertarget{p-2917}{}%
-                \[\int_b^x\circ\diff \colon A^\dagger \to A_{\mathrm{loc}}\]%
-            \item\hypertarget{li-599}{}\hypertarget{p-2915}{}%
-                \[\int_b^x \phi^*\omega = \phi^*\int_b^x \omega\,\leftarrow\text{(Frobenius equivariance)}\]%
-        \end{enumerate}
+        There is a \(\QQ_p\)-linear map \(\int_b^x\colon \Omega_{A^\dagger}^1\otimes \QQ_p \to A_\mathrm{loc} (X)\) for which:\leavevmode%
+        \[\diff \circ \int_b^x = \mathrm{id}\colon \Omega_{A^\dagger}^1\otimes \QQ_p \to \Omega_{\text{loc}}^1\,\quad\text{``FTC''}\]%
+        \[\int_b^x\circ\diff = \mathrm{id}\colon A^\dagger \hookrightarrow A_{\mathrm{loc}}\]%
+        \[\int_b^x \phi^*\omega = \phi^*\int_b^x \omega\,\quad\text{``Frobenius equivariance''}\]%
     \end{theorem}
 \end{frame}
 
 \begin{frame}{Reduction to reduction}
-    Balakrishnan-Bradshaw-Kedlaya reduce the problem of computing all Coleman integrals of basis differentials \(\omega_i\) of \(H^i\) between \(\infty\in X\) and a point \(x\in X(\QQ_p)\), to:
+    Balakrishnan-Bradshaw-Kedlaya reduce the problem of computing all Coleman integrals of basis differentials \(\omega_i\) of \(H^1_{\mathrm{dR}}(X)\) between \(\infty\in X\) and a point \(x\in X(\QQ_p)\), to:
     \begin{enumerate}
         \item Finding ``tiny integrals'' between nearby points,
-        \item Writing \(\phi^*\omega_i  - \diff f_i=\sum_j a_j \omega_j \) and evaluating the primitive \(f_i\) for a point \(P\) near \(x\), for each \(i\).
+        \item Writing \(\phi^*\omega_i  - \diff f_i=\sum_j a_{ij}\omega_j \) and evaluating the primitive \(f_i\) for a point \(P\) near \(x\), for each \(i\).
     \end{enumerate}
+    \pause%
+    Applying \(\phi^*\) to the basis \(x^i \diff x/2y\) for \(i = 0,\ldots, 2g-1\) gives
+    \[\phi^* \omega_i \equiv\sum_{j=0}^{N-1} \sum_{r=0}^{(2g+1)j} B_{j,r} x^{p(i+r+1) - 1}y^{-p(2j+1) + 1} \frac{\diff x}{2y}\pmod{p^N}\]
+    \(B_{j,r}\in \ZZ_p\) are in terms of coefficients of the curve and binomial coefficients.
 
 \end{frame}
 
 \begin{frame}{Kedlaya's algorithm}
     \begin{theorem}[Kedlaya]
-        The action of \(\phi^*\) on \(H^1(X)\) (and hence the zeta function of \(X\)) can be computed in time
+        The action of \(\phi^*\) on \(H^1_{\mathrm{MW}}(X)\) (which determines the zeta function of \(X\)) can be computed in time
         \[
             \widetilde O(p)\text{.}
         \]
     \end{theorem}
 
+    \pause%
+
     \begin{theorem}[Harvey]
-        If \(p \gt (2g+1)(2N-1)\) the action of \(\phi^*\) on \(H^1(X)\) can be computed in time
+        If \(p \gt (2g+1)(2N-1)\) the action of \(\phi^*\) on \(H^1_{\mathrm{MW}}(X)\) can be computed in time
         \[
             \widetilde O(\sqrt{p})\text{.}
         \]
     \end{theorem}
 
-\end{frame}
+    \pause%
 
-\begin{frame}{How do these work?}
-    
+    The problem solved here is almost the same: determining \(a_{ij}\) s.t. \[\phi^* \omega_i -  \sum_j a_{ij}\omega_j \in \operatorname{image} (\diff)\text{.}\]
 \end{frame}
 
 
 \begin{frame}{Primitive technology}
-    So we need to compute \(f\) along with \(\omega - \diff f\).
+    \begin{block}{Revised problem}
+        Computing \(f\) along with \(\omega - \diff f\) when reducing degree.
+    \end{block}
 
     For vanilla Kedlaya this is ``easy'', the reduction procedure is transparent, whenever we subtract \(\diff g\) to reduce, add \(g\) onto \(f\).
 
     For faster variants, this is not so simple!
 \end{frame}
 
-\begin{frame}
+\begin{frame}{The reduction process}
     Harvey uses \term{horizontal} and \term{vertical} reductions to find the action of Frobenius on cohomology, \pause%
     abstractly we have:
 
     Spaces of differentials \(W_t\), indexed by degree, each of dimension \(2g\).
-    \begin{block}{Goal} Reduce all differentials from \(W_t\) to a cohomologus one in \(W_0\), write in terms of fixed basis of \(W_0\).\end{block}
+    \begin{block}{Goal} Reduce all differentials from \(W_t\) to a cohomologous one in \(W_0\), write in terms of fixed basis of \(W_0\).\end{block}
     \pause%
     Relations in the de Rham cohomology \(\leadsto\) linear maps \(R(t)\colon W_t \to W_{t-1}\,\forall t\), with \(R(t) \omega \sim \omega\).
     \pause%
-    Want to find
+    Want to evaluate
     \[W_t \ni \omega \mapsto R(1) R(2) \cdots R(t-1)R(t) \omega \in W_0\]
 
-    \pause%
+\end{frame}
+
+\begin{frame}{\(O(\sqrt p)\)}
     \begin{alertblock}{Key fact}
         Entries of \(R(t)\) are fractions of \emph{linear} functions of \(t\), with \(\ZZ_p\) coefficients; work of Bostan-Gaudry-Schost (\& Harvey) $\implies$ products can be interpolated
         \(R(a,b) = R(a+1) \cdots R(b)\leadsto R(a+1+t,b+t)\)
     \end{alertblock}
     % Why? Taking d(x^t) gives us a t in the coefficient so 1/t d(x^t) = is monic can cancel things to get a term of lower degree.
+    This is what gives a \(\widetilde O(\sqrt p)\) algorithm.
 
-\end{frame}
-
-\begin{frame}
-    This interpolation is what gives us a \(\widetilde O(\sqrt p)\) algorithm.
-
-    We also want an evaluation of the primitive \(f\) for which \(\omega - \diff f_{\omega} = R(t)\omega\).
-    Writing the primitives in terms of the basis we get 
+    \pause%
+    We also want an evaluation of the primitive \(f_{\omega}\) for which \(\omega - \diff f_{\omega} = R(t)\omega\).
+    We can keep this extra data throughout the recurrence as \(f_{\omega}\) is linear in \(\omega\).
 
     \pause%
     \begin{block}{Vital remark}
@@ -231,45 +234,45 @@
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}{A problem and a solution}
 
     \begin{alertblock}{Stumbling block}
-        This is no longer linear in the index!
-        You cannot apply BGS to this recurrence.
+        This is no longer linear in the index \(t\)!
+        You cannot apply BGS to evaluate this recurrence faster.
     \end{alertblock}
     \pause%
-    \begin{exampleblock}{Horner to the rescue}
+    \begin{exampleblock}{Horner to the rescue!}
         Instead of computing a series
         \(\sum_{i = 0}^N a_i x^i\)
         by computing sequentially
         \[{\left(\sum_{i = t}^N a_i x^i\right)}_{t = N,N-1, \ldots, 0}\]
-        We instead compute
+        we can instead compute
         \[((\cdots ((a_N)x + a_{N-1})x  + \cdots)x + a_0)\]
-        from the inside to the out. 
+        from the inside to the out.
         This \emph{is} an iterated composition of linear functions, each of which is linear in the index \(t\).
     \end{exampleblock}
 
-    \pause%
-    The evaluation is only correct at the end!
+    %\pause%
+    %The evaluation is only correct at the end!
 \end{frame}
 
-\begin{frame}
-    In matrix form we are augmenting the reduction matrices in the following sort of way:
+\begin{frame}{Explicit recurrence}
+    In matrix form we augment the (numerators of) the reduction matrices:
 
     \resizebox{\linewidth}{!}{%
         $\displaystyle
             \kbordermatrix{
-                \amp x^{t-2g}\diff x/y          \amp \cdots \amp x^t \diff x /y                   \amp        \amp f(P)\\
-                x^{t-2g}\diff x/y \amp (2t - 1)r_{0,0} + 2s'_{0,0}\amp \cdots \amp (2t - 1)r_{2g-1,0} + 2s'_{2g-1,0}\amp \vrule \amp     \\
+                \amp y^{-2t}\diff x/2y          \amp \cdots \amp x^{2g-1} y^{-2t} \diff x /2y                   \amp        \amp f(P)\\
+                y^{-2(t-1)}\diff x/2y \amp (2t - 1)r_{0,0} + 2s'_{0,0}\amp \cdots \amp (2t - 1)r_{2g-1,0} + 2s'_{2g-1,0}\amp \vrule \amp     \\
                 \vdots \amp \vdots\amp\ddots\amp\vdots\amp  \vrule \amp   \\
-                x^{t-2g}\diff x/y \amp (2t - 1)r_{0,2g-1} + 2s'_{0,2g-1} \amp \cdots \amp (2t - 1)r_{2g-1,2g-1} + 2s'_{2g-1,2g-1}\amp  \vrule \amp \\
+                x^{2g-1} y^{-2(t-1)}\diff x/2y \amp (2t - 1)r_{0,2g-1} + 2s'_{0,2g-1} \amp \cdots \amp (2t - 1)r_{2g-1,2g-1} + 2s'_{2g-1,2g-1}\amp  \vrule \amp \\
                 \cline{2-6} % -------------------------------------------------
                 f(P) \amp -S_0(x)  \amp \cdots \amp -S_{2g-1}(x)\amp\vrule \amp y^{-2}D_V(t) \\
             }
         $
     }
 
-    so that we keep in memory a vector \(v\in W_{t}\times \QQ_p\).
+    so that we keep in memory a vector \(v\in W_{t}\times \QQ_p\) which gives the evaluation at the end.
 
 \end{frame}
 
@@ -281,10 +284,10 @@
     \resizebox{\linewidth}{!}{%
         $\displaystyle
         \kbordermatrix{
-            \amp x^{t-2g}\diff x/y          \amp \cdots \amp x^t \diff x /y                   \amp        \amp f(P_1)\amp \cdots\amp f(P_L)\\
-            x^{t-2g}\diff x/y \amp (2t - 1)r_{0,0} + 2s'_{0,0}\amp \cdots \amp (2t - 1)r_{2g-1,0} + 2s'_{2g-1,0}\amp \vrule \amp     \\
+            \amp y^{-2t}\diff x/2y          \amp \cdots \amp x^{2g-1} y^{-2t}\diff x /2y                   \amp        \amp f(P_1)\amp \cdots\amp f(P_L)\\
+            y^{-2(t-1)}\diff x/y \amp (2t - 1)r_{0,0} + 2s'_{0,0}\amp \cdots \amp (2t - 1)r_{2g-1,0} + 2s'_{2g-1,0}\amp \vrule \amp     \\
             \vdots \amp \vdots\amp\ddots\amp\vdots\amp  \vrule \amp   \\
-            x^{t-2g}\diff x/y \amp (2t - 1)r_{0,2g-1} + 2s'_{0,2g-1} \amp \cdots \amp (2t - 1)r_{2g-1,2g-1} + 2s'_{2g-1,2g-1}\amp  \vrule \amp \\
+            x^{2g-1} y^{-2(t - 1)}\diff x/y \amp (2t - 1)r_{0,2g-1} + 2s'_{0,2g-1} \amp \cdots \amp (2t - 1)r_{2g-1,2g-1} + 2s'_{2g-1,2g-1}\amp  \vrule \amp \\
             \cline{2-8} % -------------------------------------------------
             f(P_1)           \amp -S_0(x(P_1))  \amp \cdots           \amp -S_{2g-1}(x(P_1))\amp\vrule \amp y^{-2}(P_1)D_V(t)\amp\cdots\amp 0 \\
             \vdots\amp\vdots         \amp\ddots    \amp \vdots           \amp\vrule       \amp\vdots   \amp\ddots\amp \vdots        \\
@@ -296,16 +299,8 @@
     \pause%
 
     \begin{block}{Note}
-        This matrix and products of it have the same fixed form, when running BGS we don't try and interpolate entries that are always 0 \(\leadsto\) better run time.
+        This matrix and its iterates have the same fixed form, when running BGS don't try and interpolate entries that are always 0 \(\leadsto\) better run time.
     \end{block}
-\end{frame}
-
-\begin{frame}
-    Core algorithm is potentially more general? Evaluation of primitives is ``integration'', but maybe of a different type?
-\end{frame}
-
-\begin{frame}{Some amusing factoids}
-    It is faster to evaluate the power series this way than to evaluate the power series you get from vanilla Kedlya, even when multiple points are needed computing the power series is no use.
 \end{frame}
 
 \begin{frame}[standout]{Thanks for listening!}
@@ -314,4 +309,10 @@
     % put major content / summary here?
 \end{frame}
 
+
+\begin{frame}{Some amusing factoids}
+    Core algorithm is potentially more general? Evaluation of primitives is ``integration'', but maybe of a different type?
+
+    It is faster to evaluate the power series this way than to evaluate the power series you get from vanilla Kedlaya, even when multiple points are needed computing the power series is no use.
+\end{frame}
 \end{document}
