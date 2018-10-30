@@ -1,0 +1,613 @@
+%\documentclass[notheorems]{beamer}
+%\documentclass[handout]{beamer}
+%\documentclass[handout,notes=show]{beamer}
+
+\usetheme{metropolis}
+%\usecolortheme{dolphin}
+% No navigation bars
+\beamertemplatenavigationsymbolsempty
+
+\usepackage{amsmath, amssymb, amsfonts, tikz}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+
+\usepackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{conjecture}[theorem]{Conjecture}
+%% Definition-like environments, normal text
+%% Numbering is in sync with theorems, etc
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+%% Remark-like environments, normal text
+%% Numbering is in sync with theorems, etc
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+%% Example-like environments, normal text
+%% Numbering is in sync with theorems, etc
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{question}[theorem]{Question}
+\newcommand{\terminology}[1]{\textbf{#1}}
+
+\newcommand{\NN}{\mathbf{N}}
+\newcommand{\ZZ}{\mathbf{Z}}
+\newcommand{\QQ}{\mathbf Q}
+\newcommand{\CC}{\mathbf C}
+\newcommand{\RR}{\mathbf R}
+\newcommand{\FF}{\mathbf F}
+\newcommand{\lt}{<}
+\newcommand{\gt}{>}
+\newcommand{\amp}{&}
+\newcommand{\diff}{\mathop{}\!\mathrm{d}}
+\newcommand{\ints}{\mathcal{O}}
+\newcommand{\ideal}[1]{\mathfrak{#1}}
+\usepackage{mathrsfs}\usepackage{cancel}
+\newcommand{\Gal}[2]{\operatorname{Gal}(#1/#2)}
+\newcommand{\absgal}[1]{\operatorname{Gal}(\overline{#1}/#1)}
+
+\newcommand{\sheaf}[1]{\operatorname{\mathcal{#1}}}
+\newcommand{\inv}{^{-1}}
+\DeclareMathOperator{\norm}{Nm}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\divisor}{div}
+\DeclareMathOperator{\PP}{\mathbf{P}}
+\DeclareMathOperator{\Hom}{Hom}
+
+\newcommand{\lb}{[}
+\newcommand{\rb}{]}
+
+\author{Alex J. Best}
+\institute{BU qualifying exam}
+\date{29/10/2018}
+\title{Coleman-de Shalit's $p$-adic regulator}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+
+  \note[item]{Thank the audience for being awake.}
+\end{frame}
+
+%\begin{frame}
+%\frametitle{Table of Contents}
+%\tableofcontents[currentsection]
+%\end{frame}
+
+\begin{frame}{Overview/History/Philosophy}
+\textbf{Goal:} Introduce Coleman-de Shalit's regulator and show a relation to \(p\)-adic \(L\)-functions.\note{The paper is a little ad hoc, so it is interesting to note that subsequent work has placed their regulator in a broader framework.}
+\pause
+
+\textbf{Big picture:} Regulators are maps from \(K\)-groups / motivic cohomology to absolute Hodge cohomology (Deligne-Beilinson / syntomic). They relate to special values of \(L\)-functions.
+\note{absolute hodge means derived hom in derived cat of mhs
+
+}
+\pause
+
+\textbf{History:}
+\begin{itemize}
+\item                    Beilinson - Define regulators (+Bloch and many more), Deligne-Beilinson cohomology is absolute Hodge.%
+\item                    Coleman-de Shalit - Construct a \(p\)-adic analogue \note{of the above in an ad hoc way}%
+\item                    Fontaine-Messing - Syntomic cohomology%
+\item                    Gros - \emph{Rigid} syntomic cohomology%
+\item                    Besser - Coleman integrals compute regulators from \(K\)-theory to rigid syntomic cohomology%
+\item                    Bannai - Rigid syntomic cohomology is absolute Hodge coh.
+\end{itemize}
+\note{so \emph{a posteriori} everything we do here is ``right''.}%
+\end{frame}
+
+\begin{frame}{Beilinson regulators (Complex theory)}
+    \note{.}
+Let \(C/\CC\) be a smooth complete curve%, with \(U \subset C\) open affine.
+, \(f,g\in\sheaf \CC(C)^\times\). %, \(\RR(1) = \RR\otimes 2\pi i \ZZ\).
+Beilinson defines%
+
+%\begin{equation*}
+%r_U(f,g) \in H^1(U, \RR(1))\text{,}
+%\end{equation*}
+%which projects to \(H^1(C, \RR(1))\) and allows us to define%
+\begin{equation*}
+%r_{\infty,C}(f,g)(\omega) = r_C(f,g) \cup [\omega] = \frac{1}{2 \pi i} \int_{C(\CC)} \log |g|^2 \overline{\diff \log f} \wedge \omega
+r_{\infty,C}(f,g)(\omega) = \frac{1}{2 \pi i} \int_{C(\CC)} \log |g|^2 \overline{\diff \log f} \wedge \omega
+\end{equation*}
+the relation to \(K\)-groups comes via%
+\begin{equation*}
+K_2(\CC(C)) = \CC(C)^\times\otimes \CC(C)^\times / \langle f \otimes 1-f \rangle\text{.}
+\end{equation*}
+and \(r_{\infty, C}\) satisfies this relation.
+
+\end{frame}
+
+\begin{frame}{Relation to \(L\)-values}
+
+\note{One very interesting aspect of this definition is the relation to the \(L\)-function of an elliptic curve \(E\).}
+Fix \(E/ \kappa\) be an elliptic curve with CM by \(\ints_\kappa\), \(\kappa\) a CM field \emph{of class number 1}. Let \( \Psi = \Psi_{E/\kappa}\) be the associated Grossencharacter, \(p\) be a prime that splits in \(\kappa\), \(p = \ideal p \overline{\ideal p }\). \(\omega\) an invariant differential.%
+
+\begin{proposition}[Bloch, Rohrlich, Deninger-Wingberg]
+
+\begin{equation*}
+r_{\infty,E}(f,g)(\omega) = c_{f,g} \Omega \underbrace{L_\infty (E, 0)}_{= L_\infty(\Psi,0)},\, c_{f,g} \in \QQ
+\end{equation*}
+(\(L_\infty\) includes Gamma factors), and there exists \(f,g\) with \(c_{f,g} \ne 0\).%
+\end{proposition}
+\end{frame}
+
+\begin{frame}{\(p\)-adic version}
+
+\note{There is a \(p\)-adic analogue of the right hand side:}%
+We can associate a canonical \emph{period-pair-class} to \(\kappa\): %
+\(
+\langle \Omega , \Omega_p \rangle  \in (\CC^\times \times \CC_p^\times) / \overline \QQ ^\times
+\)
+so that:
+\begin{theorem}[Katz, Manin-Vishik]
+    Let \(1 \ne \ideal g\) an ideal of \( \kappa\) relatively prime to \(\ideal p\). Then \(\exists! \), \(W(\overline \FF_p)\)-valued measure \(\mu\) on
+    \(
+\mathscr G(\ideal g) = \Gal{\kappa(\ideal g \ideal p^\infty)}{\kappa}
+\)
+so that \(\forall \epsilon\) Grossencharacter of conductor dividing \(\ideal g\) with infinity type \((k,0)\) \(k\ge 1\), if%
+\begin{align*}
+L_{\infty,\ideal g}(\epsilon \inv, s) \amp= \Gamma(s+ k) \prod_{\ideal l \nmid \ideal g} (1- \epsilon \inv (\ideal l) \norm \ideal l^{-s})\inv\\
+L_{p,\ideal g} (\epsilon\inv)         \amp= \int_{\mathscr G(\ideal g)} \epsilon(\sigma) \diff \mu(\sigma)
+\end{align*}
+we have%
+\begin{equation*}
+\Omega_p^{-k} L_{p,\ideal g}( \epsilon \inv) = \Omega^{-k}(1 - p\inv \epsilon ( \ideal p )) L_{\infty, \ideal g}(\epsilon \inv, 0) \in \overline \QQ\text{.}
+\end{equation*}
+\end{theorem}
+\end{frame}
+
+\begin{frame}{\(p\)-adic regulators?}
+\note{So we have a \(p\)-adic \(L\)-function and \(p\)-adic period, can we define a \(p\)-adic regulator and obtain a similar theorem with \(L_p(\Psi)\)?%
+    The first step in this process is to rephrase the regulator pairing as}
+    Can rewrite \(r_{\infty,C}\) as
+\begin{equation*}
+    r_{\infty,C}(f,g)  = \sum_{b\in C(\CC)} \ord_b(g) F_{f,\omega}(b)
+\end{equation*}
+where %
+\(
+F_{f, \omega}
+\)
+satisfies
+\begin{equation*}
+\bar \partial (\diff F) = \bar \partial ( \log |f|^2 \omega)
+\end{equation*}
+\pause
+Even without \(p\)-adic \(\bar\partial\) we can just try to find \(F_{f,\omega}\) satisfying
+\begin{equation*}
+\diff F = \log f \cdot \omega
+\end{equation*}
+and define
+\begin{equation*}
+   '' r_{p,C}(f,g)  = \sum_{b\in C(\CC_p)} \ord_b(g) F_{f,\omega}(b)''
+\end{equation*}
+\note{%
+for which%
+    \begin{equation*}
+F(P) = \log |f(P)|^2 \int^P \omega + \text{\,smooth}
+\end{equation*}
+near \(P_0 \in |\divisor f|\).%
+We will see that even without a \(p\)-adic \(\partial\) we can solve%
+\begin{equation*}
+\diff F_{f,\omega} = \log f \cdot \omega
+\end{equation*}
+to get a candidate analogue of \(r_\infty\), the proof is in the pudding though, some relation to the \(L\)-value.%
+
+Besser does have a padic partial bar though?!
+}
+\end{frame}
+
+\begin{frame}{\(p\)-adic tools (Coleman integration)}
+    \note{If we want to find an analogue of the above picture we need a \(p\)-adic definition of integrals such as
+    We are trying to define a \(p\)-adic
+\begin{equation*}
+\int \log (f) \cdot \omega
+\end{equation*}
+}
+
+Let \(K=\CC_p=  \widehat{\overline\QQ}_p\), \(R = \ints_K\), \(k = R/\ideal m\). We will work with 1-dimensional rigid spaces (curves) over \(K\).
+We fix a branch of the \(p\)-adic logarithm \(\log\colon K^\times \to K\).%
+\pause
+
+It is always possible to integrate rigid 1-forms locally on a disk: given \(\omega\) we have a local expression in terms of a convergent power series%
+\begin{equation*}
+\omega |_{D} =\sum_i a_i t^i \diff t
+\end{equation*}
+which can be integrated formally (up to a constant).%
+\pause
+
+Let \(X / \ints _K\) be a smooth projective curve, if \(Y \subseteq X\) smooth affine open, then in the special fibre%
+\begin{equation*}
+X_k \smallsetminus Y_k = \{e_1,\ldots, e_n\}\text{.}
+\end{equation*}
+\pause
+What is hard is to integrate globally, iteratively and include \(\int \frac{\diff z}{z}\)!
+\end{frame}
+
+\begin{frame}{\(p\)-adic tools (Coleman integration)}
+    \note{
+
+The problem comes when trying to piece these together, the discs are disconnected, there are no overlaps where we can match up values of our integral, we need more structure to find an integral unique up to a single global (additive) constant.%
+%\pause
+
+The additional structure we will use is the Frobenius coming from the reduction mod \(p\).%
+%\pause
+}
+We then remove rigid disks around \(e_i\). \(Y_k\) is locally given by \(\bar h\) so we can take the rigid subspace%
+\begin{equation*}
+U_r \text{\,locally defined by\,} |h| \gt r
+\end{equation*}
+and the underlying affinoid is \(X_K - \bigcup_{i} B_\lt(e_i,1)\).%
+\pause
+
+We have%
+\begin{equation*}
+U = \varprojlim_{r\to 1} U_r
+\end{equation*}
+and spaces of overconvergent functions and \(1\)-forms%
+\begin{equation*}
+A(U) = \varinjlim_{r\to 1} A(U_r)
+\end{equation*}
+
+
+Let \(Y\) be an affinoid with good reduction then \(Y_k\) finite type, and we have \(F\colon Y_k \to  Y_k\) the \(q\)-power frobenius.%
+\end{frame}
+
+\begin{frame}{\(p\)-adic tools (Coleman integration)}
+
+\note{Here's a theorem which is needed in general, but technically unnecessary:}
+
+\begin{proposition}[]There exists%
+\begin{equation*}
+\phi \colon U \to U,\,\widetilde \phi = F
+\end{equation*}
+a \terminology{lift of frobenius} or frobenius morphism of \(X\), of degree \(q \).%
+\end{proposition}
+\textbf{Note:} Whatever we choice of frobenius we make should not matter!
+\note{
+
+One can imagine two different ways of computing a Coleman integral, picking a frobenius lift in a versatile  but ``arbitrary'' way, using existance in theory or making some simple choice in practice. In some situations there are canonical Frobenius lifts, perhaps an algebraic lift of Frobenius.%
+
+Our final theory should be invariant under our choice, so we should be able to use a widely applicable computational approach à la Balakrishnan-Bradshaw-Kedlaya. Or use a lift coming from some specific structure and get the same answer.%
+}
+\pause
+\begin{example}
+
+    Have \(X = \PP^1_{\ints_{\CC_p}} \supseteq Y = \mathbf G_m = \PP^1 \smallsetminus \{0, \infty\}\) then%
+\begin{equation*}
+U_r  = \{ r \lt |z| \lt 1/r\}
+\end{equation*}
+\(\phi(z) = z^q \colon U_r \to U_{r^q}\). (But we could add some other \(p\cdot \text{junk}\)!)
+\end{example}
+\end{frame}
+
+\begin{frame}
+
+\begin{equation*}
+\Omega^1 (U) = \varinjlim_{r\to 1} \Omega^1(U_r)
+\end{equation*}
+
+%We can decompose \(U\) into residue disks \(U_x\) around points \(x\) of the special fibre, along with for each \(r \lt 1\) the residue annulus around \(e_i\). We let \(U_{e_i}\) be the limit of these.%
+
+\begin{equation*}
+A(U_x) = \left\{ f(z) = \sum_{n=0}^\infty a_n z^n \text{ converging for } |z| \lt 1\right\}
+\end{equation*}
+
+\begin{equation*}
+A(U_{e_i}) = \left\{ f(z_{e_i}) = \sum_{n=-\infty}^\infty a_n z_{e_i}^n \text{ converging for } r \lt |z_{e_i}| \lt 1, r \lt 1\right\}\text{.}
+\end{equation*}
+
+\begin{equation*}
+A_{\log}(U_x) = A(U_x),\,A_{\log}(U_{e_i}) = A(U_{e_i})[\log (z_{e_i})]
+\end{equation*}
+
+\begin{equation*}
+\Omega_{\log}^1(U_?) = A_{\log}(U_?) \diff z_?
+\end{equation*}
+
+\begin{equation*}
+A_{\operatorname{loc}}(U) = \prod_x A_{\log}(U_x)
+\end{equation*}
+
+\begin{equation*}
+\Omega^1_{\operatorname{loc}}(U) = \prod_x \Omega^1_{\log}(U_x)
+\end{equation*}
+
+\begin{equation*}
+\diff \colon A_{\operatorname{loc}}(U) \twoheadrightarrow \Omega^1_{\operatorname{loc}}(U)
+\end{equation*}
+\end{frame}
+
+\begin{frame}
+    \note{.}
+\begin{theorem}[Coleman integration]
+There is a subspace \(M(U)\) of \(A_{\operatorname{loc}} (U)\), which we call the space of Coleman functions, and linear map (integration), which we denote by \(\int\) or by \(\omega \mapsto F_\omega\), from \(M(U) \otimes_{A(U)} \Omega(U)\) to \(M(U)/\CC_p\).%
+\pause
+
+The map f is characterized by three properties:\leavevmode%
+\begin{enumerate}
+\item\hypertarget{li-6}{}It is a primitive for the differential in the sense that \(\diff F_{\omega} = \omega\).%
+\item\hypertarget{li-7}{}It is Frobenius equivariant \(F_{ \phi^*\omega} =  \phi ^* F_\omega\).%
+\item\hypertarget{li-8}{}If \(g \in A(U)\), then \(F_{\diff g} = g + \CC_p\).%
+\end{enumerate}
+
+\pause
+
+We also have properties such as:%
+\begin{equation*}
+f\in M(U)
+\end{equation*}
+vanishes on one residue disk, then \(f\) is identically zero.%
+\pause
+
+The space \(M(U)\) is constructed iteratively \(M(U) = \bigcup_n A_n(U)\) with each step being obtained as functions you get by integration from the previous.%
+\end{theorem}
+\end{frame}
+
+%
+\typeout{************************************************}
+\typeout{Section 1.5 The \(p\)-adic regulator}
+\typeout{************************************************}
+
+\begin{frame}{The \(p\)-adic regulator}
+    \note{.}
+
+We can now define a \(p\)-adic version of the above regulator.%
+\pause
+
+(Let \(C\) to be a complete non-singular curve whose jacobian has good reduction.)
+
+If \(
+f \in K(C)^\times,\,U = C \smallsetminus |\divisor (f)|
+\) we can take a global 1-form \(\omega \in H^0(C, \Omega_{C/K}^1)\) and the function%
+\begin{equation*}
+\log(f)  = \int \frac{\diff f}f\in A_1(U)
+\end{equation*}
+and obtain
+\begin{equation*}
+\log(f) \omega \in \Omega_1(U)\text{.}
+\end{equation*}
+
+Integration gives%
+\begin{equation*}
+F_{f,\omega} \in A_2(U) \text{ with } \diff F_{f,\omega} = \log(f) \omega \in \Omega_1(U)\text{,}
+\end{equation*}
+unique up to a constant.%
+\note{
+If \(a\in |\divisor (f) | = C\smallsetminus U\) then we can fix \(R_a\) a rigid disc around \(a\), and \(V_a= R_a \smallsetminus \{ a\}\). On \(V_a\) we have%
+\begin{equation*}
+\int \log(f) \omega = \log (f) \int \omega - \int \left(\frac{\diff f}{f} \int \omega\right)
+\end{equation*}
+we choose \(\int \omega\) to vanish at \(a\), so this is a function which differs from \(F_{f,\omega}\) by a constant.%
+\pause
+
+Doing this extends \(F_{f,\omega}\) to a function on \(C(K)\) rather than just in \(A_2(U)\).%
+}
+\end{frame}
+
+\begin{frame}{The regulator}
+    \note{.}
+\begin{definition}[The \(p\)-adic regulator]
+
+Take \(f,g,\omega\) as before defined over \(\overline k\), then define%
+\begin{equation*}
+r(f,g)(\omega) = -\int_{(g)} \log(f) \omega = -\sum_{b \in C(K)} \ord_b(g) F_{f,\omega}(b) \in \overline k
+\end{equation*}
+\note{which is well defined as \((g)\) has degree 0.}
+\end{definition}
+\pause
+\begin{theorem}[Coleman-de Shalit]
+\(r_C(f,g)\) is a skew-symmetric bilinear pairing on \(\overline k (C)^\times\) that\leavevmode%
+\begin{enumerate}
+\item                      factors through \(K_2(\overline k(C))\)
+    \note{giving%
+\begin{equation*}
+r_C \colon K_2(\overline k(C))  \to \Hom (H^0(C, \Omega_{C/\overline k}^1), \overline k)\text{.}
+\end{equation*}}
+
+\item                     depends only on \(\divisor(f),\divisor(g)\)
+\item                     is \(\absgal{k}\) equivariant%
+\item                     for finite morphisms of complete non-singular curves \(/k\) \(u \colon C' \to C\) we get 
+\(
+r_{C'} (u^* f, u^* g) = u^*r_C(f,g)\text{.}
+\)
+
+\end{enumerate}
+
+\end{theorem}
+\end{frame}
+
+%
+\typeout{************************************************}
+\typeout{Section 1.6 Comparison of the \(p\)-adic and \(\CC\) theories}
+\typeout{************************************************}
+
+\begin{frame}{Comparison of the \(p\)-adic and \(\CC\) theories}
+    \note{.}
+
+We now move to a very special situation, where the above regulators can be shown to be related to \(L\)-values.%
+\pause
+
+\(C = E/\kappa\) will be an elliptic curve with CM by \(\ints_\kappa\). \(\Psi = \Psi_{E/\kappa}\) the corresponding Grossencharacter with conductor \(\ideal f\) and assume%
+\begin{equation*}
+w_{\ideal f} = \#\{\zeta \in \mu(K) : \zeta \equiv 1 \pmod {\ideal f}\} = 1\text{.}
+\end{equation*}
+let \( \omega\) be  a \(\kappa\)-rational invariant differential, \(\mathscr L\) the period lattice of \((E, \omega)\).
+\end{frame}
+
+\begin{frame}{The theorem}
+    \note{.}
+%From the Beilinson regulator%
+%\begin{equation*}
+%r_\infty(f,g) = r_E(f,g) \cup \lb \omega \rb
+%\end{equation*}
+
+\begin{theorem}[Rohrlich, others?]
+\begin{multline*}
+r_\infty ( f,g) = \\
+\underbrace{12 ( \norm \ideal a - \Psi\inv (\ideal a)) \sum_{\text{orbits } \langle Q \rangle} \ord_Q g \cdot \Omega(Q) \prod_{\ideal l | \ideal g_Q} (1- \Psi (\ideal l))}_{c_{f,g}} L_\infty (\Psi,0)
+\end{multline*}
+\(\ideal g_Q\) ideal of annihilators of \(Q\).%
+\end{theorem}
+\pause
+\begin{theorem}[Coleman-de Shalit]
+We have the formula%
+\begin{equation*}
+r_{p,E}(f,g)(\omega) = c_{f,g} \Omega_p (1 - (\Psi(\ideal p) p)\inv)\inv L_p(\Psi)\text{.}
+\end{equation*} \note{the \(c_{f,g}\) is the to the \(c_{f,g}\) in the first theorem, I haven't just abused notation, this was one of the most surprising aspects of this theorem to me, personally my main goal was to understand this}\end{theorem} \pause
+Where do these terms come from? (in the \(p\)-adic case)
+
+The rest of the talk: proof overview, see where the terms come in.
+\end{frame}
+
+\begin{frame}{Proof}
+    \note{.}
+
+    We use a specific class of \(f\)'s (for \((\ideal a,\ideal f \ideal p)=1\)), the functions%
+\begin{equation*}
+f( P ) = \Theta_{\ideal a}(P) = \Delta (\sheaf L) \Delta (\ideal a\inv \sheaf L)\inv \sideset{}{'} \prod_{R\in E[\ideal a]} \frac{\Delta (\sheaf L)}{(x(P) - x(R))^6} \in \kappa (E)^\times
+\end{equation*}
+whose values are \terminology{elliptic units}, the divisor of \(\Theta_{\ideal a}\) is%
+\begin{equation*}
+    12 \left( (\norm \ideal a - 1) \cdot (0) - \sideset{}{'} \sum_{R\in E[\ideal a ]} (R) \right)
+\end{equation*}
+\pause
+and we have the \terminology{distribution relation}%
+\begin{equation*}
+f(\pi P )  =  \prod_{v \in E[\ideal p]} f(P + v) \note{see de Shalit.}
+\end{equation*}
+These functions generate the set of all functions with divisors supported on torsion.
+
+We also take \(g\in \kappa (E)^\times\) with divisor supported on torsion and \( Q\in |\divisor g| \implies \ideal f | \ideal g_Q,\,(\ideal g_Q,\ideal a \ideal p) = 1\).
+\end{frame}
+
+\begin{frame}
+    \note{.}
+    Take \(E\) with the \(\ideal a\)-torsion points removed,
+\begin{equation*}
+X(\ideal a) = E \smallsetminus \bigcup_{P\in E[\ideal a]} B(P,1)
+\subseteq U_r(\ideal a) = E \smallsetminus \bigcup_{P\in E[\ideal a]} B(P, r)\text{.}
+\end{equation*}
+\pause
+    \note{.}
+Take \(D\) to be a derivation that is dual to \(\omega\) (so \(DF_{\omega} = 1\)). Then%
+\begin{equation*}
+F_{f,\omega}
+\end{equation*}
+is the unique (up to constant) \(F \in A_2(U_r(\ideal a))\) for which%
+\begin{equation*}
+DF  = \log f
+\end{equation*}
+Then we have%
+\begin{equation*}
+D(F(\pi P)) = \pi \cdot (DF)(\pi P)
+\end{equation*}
+and the distribution relation gives%
+\begin{equation*}
+D(F(\pi P)) =  \pi \sum_{v\in E[ \pi] } (DF)(P+v)
+\end{equation*}
+
+\end{frame}
+
+\begin{frame}
+    \note{.}
+    By definition \(\pi = \psi(\ideal p)\) is a lift of frobenius (which is algebraic!). As \(F \in A_2(U_r(\ideal a))\), for some (possibly different) \(r\) close to 1 we have
+\begin{equation*}
+F(\pi P) -  \pi \sum_{v\in E[ \pi] } F(P+v) \in A_2(U_r(\ideal a))
+\end{equation*}
+the above implies this is locally constant, hence constant! So we change \(F\) to get that%
+\begin{equation*}
+F(\pi P) -  \pi \sum_{v\in E[ \pi] } F(P+v)  = 0\text{.}
+\end{equation*}
+
+\end{frame}
+
+\begin{frame}
+    \note{.}
+\begin{equation*}
+F(\pi P) -  \pi \sum_{v\in E[ \pi] } F(P+v)  = 0\text{.}
+\end{equation*}
+Now define%
+\begin{equation*}
+F^\#(P) = F(P) - p\inv \sum_{v\in E[\pi]} F(P+v)
+\end{equation*}
+\pause
+so that as \(Q \in |\divisor g|\) is Galois conjugate to \(\pi Q\) over \(\kappa\):%
+\begin{equation*}
+r_p(f,g) = - \sum_Q \ord_Q g F(Q) = - \sum_Q \ord_Q g F(\pi Q)
+\end{equation*}
+giving%
+\begin{equation*}
+\left( 1 - \frac 1{\pi p}\right) r_p(f,g) = - \sum_Q \ord_Q g F^\# (Q)\text{.}
+\end{equation*}
+
+\pause
+We also have
+\begin{equation*}
+\log(f)^\# (P) = \log f(P) - p \inv \sum_{v\in E[\pi ]} \log f(P+v)\text{.}
+\end{equation*}
+\end{frame}
+
+\begin{frame}
+    \note{.}
+If \(Q\) is a torsion point in \(X(\ideal a)\) relatively prime to \(\ideal p\) order, then de Shalit has associated a%
+\begin{equation*}
+    \eta_Q \colon \widehat {\mathbf G}_m \xrightarrow\sim \widehat E
+\end{equation*}
+so \(Q + \eta_Q(S)\) parameterises the residue disk of \(Q\) and a \(W = W(\overline \FF_p)\) valued measure \(\mu_Q\) on \(\ZZ_p^\times\) s.t.%
+\begin{equation*}
+\log (f)^\# (Q+ \eta_Q(S)) = \int_{\ZZ_p^\times} (1+S)^x \diff \mu_Q(x) \in W[[ S]]
+\end{equation*}
+
+\end{frame}
+
+\begin{frame}
+    \note{eta is parameterising the residue disk around Q}
+Then work of de Shalit shows that%
+\begin{equation*}
+F^\# (Q+ \eta_Q(S)) = \underbrace{\eta'_Q(0)}_{\Omega_p(Q)} \int_{\ZZ_p^\times} (1+S)^x x\inv \diff \mu_Q(x) + c
+\end{equation*}
+for some constant  \(c\), and that \(F^\# (P)\) is rigid analytic on \(X(\ideal a)\).%
+\pause
+
+So we get%
+\begin{equation*}
+\left( 1 - \frac{1}{\pi p } \right) r_p(f,g) = - \sum_Q \ord_Q g \Omega_p(Q) \int_{\ZZ_p^\times } x\inv \diff \mu_Q(x)\text{.}
+\end{equation*}
+We need to move to the correct group and remove the dependence on \(Q\),
+\pause
+by identifying \(G = \Gal{\kappa(\ideal g \ideal p^\infty)}{\kappa(\ideal g)} \cong \ZZ_p^\times\) so that
+\begin{align*}
+\amp= - \sum_{\langle Q\rangle} \ord_Q g \Omega_p(Q) \sum_{\tau \in \mathscr G/ G}  \int_{G} \Psi \inv(\sigma) \diff \mu_{\tau (Q)}(\sigma)\\
+\amp= - \sum_{\langle Q\rangle} \ord_Q g \Omega_p(Q) \int_{\mathscr G (\ideal g_Q)} \Psi \inv (\sigma) \diff \mu_e(\sigma)
+\end{align*}
+\note{e  is norm compatible sequence of elliptic units (question for later: an euler system?!)}
+
+\end{frame}
+
+\begin{frame}
+\begin{theorem}[Coates-Wiles]
+\begin{equation*}
+\mu_e = 12 (\sigma_{\ideal a} - \norm \ideal a) \mu (\ideal g _Q)
+\end{equation*}
+\end{theorem}
+where \(\mu (\ideal g_Q)\) is the measure which defines the \(p\)-adic \(L\)-function of conductor \(\ideal g_Q\),\pause so removing those factors we reach%
+\begin{multline*}
+    \overbrace{(1 - (\pi p )\inv)}^{\text{Distribution relations}} r_p ( f,g) =\\
+\underbrace{12 ( \norm \ideal a - \Psi\inv (\ideal a))}_{\text{Coates-Wiles}} \sum_{\text{orbits } \langle Q \rangle} \ord_Q g \Omega_p(Q) \underbrace{\prod_{\ideal l | \ideal g_Q} (1- \Psi (\ideal l))}_{L_{p,\ideal g_Q} \leadsto L_p} L_p (\Psi)\text{,}
+\end{multline*}
+\pause
+Fin.%
+\note{this isn't the exact formula we saw earlier, need to factor out a \(\Omega_p\) to get something algebraic}
+\end{frame}
+
+\end{document}
