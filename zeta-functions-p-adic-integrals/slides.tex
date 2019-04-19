@@ -1,0 +1,505 @@
+%\documentclass[notheorems]{beamer}
+%\documentclass[handout]{beamer}
+%\documentclass[handout,notes=show]{beamer}
+
+\usetheme{metropolis}
+%\usecolortheme{dolphin}
+% No navigation bars
+\beamertemplatenavigationsymbolsempty
+
+\usepackage{amsmath, amssymb, amsfonts, tikz}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{mathtools}
+\usepackage{xmpmulti}
+
+
+\usepackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{conjecture}[theorem]{Conjecture}
+%% Definition-like environments, normal text
+%% Numbering is in sync with theorems, etc
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+%% Remark-like environments, normal text
+%% Numbering is in sync with theorems, etc
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+%% Example-like environments, normal text
+%% Numbering is in sync with theorems, etc
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{question}[theorem]{Question}
+\newcommand{\terminology}[1]{\textbf{#1}}
+
+\newcommand{\NN}{\mathbf{N}}
+\newcommand{\ZZ}{\mathbf{Z}}
+\newcommand{\QQ}{\mathbf Q}
+\newcommand{\CC}{\mathbf C}
+\newcommand{\RR}{\mathbf R}
+\newcommand{\FF}{\mathbf F}
+\newcommand{\lt}{<}
+\newcommand{\gt}{>}
+\newcommand{\amp}{&}
+\newcommand{\diff}{\mathop{}\!\mathrm{d}}
+\newcommand{\ints}{\mathcal{O}}
+\newcommand{\ideal}[1]{\mathfrak{#1}}
+\usepackage{mathrsfs}\usepackage{cancel}
+\newcommand{\Gal}[2]{\operatorname{Gal}(#1/#2)}
+\newcommand{\absgal}[1]{\operatorname{Gal}(\overline{#1}/#1)}
+\DeclareMathOperator{\USp}{USp}
+\DeclareMathOperator{\Spec}{Spec}
+
+\newcommand{\sheaf}[1]{\operatorname{\mathcal{#1}}}
+\newcommand{\inv}{^{-1}}
+\DeclareMathOperator{\norm}{Nm}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\divisor}{div}
+\DeclareMathOperator{\PP}{\mathbf{P}}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\Mat}{Mat}
+\DeclareMathOperator{\End}{End}
+
+\newcommand{\lb}{[}
+\newcommand{\rb}{]}
+
+\author{Alex J. Best}
+\institute{AMS Graduate Student Conference, Brown University}
+\date{16/4/2019}
+\title{Zeta functions and $p$-adic integrals; computations and applications}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+
+  \note[item]{Thank the audience for being awake.}
+\end{frame}
+
+%\begin{frame}
+%\frametitle{Table of Contents}
+%\tableofcontents[currentsection]
+%\end{frame}
+
+
+% Overview :
+% - Zeta functions, history
+% - applications
+%   - finding maps between curves
+%   - global l-functions?
+%   - point counts on curve and jac
+%   - katz? n-torsion theorem
+% - how to compute?
+% - Kedlaya, variants
+% - Coleman integrals
+% - how to compute?
+% - BBK, variants
+% - applications
+%   - torsion points
+%   - rational points
+%     - classical chab
+%     - cursed curve (iterated)
+%     - BBTV
+
+\begin{frame}{Where are we going?}
+    \begin{quotation}... Hilbert often interrupted me... he kept interrupting frequently--
+        finally I could not speak any more at all -- and he said that from the start he
+        did not even listen since he had the impression that everything was trivial
+        ---E. Artin
+    \end{quotation}
+
+    \pause
+    \textbf{Please ask questions!}
+    \pause
+
+    \textbf{Plan:}
+    \begin{itemize}
+        \item
+            Zeta functions:
+            \begin{itemize}
+                \item What are they?
+                \item Why calculate them?
+                \item How do you find them?
+            \end{itemize}\pause
+        \item
+            Coleman integrals:
+            \begin{itemize}
+                \item What are they?
+                \item Why calculate them?
+                \item How do you find them?
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Curves and their points}
+    Let $C$ be a (smooth, projective) curve over $\FF_q$, a finite field with $q$ elements.
+    \pause
+
+    As $\FF_q$ is finite $C(\FF_q)$ is finite, moreover $C(\FF_{q^n})$ is finite for all $n$, what are the values for different $n$?  \pause
+    \begin{example}
+        If $C  = \PP^1/\FF_p$ then we have $C (\FF_q) = \FF_q \cup\{\infty\}$ so
+        \[\#C(\FF_{p^n}) = p^n + 1\text.\]
+    \end{example}
+\end{frame}
+
+\begin{frame}{An elliptic curve}
+    \begin{example}
+        If $E\colon y^2 = x^3 - 1/\FF_5$ then
+        \begin{table}
+            \centering
+            \resizebox{\columnwidth}{!}{%
+
+                \begin{tabular}{r|cccccccc}
+                    \(n\)&\(1\)&\(2\)&\(3\)&\(4\)&\(5\)&\(6\)&\(7\)&\(8\)\tabularnewline[0pt]
+                    \hline
+                    \(\#E(\FF_{5^n})\)&\(6\)&\(36\)&\(126\)&\(576\)&\(3126\)&\(15876\)&\(78126\)&\(389376\)\pause\tabularnewline[0pt]
+                    \(5^n\)&\(5\)&\(25\)&\(125\)&\(625\)&\(3125\)&\(15625\)&\(78125\)&\(390625\)\pause\tabularnewline[0pt]
+                    \(\#E(\FF_{5^n}) - 5^n - 1\)&\(0\)&\(10\)&\(0\)&\(-50\)&\(0\)&\(250\)&\(0\)&\(-1250\)
+                \end{tabular}
+            }
+        \end{table}
+
+        \only<4->{We need a formula that is $0$ for odd $n$ and $-2\cdot (-5)^{n/2}$ for even $n$:
+            \[\#E(\FF_{5^n}) = 5^n + 1 - \left(\sqrt{-5}^n + (-\sqrt{-5})^n \right)\]
+        }
+
+        \only<5->{It initially seemed like we had an infinite amount of data here: $\#E(\FF_{5^n})$ for all $n \in \NN$. But we don't!}
+    \end{example}
+
+
+\end{frame}
+
+
+
+\begin{frame}{The Weil polynomial}
+    Rephrased: we have a polynomial
+    \[L_E = t^2 + 5\]
+    so that
+    \[\#E(\FF_{5^n}) = 5^n + 1 - \sum_{\text{roots }\alpha_i \text{ of }L_E} \alpha_i^n\]
+    how general a phenomenon is this?\pause
+
+    \begin{theorem}[Schmidt?, Weil?]
+        Let $C / \FF_q$ be a curve, there exists a monic $L_C(t) \in \ZZ\lb t \rb$ of degree $2 \cdot \operatorname{genus}(C)$. Whose roots $\alpha_i$ come in complex conjugate pairs with $|\alpha_i| = q^{1/2}$ and
+        \[\#C(\FF_{q^n}) = q^n + 1 - \sum_{\text{roots }\alpha_i \text{ of }L_C} \alpha_i^n\]
+    \end{theorem}
+
+
+\end{frame}
+
+\begin{frame}{The zeta function}
+    The condition on the roots means $\alpha_i \overline \alpha_i = q$ so we may write $L_C(t) = q^g\prod_i (1-\frac{\alpha_i }{q}t)$ then
+    \[\log(L_C(t)/q^g) = -\sum_i \sum_{n=1}^\infty \frac{\alpha_i^n t^n}{q^n n}  = \sum_{n=1}^\infty -\left(\sum_i \alpha_i^n\right) \frac{t^n}{q^n n}\]
+    so \(\log(L_C(qt)/q^g)\) almost knows the point counts\pause, if we define:
+
+    \begin{definition}
+        The (Hasse-Weil) zeta function of $C/\FF_q$ is
+        \[ Z(C, t) \coloneqq \exp\left(\sum_{i=1}^\infty \#C(\FF_{q^i}) \frac{t^i}{i}\right) \]
+    \pause
+    And we have that \[Z(C,t) = \frac{q^{-g}L_C(qt)}{(1-t)(1-qt)}\text.\]
+    \end{definition}
+\end{frame}
+
+\begin{frame}{Why bother?}
+    \textbf{Reverse engineering:}
+    Find point counts!
+
+    If we have a way to find the zeta function we can get the point counts in a more sophisticated way.\pause
+
+    In fact if \(J =\operatorname{Jac}(C)\) the Jacobian (i.e.\ the class group of \(C\))
+    \[ L_C(1) = \# J(\FF_q)\]
+
+    We can tell a lot about the Jacobian from this number!\pause
+
+    \begin{example}[A completely random example, I promise]
+        \[C \colon y^2 = x^5 + 6x^2 + x + 3/\FF_{43}\]
+        \[L_C(t) = t^4 + 9t^3 + 64t^2 + 387t + 1849\]
+        \[ \implies\#J(\FF_{43}) = L_C(1) = 2310 = 2 \cdot 3 \cdot 5 \cdot 7 \cdot 11\]
+        so \(J(\FF_{43}) = C_{2 \cdot 3 \cdot 5 \cdot 7 \cdot 11}\).  \pause
+        So never use this curve for cryptography!!
+    \end{example}
+\end{frame}
+
+\begin{frame}{Distributional questions - Sato-Tate}
+    Let $C/\QQ$ be a genus $g$ curve. We can reduce mod $p$ for all primes $p$ of good reduction, get a polynomial $L_{C_{\FF_p}}(t)$ for all these $p$. \pause
+    If we \emph{normalise} to have all roots of complex norm 1 we get
+    \[\widetilde L_{C_{\FF_p}}(t) = L_{C_{\FF_p}}\left(\sqrt{p} t\right)\text,\]
+    a unitary symplectic polynomial, i.e.\ the characteristic polynomial of a unitary symplectic matrix.\pause
+
+    So we get a map
+    \[\text{good primes} \to \operatorname{Conj}(\USp(2g))\]
+    the RHS has a Haar measure coming from $\USp(2g)$\pause
+
+    How is the image distributed as $p\to \infty$?
+\end{frame}
+
+\begin{frame}{Genus 1}
+    %\transduration<0-30>{0}
+    \[y^2 = x^3 + x+ 1 \qquad y^2 =x^3 + 1\]
+    \multiinclude[<+->][format=png, graphics={width=\textwidth}]{img/g1}
+    Pictures due to Drew Sutherland.
+    \pause
+    Left is a generic elliptic curve, the right has CM (over $\QQ$).
+    \pause
+    By computing enough zeta functions we can \emph{see} the endomorphism algebra of our curve.
+\end{frame}
+
+\begin{frame}{Genus 2}
+    %\transduration<0-30>{0}
+    \[y^2 = x^5 - x + 1 \qquad y^2 =x^6 + 2\]
+    \multiinclude[<+->][format=png, graphics={width=\textwidth}]{img/g2}
+    Pictures due to Drew Sutherland.
+    \pause
+    Left is a generic genus 2 curve, the right has $\End(\operatorname{Jac}(C)_{\overline{\QQ}})\otimes \RR = \Mat_2(\CC)$.
+    \pause
+    After the work of Fit\'e-Kedlaya-Rotger-Sutherland we can recognise these distributions and guess the structure of the Jacobian, the right one should be square of a CM elliptic curve.
+\end{frame}
+
+\begin{frame}{Relations}
+    Let
+    \[ C_1 \colon y^2 + y = x^3 + x/\FF_2,\, C_2 \colon y^2 + y = x^5 + x/\FF_2\]\pause
+    then
+    \[ L_{C_1}(t) = t^2 + 2t + 2 ,\,L_{C_2} = ( t^2 + 2t + 2)(t^2 + 2)\]
+    what does this tell us?\pause
+
+    \begin{theorem}[Kleiman, Serre]
+        If there is a morphism of curves \(C\to D\) over \(\FF_q\) then
+        \[L_D(t) | L_C(t)\]
+    \end{theorem} \pause
+
+    In our example we have a map
+    \[(x,y) \mapsto (x^2 + x, y + x^3 + x^2)\text.\]
+
+\end{frame}
+
+\begin{frame}{Relations again}
+    The converse is false!
+    \[ D_1 \colon y^2 + xy = x^5 + x/\FF_2,\, D_2 \colon y^2 + xy = x^7 + x/\FF_2\]\pause
+    where
+    \[ L_{D_1}(t) = t^4 + t^3 + 2t + 4 ,\,L_{D_2} = ( t^4 + t^3 + 2t + 4 )(t^2 + 2)\]
+    but no map exists!
+\end{frame}
+
+
+\begin{frame}{How to compute?}
+    \textbf{Reverse reverse engineering:}
+    Count points for a few $n$ ($n\le g$ is sufficient), recover $L_C(t)$.  \pause
+    This can take a long time! \pause
+
+    \textbf{$p$-adic cohomology:}
+    A method due to Kedlaya relates $L_C(t)$ to $p$-adic cohomology.
+    $L_C(t)$ is the characteristic polynomial of ``Frobenius'' acting on ``$H^1_{MW}(\tilde C)$''.
+    If we can compute this action (as a matrix) we win!
+    \pause
+
+    \textbf{Average time:}
+    Harvey-Sutherland have an approach to compute $L_{C_{\FF_p}}(t)$ for a curve over $\QQ$ for all $p \lt N$ at once!
+    This works out faster on average.
+\end{frame}
+
+\begin{frame}{Monsky-Washnitzer cohomology in general}
+    Let $C /\FF_q$ be an (odd) hyperelliptic curve. \pause
+
+    First choose a lift $\tilde C/\ZZ_q$ and an affine open $U = \Spec(A) \subseteq C$.
+    And a lift of the $q$-power Frobenius on \(\overline A= A/pA\) to \(\phi\colon A^\dagger \to A^\dagger\).
+
+    Now the weak completion $A^\dagger$ is the set of $p$-adic power series on $U$ that $p$-adically overconverge.
+
+    We have differentials \(\Omega_{A^\dagger}^1\) and a derivative i\(\diff \colon A^\dagger \to \Omega^1_{A^\dagger}\)
+    %We will say that \(f\) is a \terminology{primitive} of the exact differential \(\diff f\).
+    \[H^1_{\mathrm{MW}}(\overline A) = \Omega^1_{A^\dagger}\otimes \QQ_p/\diff(A^\dagger\otimes \QQ_p)\]
+
+
+\end{frame}
+
+\begin{frame}{Monsky-Washnitzer cohomology (for hyperelliptic curves)}
+    Let $C \colon y^2 = \overline Q(x)/\FF_q$ be an (odd) hyperelliptic curve. \pause
+
+    First choose a lift $\tilde C \colon y^2 = Q(x)/\ZZ_q$. \pause
+
+    The affine coordinate ring of the punctured curve is \[A = \ZZ_p[x,y,y^{-1}]/(y^2 - Q(x))\]\pause
+    \[A^\dagger =  \left\{ \sum_{i = -\infty}^\infty R_i(x)y^{-i} : R_i \in \ZZ_p[x]_{\deg \le 2g}\text{ where }\liminf_{|i| \to \infty} v_p(R_i)/|i| \gt 0\right\}\]\pause
+
+    The \(q\)-power Frobenius on \(A/pA\)  can be lifted to \(\phi\colon A^\dagger \to A^\dagger\)
+    \begin{align*}
+        x \amp\mapsto x^p\\
+        y \amp\mapsto y^{-p}\sum_{k=0}^{\infty}\binom{-1/2}{k}(\phi(Q(x)) - Q(x)^p)^k /y^{2pk}\text.
+    \end{align*}
+\end{frame}
+
+\begin{frame}{Monsky-Washnitzer cohomology (for hyperelliptic curves)}
+
+    \[ \Omega _{A^\dagger} = A^\dagger \diff x \oplus A^\dagger \diff y/(2y\diff y - Q'(x)\diff x))\]
+
+
+    \begin{align*}
+        \diff \colon A^\dagger \amp\to \Omega^1_{A^\dagger}\\ \sum_{i=-\infty}^\infty \frac{R_i(x)}{y^i} \amp\mapsto \sum_{i=-\infty}^\infty R'_i(x) y^{-i}\diff x-R_i(x) iy^{-i-1} \diff y\text{.}\label{eqn-exterior-d}
+    \end{align*}
+
+    %The action of Frobenius and of the hyperelliptic involution can be extended to \(\Omega^1_{A^\dagger}\) and to \(H^1_{\mathrm{MW}}(\overline A)\) and the actions of \(\phi\) and \(\iota\) commute. In particular we have an eigenspace decomposition of all of these spaces under \(\iota\) into \terminology{even} and \terminology{odd} parts; the odd part will be denoted with a \(-\) superscript. Let  \(A_\mathrm{loc}(X)\) denote the \(\QQ_p\)-valued functions on \(X(\QQ_p)\) which are given by a power series on each residue disk.%
+\end{frame}
+
+\begin{frame}{Reductions in cohomology}
+    \(\{\omega_i  = x^i\diff x/y\}_{i=1,\ldots, 2g}\) are a basis for $H^1_{MW}(C)$ and for each $i$
+    we get an expansion
+    \[\phi^* \omega_i \equiv\sum_{j=0}^{N-1} \sum_{r=0}^{(2g+1)j} B_{j,r} x^{p(i+r+1) - 1}y^{-p(2j+1) + 1} \frac{\diff x}{2y}\pmod{p^N}\]\pause
+    We need to write this in the form
+    \[\phi^* \omega_i \equiv \sum_{j=1}^{2g} a_{ij} \omega_j  - \diff(f_i)\pmod{p^N}\]\pause
+    to do this we iteratively use relations like
+    \begin{align*}
+        \diff(x^s y^{-2t + 1}) = \amp\left(2s - (2t - 1 ) (2g+1)  \right)x^{2g+1} x^{s-1} y^{-2t}\frac{\diff x}{2y} \\
+    \amp+ \left(2sP(x) - (2t - 1 )xP'(x) \right) x^{s-1} y^{-2t}\frac{\diff x}{2y}\text{.}\end{align*}
+    to reduce the exponents of monomials appearing in the expansion.
+\end{frame}
+
+\begin{frame}{Reductions in cohomology}
+    We  end up with
+    \[\phi^* \omega_i \equiv \sum_{j=1}^{2g} a_{ij} \omega_j  - \diff(f_i)\pmod{p^N}\]\pause
+    The $L$-polynomial is then the characteristic polynomial of the matrix $F = (a_{ij})_{i,j}$.
+\end{frame}
+
+\begin{frame}{Interlude: Computing things quickly - a silly example}
+    Suppose we want to evaluate $N!$ for $N$ large, how many ring operations does this take? \pause
+    Naively: $N$ operations, but we can break up the product into chunks by 
+    %\[ N ! = 1 \cdot 2 \cdot \cdots \cdot \left\lfloor N/2\right\rfloor \cdot (\left\lfloor N/2\right\rfloor   + 1)\cdot\cdots \cdot (N-1) \cdot N\]
+    dividing into products of length $\sqrt[4]{N}$ (so $\sqrt[4]{N}^3$ subproducts in total)
+    \[ N! = P(0)\cdot P(\sqrt{N})\cdot P(2\sqrt{N})\cdots P((\sqrt{N} - 1)\sqrt N) \]
+    where
+    \[P(x) = (x + 1)(x+2) \cdots (x+\sqrt[4]{N})\]\pause
+    once we compute $\sqrt[4]{N}$ of these $P(i)$ (for $i = 0, \ldots, \sqrt[4]{N}$) in $\sqrt{N}$ steps we have a degree $\sqrt[4]{N}$ polynomial evaluated at $\sqrt[4]{N}$ points. If you know a (monic) degree $n$ polynomial at $n$ points, you know the polynomial! $\leadsto$ interpolate to find other values
+\end{frame}
+
+\begin{frame}{Interlude: Computing things quickly - Fancy version}
+    In general if we have $M(t)\in \Mat_{n\times n}(R[t])$ a matrix with linear polynomials as coefficients.
+    We can evaluate lots of products
+    \begin{align*}\amp M(0) M(1) \cdots M(k-1),\\\amp M(k) M(k+1) \cdots M(2k-1),\\\amp\vdots\\\amp M((m-1)k) M((m-1)k+1) \cdots M(mk - 1)\end{align*}\pause
+    quickly in practice! (Bostan-Gaudry-Schost,Harvey)\pause
+
+    Using this we can reduce quickly and compute $L_C(t)$ in time roughly $\sqrt p$ (Harvey).
+
+    With Arul, Costa, Magner, Triantafillou we can do this for general cyclic covers $y^a = f(x)$.
+\end{frame}
+
+\begin{frame}{Part II - Coleman integrals}
+    Take \(C/\ZZ_p\) a genus \(g\) curve and \(p\) an odd prime.
+    \begin{theorem}[{Coleman}]
+        There is a \(\QQ_p\)-linear map \(\int_b^x\colon \Omega_{A^\dagger}^1\otimes \QQ_p \to A_\mathrm{loc} (X)\) for which:
+        \begin{align*}
+            \diff \circ \int_b^x \amp= (\mathrm{id}\colon \Omega_{A^\dagger}^1\otimes \QQ_p \to \Omega_{\text{loc}}^1)\,\quad\text{``FTC''}\\
+            \int_b^x\circ\diff \amp = (\mathrm{id}\colon A^\dagger \hookrightarrow A_{\mathrm{loc}})\\
+        \int_b^x \phi^*\omega \amp= \phi^*\int_b^x \omega\,\quad\text{``Frobenius equivariance''}
+        \end{align*}
+    \end{theorem}\pause
+    Locally we can integrate power series formally.\pause
+
+    To integrate between far away points we use Frobenius equivariance.
+\end{frame}
+
+\begin{frame}{Frobenius equivariance}
+    Switch to an odd hyperelliptic curve now, some manipulation with the set of all $\int_P^\infty\omega_i$ gives:
+    \begin{equation*}
+        \left(\begin{smallmatrix} \vdots \\ \int_{P}^\infty \omega_i \\\vdots \end{smallmatrix}\right) = (F - I)^{-1} \left(\begin{smallmatrix}\vdots \\ f_i(P) \\ \vdots \end{smallmatrix}\right)
+    \end{equation*}
+    where from earlier
+    \[\phi^* \omega_i \equiv \sum_{j=1}^{2g} M_{ij} \omega_j  - \diff f_i\]
+\end{frame}
+
+\begin{frame}{Effective Chabauty}
+    One consequence of Coleman's work we saw earlier is
+    \begin{theorem}[Coleman's effective Chabauty]
+        Let $C/\QQ$ be a curve of genus $g$. If $\operatorname{rank}J(C)(\QQ)\lt g$ and $p\gt 2$ is a prime of good reduction for $C$ then
+        \[\#C(\QQ) \le \# C_p(\FF_p) + 2g-2\text.\]
+    \end{theorem}
+\end{frame}
+
+\begin{frame}{Explicit Chabauty}
+    Given an individual curve we can often compute $X(\QQ)$ by explicitly evaluating enough of these integrals.\pause
+
+    More generally via non-abelian Chabauty we can approach more curves, \pause this requires computing iterated Coleman integrals.
+
+    \[X_s(13)\] \pause
+
+    or
+
+    \[X_0(67)^+\text{ and friends}?\]
+
+\end{frame}
+
+\begin{frame}{A fun converse}
+    Thinking about effective Chabauty backwards: if we have a lot of $\QQ$-points and few $\FF_p$ points, the Jacobian must have large rank!
+
+    \begin{example}
+        To force a curve to have many $\QQ$ points and few $\FF_7$ points, let
+        \[ C\colon y^2 = x(x-7)(x-14)(x+ 7)(x+14) + 1\]\pause
+        this has a bunch of rational points $(7n, \pm 1)$ for $n =-2,-1,0,1,2$ (and $\infty$ so $\ge11$ in all), but these give the same $\FF_7$ points $(0,\pm1)$.
+        In fact
+        \(\#C(\FF_7) = 8\)
+        so we fail the Coleman bound as
+        \[ 11 \le 8 + 2g - 2= 10\]
+        so we must have $\operatorname{rank} \operatorname{Jac}(C)(\QQ) \ge g =2$.
+        (Magma tells me $\operatorname{rank} \operatorname{Jac}(C)(\QQ) = 5$ in fact!)
+    \end{example}
+\end{frame}
+
+\begin{frame}{More generally}
+    In fact Coleman showed:
+    \begin{corollary}[Coleman]
+        Let $k\in \ZZ$, $p\nmid k$ prime and $f(x)/\ZZ$ monic with $f(x) \equiv x^k \pmod p$ and $\lfloor (k+1)/2 \rfloor$ roots over $\ZZ$ then the rank of the Jacobian of
+        \[y^2  = f(x) + 1\]
+        is at least the genus (which is $\lfloor (k-1)/2\rfloor$)
+    \end{corollary}\pause
+
+    The proof is a little more serious than our example above, it shows that the points $(\alpha_i, 1)$ where $\alpha_i$ are roots of $f$ are actually linearly independent in the Jacobian.
+\end{frame}
+
+\begin{frame}{Fast Coleman}
+    Recall to compute a Coleman integral we need to find
+    \begin{equation*}
+        F, \{f_i(P)\}_i
+    \end{equation*}\pause
+    we can coerce the evaluation of $f_i(P)$ into a linear recurrence and apply Bostan-Gaudry-Schost!
+\end{frame}
+
+\begin{frame}{Generalities}
+    Coleman integration can be more general, Coleman de Shallit define:
+    \[
+        r_C \colon K_2(\overline k(C))  \to \Hom (H^0(C, \Omega_{C/\overline k}^1), \overline k)\text{.}
+    \]
+    \begin{equation*}
+        r(f,g)(\omega) = -\int_{(g)} \log(f) \in \overline k
+    \end{equation*}
+
+\end{frame}
+
+\begin{frame}{Where next?}
+    \begin{itemize}
+        \item Coleman integration quickly on general curves
+        \item Coleman integration for many primes at once?
+        \item Distribution?
+    \end{itemize}
+\end{frame}
+%\begin{frame}{Stoll's sharpening}
+%    Michael Stoll has shown that in fact assuming that $\operatorname{rank}(J) = r\lt g$ and that $p \gt 2r +2$ we have
+%    \[ \#C(\QQ) \le \#C(\FF_p) + 2r\text.\]\pause
+
+%    We can reverse this too!
+%    \begin{example}
+%        \[ C\colon y^2 = \prod_{i =0}^6 (x - 13i)+ 1\]\pause
+%        has $\#C(\FF_{13}) = 14$ and at least $15$ rational points.
+
+%    \end{example}
+
+%\end{frame}
+
+
+\end{document}
