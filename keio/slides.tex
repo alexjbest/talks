@@ -233,7 +233,7 @@ sensitive=true}
 \end{wrapfigure}
 
 \visible<3->{
-    E.g. near a point $\alpha $:
+    For instance near a point $\alpha $:
 \[\omega=\frac{\mathrm{d}(\alpha+x)}{\alpha+x}=\frac{\mathrm{d} x}{\alpha+x}=\frac{1}{\alpha} \sum\left(\frac{-x}{\alpha}\right)^{n} \mathrm{d} x\]}
 
 
@@ -250,14 +250,14 @@ sensitive=true}
 
 \begin{frame}{Coleman integration: More problems}
     Now we have functions
-    \[\mathrm{T}=\mathrm{K}\left\langle t\right\rangle=\left\{\sum a_{\mathrm{i}} t^{\mathrm{i}} ; a_{\mathrm{i}} \in \mathrm{K}, \lim _{\mathrm{i} \rightarrow \infty}\left|a_{\mathrm{i}}\right|=0\right\}\]
+    \[\mathrm{K}\left\langle t\right\rangle=\left\{\sum a_{\mathrm{i}} t^{\mathrm{i}} ; a_{\mathrm{i}} \in \mathrm{K}, \lim _{\mathrm{i} \rightarrow \infty}\left|a_{\mathrm{i}}\right|=0\right\}\]
     and
     \[\diff \colon T \to \Omega ^1_{T}\]
     and our integral map should send
     \[ \sum a_{i} t^{i+1}\mapsto\sum \frac{a_{i}}{i+1} t^{i+1} \]
-    but
+    but\pause
     \[\frac{a_i}{i+1}\]
-    may not converge to 0.
+    may not converge to 0.  \pause
 
     So instead we work with a subring of \emph{overconvergent} functions
     \[\mathcal{T}^{\dagger}=\left\{\sum a_{\mathrm{i}} t^{\mathrm{i}} ; a_{\mathrm{i}} \in K, \exists r>1 \text { such that } \lim _{\mathrm{i} \rightarrow \infty}\left|a_{\mathrm{i}}\right| r^{\mathrm{i}}=0\right\}\text.\]
@@ -297,9 +297,9 @@ sensitive=true}
 
 \begin{frame}[fragile]{Computing polylogarithms}
 
-    Besser and de Jeu have given a complete algorithm to compute these functions, and this is now implemented in SageMath.
+    Besser and de Jeu have given a complete algorithm to compute these functions, and this is now implemented in SageMath.\pause
 
-    For instance in Sage we can check relations among polylogarithms
+    For instance we can check relations among polylogarithms
 \begin{programbox}[language=Sage]
 sage: K = Qp(7, prec=30)
 sage: x = K(1/3)
@@ -348,7 +348,7 @@ sage: (x^2).polylog(4) - 8*x.polylog(4) - 8*(-x).polylog(4)
 
     \begin{equation*}
         \implies \qquad
-        \left(\begin{smallmatrix} \vdots \\ \int_{\phi(b)}^{\phi(P)} \omega_i \\\vdots \end{smallmatrix}\right) = (M - I)^{-1} \left(\begin{smallmatrix}\vdots \\ f_i(P) - f_i(b) \\ \vdots \end{smallmatrix}\right)
+        \left(\begin{smallmatrix} \vdots \\ \int_{b}^{P} \omega_i \\\vdots \end{smallmatrix}\right) = (M - I)^{-1} \left(\begin{smallmatrix}\vdots \\ f_i(P) - f_i(b) \\ \vdots \end{smallmatrix}\right) \text{ if }b = \phi(b),\,P = \phi(P)
     \end{equation*}\pause
     Every point $P\in U$ is close to one fixed by Frobenius, so we can use the above and local integration to find integrals between points of $U$.\pause
 
@@ -390,35 +390,29 @@ sage: (x^2).polylog(4) - 8*x.polylog(4) - 8*(-x).polylog(4)
 \begin{frame}{Motivating question}
     Can $p$-adic algorithms for computing zeta functions be turned into algorithms for computing Coleman integrals? \pause
 
-    For instance Harvey and Minzlaff have introduced variants of Kedlaya's algorithm for hyper- and super-elliptic curves that works well when $p$ is large!
+    For instance Harvey and Minzlaff have introduced variants of Kedlaya's algorithm for hyper- and super-elliptic curves that works well when $p$ is large!\pause
 
     They use interpolation to reduce the work when reducing
     \[\phi^* \omega_j \leadsto \sum M_{ij} \omega_j\]
-    not clear where the functions $f_i$ went.
+    but its not clear where the functions $f_i$ went.
 
-    Key to the interpolation is the fact that reductions in cohomology are linear in the exponents of $x,y$.
+    Key to their interpolation is the fact that reductions in cohomology are linear in the exponents of $x,y$.
 
-    \emph{Surprising consequence:} Evaluation is faster than writing the function down!
 
-    Balakrishnan-Tuitman have an alternative approach for general curves based on work of Tuitman for computing zeta functions.
 
 \end{frame}
 
 
 
 \begin{frame}{Superelliptic curves}
+    We can write down a similar recurrence that evaluates the exact forms also, using 
+    \[\left(\sum_{i = t}^N a_i x^i\right)= ((\cdots ((a_N)x + a_{N-1})x  + \cdots)x + a_0)\]
     \begin{theorem}[B.]
         Let \vspace{-13pt} $$ C/\ZZ_{p^n}\colon y^a = h(x)$$
         with $ \gcd(a,\deg(h)) = 1$, $ p\nmid a$, Let $ M$ be the matrix of Frobenius, acting on  $ H^1_\mathrm{dR}(C)$, basis $ {\{\omega_{i,j}= x^i\diff x /y^j\}}_{i=0,\ldots, b-2,j=1,\ldots,a}$, and points $ P,Q\in C(\QQ_{p^n})$ known to precision $ p^N$, if $ p \gt (aN - 1)b$, the vector of Coleman integrals $\left(\int_P^Q \omega_{i,j}\right)_{i,j}$ can be computed in time \vspace{-13pt}
         $$ \widetilde O\left(g^3 \sqrt{p}n N^{5/2} + N^4 g^4 n^2 \log p \right)$$
         to absolute precision  $ N - v_p(\det(M-I))$.
     \end{theorem}
-
-    \pause%
-    By integrating invariant differentials we can check/guess linear relations between points on the Jacobian of this superelliptic curve. \pause
-
-    Speed of this algorithm may lend itself to answering distributional questions?
-
 \end{frame}
 
 
