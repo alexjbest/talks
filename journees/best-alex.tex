@@ -1,0 +1,78 @@
+\documentclass[12pt]{amsart}
+
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{epsfig}
+\usepackage{amsfonts}
+\usepackage{amscd}
+\usepackage{mathrsfs}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{cor}[theorem]{Corollary}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{conj}[theorem]{Conjecture}
+\newtheorem{defn}[theorem]{Definition}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%   PLEASE DO NOT EDIT ABOVE THIS LINE   %%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{Explicit computation with Coleman integrals and applications}
+
+\author{Alex J. Best (*)}
+\address{Boston University}
+\email{alexbest@bu.edu}
+
+\subjclass[2010]{Primary 11G20; Secondary 11Y16, 14F30}
+
+\keywords{Coleman integration, superelliptic curves, Kedlaya's algorithm}
+
+\date{May 2019}
+
+\begin{abstract}
+\noindent
+
+
+Coleman integration is a \(p\)-adic integration theory that provides a
+way integrate 1-forms on curves over \(p\)-adic fields \cite{bib-coleman-torsion}. The applications
+of this theory to arithmetic questions are varied, but include
+definitions of \(p\)-adic polylogarithms, explicit determination of
+rational points and torsion points on curves, and the computation of
+regulator maps in \(K\)-theory.
+
+We will discuss the problem of computing these integrals in practice for
+special classes of interesting curves, such as hyperelliptic or superelliptic curves. Via Monsky-Washnitzer cohomology
+this problem is related to that of computing zeta functions of curves
+over finite fields \cite{bib-balakrishnan-bradshaw-kedlaya}. One can try to extend methods for computing the zeta
+function to also compute Coleman integrals. Several algorithms
+can be developed for Coleman integration in this way \cite{bib-best-coleman-harvey,bib-best-super} with advantages and disadvantages of each. We will also mention work
+in progress to use such computations as part of quadratic Chabauty to
+determine all rational points on interesting modular curves (as pioneered in \cite{bib-balakrishnan-dogra-muller-tuitman-vonk}), in cases
+that were as far as we know previously undetermined.
+\end{abstract}
+
+\maketitle
+
+\bibliographystyle{amsplain}
+\begin{thebibliography}{normalsize}
+
+\bibitem{bib-balakrishnan-bradshaw-kedlaya}Balakrishnan, Jennifer S., Robert W. Bradshaw, and Kiran S. Kedlaya. \textit{Explicit Coleman Integration for Hyperelliptic Curves}. In ANTS-IX 2010, LNCS 6197, pp. 16-31, 2010.
+\bibitem{bib-balakrishnan-dogra-muller-tuitman-vonk}Balakrishnan, Jennifer S., Netan Dogra, J. Steffen Müller, Jan Tuitman, and Jan Vonk. \textit{Explicit Chabauty-Kim for the Split Cartan Modular Curve of Level 13}. Annals of Mathematics Vol. 189, No. 3 (May 2019), pp. 885-944.
+\bibitem{bib-best-coleman-harvey}Best, Alex J. \textit{Explicit Coleman integration in larger characteristic}. Proceedings of the Thirteenth Algorithmic Number Theory Symposium, The Open Book Series, 2(1), 85-102, 2019.
+\bibitem{bib-best-super}Best, Alex J. \textit{Quadratic time Coleman integration on superelliptic curves}. In preparation.
+\bibitem{bib-coleman-torsion}Coleman, Robert F.  \textit{Torsion points on curves and p-adic abelian integrals.} Annals of Mathematics 121.1 (1985): 111-168.
+
+\end{thebibliography}
+
+
+\end{document}
