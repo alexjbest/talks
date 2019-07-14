@@ -1,0 +1,162 @@
+%\documentclass[notheorems]{beamer}
+%\documentclass[handout]{beamer}
+%\documentclass[handout,notes=show]{beamer}
+
+\usetheme{metropolis}
+%\usecolortheme{dolphin}
+% No navigation bars
+\beamertemplatenavigationsymbolsempty
+
+\usepackage{amsmath, amssymb, amsfonts, tikz}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{mathtools}
+\usepackage{xmpmulti}
+
+\setsansfont[
+    Extension      = .otf,
+    UprightFont    = *-Light,
+    ItalicFont     = *-LightItalic,
+    BoldFont       = *-Regular,
+    BoldItalicFont = *-RegularItalic
+]{FiraSans}
+\setmonofont[
+    Extension   = .otf,
+    UprightFont = *-Regular,
+    BoldFont    = *-Medium
+]{FiraMono}
+
+\definecolor{Purple}{HTML}{911146}
+\definecolor{Orange}{HTML}{CF4A30}
+\definecolor{Tan}{RGB}{225,221,191}
+\definecolor{Green}{RGB}{76,131,122}
+\definecolor{DB}{RGB}{4,37,58}
+
+% Theme colors are derived from these two elements
+\setbeamercolor{alerted text}{fg=Green}
+
+% ... however you can of course override styles of all elements
+\setbeamercolor{frametitle}{bg=Tan,fg=DB}
+
+\metroset{titleformat=smallcaps}
+
+
+\usepackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{conjecture}[theorem]{Conjecture}
+%% Definition-like environments, normal text
+%% Numbering is in sync with theorems, etc
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+%% Remark-like environments, normal text
+%% Numbering is in sync with theorems, etc
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+%% Example-like environments, normal text
+%% Numbering is in sync with theorems, etc
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{question}[theorem]{Question}
+\newcommand{\terminology}[1]{\textbf{#1}}
+
+\newcommand{\NN}{\mathbf{N}}
+\newcommand{\ZZ}{\mathbf{Z}}
+\newcommand{\QQ}{\mathbf Q}
+\newcommand{\CC}{\mathbf C}
+\newcommand{\RR}{\mathbf R}
+\newcommand{\FF}{\mathbf F}
+\newcommand{\lt}{<}
+\newcommand{\gt}{>}
+\newcommand{\amp}{&}
+\newcommand{\diff}{\mathop{}\!\mathrm{d}}
+\newcommand{\ints}{\mathcal{O}}
+\newcommand{\ideal}[1]{\mathfrak{#1}}
+\usepackage{mathrsfs}\usepackage{cancel}
+\newcommand{\Gal}[2]{\operatorname{Gal}(#1/#2)}
+\newcommand{\absgal}[1]{\operatorname{Gal}(\overline{#1}/#1)}
+\DeclareMathOperator{\USp}{USp}
+\DeclareMathOperator{\Spec}{Spec}
+
+\newcommand{\sheaf}[1]{\operatorname{\mathcal{#1}}}
+\newcommand{\inv}{^{-1}}
+\DeclareMathOperator{\norm}{Nm}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\divisor}{div}
+\DeclareMathOperator{\PP}{\mathbf{P}}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\Mat}{Mat}
+\DeclareMathOperator{\End}{End}
+
+\newcommand{\lb}{[}
+\newcommand{\rb}{]}
+
+\setbeamerfont*{subtitle}{size=\small,shape=\scshape}
+
+\author{Alex J. Best}
+\institute{Boston University}
+\date{4/6/2019}
+\title{Computing Coleman integrals on superelliptic curves}
+\subtitle{Arithmetic of low dimensional abelian varieties -- ICERM}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+
+  \note[item]{Thank the audience for being awake.}
+\end{frame}
+
+%\begin{frame}
+%\frametitle{Table of Contents}
+%\tableofcontents[currentsection]
+%\end{frame}
+
+
+\begin{frame}{Background}
+    \alert{Coleman integration} is a $p$-adic integration theory that may be applied to integrate 1-forms on curves.
+
+    \pause%
+    Fix a curve $C/\ZZ_{p^n}$ with good reduction, a point $b\in C$, and $A$ the ring of (overconvergent) functions on $C$, defines $\int_b\colon \Omega^{1}_{A} \to A$,
+    satisfying the usual properties (fundamental theorem of calculus, linearity, additivity in endpoints).
+
+    \pause Many applications; finding rational points (Chabauty-Coleman(-Kim)), verifying torsion points on Jacobians of curves, defining regulators and period maps, \ldots
+
+
+    \pause Since the work of Balakrishnan-Bradshaw-Kedlaya, we can compute Coleman integrals of $\{x^i\diff x/y\}_{i=0}^{2g-1}$ on hyperelliptic curves.
+
+    \pause This algorithm took time proportional to $p$, as have extensions.
+
+\end{frame}
+
+\begin{frame}{Superelliptic curves and their Jacobians}
+    \begin{theorem}
+        Let \vspace{-13pt} $$ C/\ZZ_{p^n}\colon y^a = h(x)$$
+        with $ \gcd(a,\deg(h)) = 1$, $ p\nmid a$, Let $ M$ be the matrix of Frobenius, acting on  $ H^1_\mathrm{dR}(C)$, basis $ {\{\omega_{i,j}= x^i\diff x /y^j\}}_{i=0,\ldots, b-2,j=1,\ldots,a}$, and points $ P,Q\in C(\QQ_{p^n})$ known to precision $ p^N$, if $ p \gt (aN - 1)b$, the vector of Coleman integrals $\left(\int_P^Q \omega_{i,j}\right)_{i,j}$ can be computed in time \vspace{-13pt}
+        $$ \widetilde O\left(g^3 \sqrt{p}n N^{5/2} + N^4 g^4 n^2 \log p \right)$$
+        to absolute precision  $ N - v_p(\det(M-I))$.
+    \end{theorem}
+
+    \pause%
+    By integrating invariant differentials we can check/guess linear relations between points on the Jacobian of this superelliptic curve. \pause
+
+    Speed of this algorithm may lend itself to answering distributional questions?
+
+\end{frame}
+
+
+%\begin{frame}{}
+%In this lightning talk we discuss recent work to develop algorithms to compute these integrals specifically on superelliptic curves.
+%This technique provides a quick way to find and verify torsion points on the Jacobians of such curves.
+%\end{frame}
+
+\end{document}
