@@ -18,4 +18,4 @@ clean:
 	rm -f *.aux
 	rm -f *.fdb_latexmk
 
-.PHONY:	clean
+.PHONY:	clean all
