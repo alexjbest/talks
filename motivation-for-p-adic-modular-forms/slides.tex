@@ -1,0 +1,154 @@
+%\documentclass[notheorems]{beamer}
+%\documentclass[handout]{beamer}
+%\documentclass[handout,notes=show]{beamer}
+
+\usetheme{metropolis}
+%\usecolortheme{dolphin}
+% No navigation bars
+\beamertemplatenavigationsymbolsempty
+
+\usepackage{amsmath, amssymb, amsfonts, tikz}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+
+\usepackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{conjecture}[theorem]{Conjecture}
+%% Definition-like environments, normal text
+%% Numbering is in sync with theorems, etc
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+%% Remark-like environments, normal text
+%% Numbering is in sync with theorems, etc
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Observation}
+%% Example-like environments, normal text
+%% Numbering is in sync with theorems, etc
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{question}[theorem]{Question}
+\newcommand{\terminology}[1]{\textbf{#1}}
+
+\newcommand{\NN}{\mathbf{N}}
+\newcommand{\ZZ}{\mathbf{Z}}
+\newcommand{\QQ}{\mathbf Q}
+\newcommand{\CC}{\mathbf C}
+\newcommand{\RR}{\mathbf R}
+\newcommand{\FF}{\mathbf F}
+\newcommand{\dR}{\mathrm{dR}}
+\newcommand{\lt}{<}
+\newcommand{\gt}{>}
+\newcommand{\amp}{&}
+\newcommand{\diff}{\mathop{}\!\mathrm{d}}
+\newcommand{\ints}{\mathcal{O}}
+\newcommand{\ideal}[1]{\mathfrak{#1}}
+\usepackage{mathrsfs}\usepackage{cancel}
+\newcommand{\Gal}[2]{\operatorname{Gal}(#1/#2)}
+\newcommand{\absgal}[1]{\operatorname{Gal}(\overline{#1}/#1)}
+
+\newcommand{\sheaf}[1]{\operatorname{\mathcal{#1}}}
+\newcommand{\inv}{^{-1}}
+\DeclareMathOperator{\norm}{Nm}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\divisor}{div}
+\DeclareMathOperator{\PP}{\mathbf{P}}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\coker}{coker}
+
+\newcommand{\lb}{[}
+\newcommand{\rb}{]}
+
+\author{Alex J. Best}
+\institute{STAGE}
+\date{18/3/2020}
+\title{Motivation for $p$-adic modular forms}
+\setbeamertemplate{footline}[text line]
+{\url{https://alexjbest.github.io/talks/motivation-for-p-adic-modular-forms/slides_h.pdf}}
+\begin{document}
+
+\begin{frame}
+  \titlepage
+
+  \note[item]{Thank the audience for attending remotely in times of Covid.}
+\end{frame}
+
+%\begin{frame}
+%\frametitle{Table of Contents}
+%\tableofcontents[currentsection]
+%\end{frame}
+
+\begin{frame}{Overview}
+    These slides are availiable online (in handout form) at
+
+    \begin{centering}
+        \url{https://alexjbest.github.io/talks/motivation-for-p-adic-modular-forms/slides_h.pdf}
+    \end{centering} \note{to read along check back definitions, link will be at the bottom of all slides, pls no skip}\pause
+
+    \textbf{Goal:} Introduce, post hoc, motivation for Katz's definition of $p$-adic modular forms, especially to motivate Serre's $\partial$ operator.
+
+\end{frame}
+
+\begin{frame}{Recall}
+    A \emph{modular form} of weight $k$ is a function
+    \[f\colon \{(E \xrightarrow \pi R\text{ an ell.\ curve}, \omega\in \Gamma(E, \Omega^1_{E/R})\text{ nowhere vanishing})\}\to R\] \pause
+    s.t.
+    \begin{enumerate}
+        \item \(\forall \lambda\in R\units,  f(E, \lambda \omega) = \lambda ^{-k} f(E, \omega)\)g
+        \item \(f(E, \omega)\) is isomorphism invariant.
+        \item \(f\) is functorial w.r.t. $R$.
+    \end{enumerate} \pause
+    we then have
+    \[f(E, \omega) \cdot \omega^{\otimes k} \in \Gamma(R, {\underbrace{\pi_*(\Omega^1_{E/R})}_{\underline \omega_{E/R}}}^{\otimes k})\]
+
+\end{frame}
+
+\begin{frame}{De Rham cohomology}
+    The sheaf of values $\underline \omega_{E/R}$ is a subsheaf of the de Rham cohomology of $E/R$:
+    \[H_{\dR}^1(E/R) := \mathbb H^1(E, \Omega^\bullet_{E/R}) \]
+    \[0\to \underline \omega_{E/R} \to H^1_\dR(E/R) \to \underbrace{ H^1 (E, \sheaf O_E)}_{=\underline \omega_{E/R}} \to 0\]\pause
+    assuming $1/6\in R$ we can canonically split this sequence:\pause
+
+    Fixing $(E, \omega)/R$ we have a unique pair of meromorphic functions with poles only at $\infty$, of orders $2$ and $3$ resp., denoted by $X,Y$ so that
+    \[ \omega = \frac{\diff X }{Y}\text{ and } E \colon Y^2 = 4X^3  - g_2X - g_3,\,g_i\in R\]
+\end{frame}
+
+\begin{frame}
+    Then we have an inclusion of 2-term complexes
+    \[
+        (\sheaf O_E \to \Omega_{E/R}^1) \subseteq (\sheaf O_{E}(\infty) \to  \Omega_{E/R}^1 (2\infty))
+    \]
+    which induces an isomorphism on $\mathbb H^1$.
+    Moreover for $i\gt0$,
+    \[ H^i(E, \sheaf O_E(\infty)) = 0 \]
+    \[ H^i(E, \Omega^1_{E/R}(2\infty)) = 0 \]
+    giving
+    \begin{align*}
+        H^1_\dR(E/R) \amp\cong \mathbb H^1(E, \sheaf O_E(\infty) \to  \Omega^1_{E/R}(2\infty))\\
+          \amp= \coker( H^0(E, \sheaf O_E(\infty)) \to H^0(E, \Omega^1_{E/R}(2\infty)))\\
+                                                                        \amp= \coker( R \xrightarrow 0  H^0(E, \Omega^1_{E/R}(2\infty)))        \\
+                                                                        \amp= H^0(E, \Omega^1_{E/R}(2\infty))
+    \end{align*}
+\end{frame}
+
+\begin{frame}
+\end{frame}
+
+\begin{frame}
+\end{frame}
+\begin{frame}
+
+\begin{theorem}[Katz, Manin-Vishik]
+\end{theorem}
+\end{frame}
+
+
+\end{document}
