@@ -2,6 +2,8 @@
 %\documentclass[handout]{beamer}
 %\documentclass[handout,notes=show]{beamer}
 
+%\usepackage[draft]{pdfcomment}
+
 \usetheme{metropolis}
 %\usecolortheme{dolphin}
 % No navigation bars
@@ -38,6 +40,8 @@
 \newtheorem{question}[theorem]{Question}
 \newcommand{\terminology}[1]{\textbf{#1}}
 
+\newcommand{\pdfnote}[1]{\marginnote{\pdfcomment[icon=note]{#1}}}
+
 \newcommand{\NN}{\mathbf{N}}
 \newcommand{\ZZ}{\mathbf{Z}}
 \newcommand{\QQ}{\mathbf Q}
@@ -54,6 +58,7 @@
 \usepackage{mathrsfs}\usepackage{cancel}
 \newcommand{\Gal}[2]{\operatorname{Gal}(#1/#2)}
 \newcommand{\absgal}[1]{\operatorname{Gal}(\overline{#1}/#1)}
+\newcommand{\units}{^{\times}}
 
 \newcommand{\sheaf}[1]{\operatorname{\mathcal{#1}}}
 \newcommand{\inv}{^{-1}}
@@ -78,7 +83,7 @@
 \begin{frame}
   \titlepage
 
-  \note[item]{Thank the audience for attending remotely in times of Covid.}
+  \pdfnote[item]{Thank the audience for attending remotely in times of Covid.}
 \end{frame}
 
 %\begin{frame}
@@ -87,13 +92,14 @@
 %\end{frame}
 
 \begin{frame}{Overview}
-    These slides are availiable online (in handout form) at
+    These slides are available online (in handout form) at
 
     \begin{centering}
         \url{https://alexjbest.github.io/talks/motivation-for-p-adic-modular-forms/slides_h.pdf}
-    \end{centering} \note{to read along check back definitions, link will be at the bottom of all slides, pls no skip}\pause
+    \end{centering} \pdfnote{to read along check back definitions, link will be at the bottom of all slides, pls no skip}\pause
 
     \textbf{Goal:} Introduce, post hoc, motivation for Katz's definition of $p$-adic modular forms, especially to motivate Serre's $\partial$ operator.
+    \pdfnote{Abstract: In this talk we will introduce }
 
 \end{frame}
 
@@ -109,6 +115,7 @@
     we then have
     \[f(E, \omega) \cdot \omega^{\otimes k} \in \Gamma(R, {\underbrace{\pi_*(\Omega^1_{E/R})}_{\underline \omega_{E/R}}}^{\otimes k})\]
 
+    \pdfnote{.}
 \end{frame}
 
 \begin{frame}{De Rham cohomology}
@@ -119,14 +126,15 @@
 
     Fixing $(E, \omega)/R$ we have a unique pair of meromorphic functions with poles only at $\infty$, of orders $2$ and $3$ resp., denoted by $X,Y$ so that
     \[ \omega = \frac{\diff X }{Y}\text{ and } E \colon Y^2 = 4X^3  - g_2X - g_3,\,g_i\in R\]
+    \pdfnote{.}
 \end{frame}
 
 \begin{frame}
     Then we have an inclusion of 2-term complexes
     \[
-        (\sheaf O_E \to \Omega_{E/R}^1) \subseteq (\sheaf O_{E}(\infty) \to  \Omega_{E/R}^1 (2\infty))
-    \]
-    which induces an isomorphism on $\mathbb H^1$.
+        (\sheaf O_E \to \Omega_{E/R}^1) \subseteq (\sheaf O_{E}(\infty) \to  \Omega_{E/R}^1 (2\infty))\text,
+    \]\pause
+    this induces an isomorphism on $\mathbb H^1$.
     Moreover for $i\gt0$,
     \[ H^i(E, \sheaf O_E(\infty)) = 0 \]
     \[ H^i(E, \Omega^1_{E/R}(2\infty)) = 0 \]
@@ -137,17 +145,23 @@
                                                                         \amp= \coker( R \xrightarrow 0  H^0(E, \Omega^1_{E/R}(2\infty)))        \\
                                                                         \amp= H^0(E, \Omega^1_{E/R}(2\infty))
     \end{align*}
+    \pdfnote{.}
 \end{frame}
 
 \begin{frame}
+    \pdfnote{.}
 \end{frame}
 
 \begin{frame}
+    \pdfnote{.}
 \end{frame}
+
 \begin{frame}
 
 \begin{theorem}[Katz, Manin-Vishik]
 \end{theorem}
+    \pdfnote{.}
+
 \end{frame}
 
 

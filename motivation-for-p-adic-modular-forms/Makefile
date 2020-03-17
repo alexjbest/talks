@@ -5,20 +5,20 @@ outputs := $(patsubst %.tex,%.pdf,$(wildcard *.tex)) $(patsubst %.tex,%_notes.pd
 all:	$(outputs)
 
 %.pdf:	%.tex Makefile
-	pdflatex $(OPTS) -jobname=$(basename $<) "\documentclass[notheorems]{beamer} \input{$<}"
-	pdflatex $(OPTS) -jobname=$(basename $<) "\documentclass[notheorems]{beamer} \input{$<}"
+	pdflatex $(OPTS) -jobname=$(basename $<) "\documentclass[notheorems]{beamer}\usepackage[final]{pdfcomment} \input{$<}"
+	pdflatex $(OPTS) -jobname=$(basename $<) "\documentclass[notheorems]{beamer}\usepackage[final]{pdfcomment} \input{$<}"
 
 %_notes.pdf: %.tex Makefile
-	pdflatex $(OPTS) -jobname=$(basename $<)_notes "\documentclass[notes=only,notheorems]{beamer} \input{$<}"
-	pdflatex $(OPTS) -jobname=$(basename $<)_notes "\documentclass[notes=only,notheorems]{beamer} \input{$<}"
+	pdflatex $(OPTS) -jobname=$(basename $<)_notes "\documentclass[notheorems]{beamer}\usepackage[draft]{pdfcomment} \input{$<}"
+	pdflatex $(OPTS) -jobname=$(basename $<)_notes "\documentclass[notheorems]{beamer}\usepackage[draft]{pdfcomment} \input{$<}"
 
 %_notes_h.pdf: %.tex Makefile
-	pdflatex $(OPTS) -jobname=$(basename $<)_notes_h "\documentclass[notes=only,handout,notheorems]{beamer} \input{$<}"
-	pdflatex $(OPTS) -jobname=$(basename $<)_notes_h "\documentclass[notes=only,handout,notheorems]{beamer} \input{$<}"
+	pdflatex $(OPTS) -jobname=$(basename $<)_notes_h "\documentclass[handout,notheorems]{beamer}\usepackage[draft]{pdfcomment} \input{$<}"
+	pdflatex $(OPTS) -jobname=$(basename $<)_notes_h "\documentclass[notes=only,handout,notheorems]{beamer}\usepackage[draft]{pdfcomment} \input{$<}"
 
 %_h.pdf: %.tex Makefile
-	pdflatex $(OPTS) -jobname=$(basename $<)_h "\documentclass[handout,notheorems]{beamer} \input{$<}"
-	pdflatex $(OPTS) -jobname=$(basename $<)_h "\documentclass[handout,notheorems]{beamer} \input{$<}"
+	pdflatex $(OPTS) -jobname=$(basename $<)_h "\documentclass[handout,notheorems]{beamer}\usepackage[final]{pdfcomment} \input{$<}"
+	pdflatex $(OPTS) -jobname=$(basename $<)_h "\documentclass[handout,notheorems]{beamer}\usepackage[final]{pdfcomment} \input{$<}"
 
 clean:
 	rm -f *.snm
