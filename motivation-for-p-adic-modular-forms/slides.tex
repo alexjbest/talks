@@ -156,7 +156,7 @@
     By uniqueness
     \begin{equation*}
         \begin{array}{l}
-            {X}\left({E}, \lambda{\omega}\right)=\lambda^{-2} \cdot {Y}({E}, \omega) \\
+            {X}\left({E}, \lambda{\omega}\right)=\lambda^{-2} \cdot {X}({E}, \omega) \\
             {Y}({E}, \lambda \omega)=\lambda^{-3} \cdot {Y}({E}, \omega) \\
             {g}_{2}({E}, \lambda \omega)=\lambda^{-4} {g}_{2}({E}, \omega) \\
             {g}_{3}({E}, \lambda \omega)=\lambda^{-6} {g}_{3}({E}, \omega)
@@ -183,11 +183,11 @@
     $$
     of abelian sheaves satisfying the "Leibniz rule"
     $$
-    \nabla(g e)=g \nabla(e)+\diff g \otimes e
+    \nabla(g e)=g \nabla(e)+e\otimes\diff g 
     $$
     where $g$ and $e$ are sections of $\mathcal{O}_{S}$ and $\mathcal{E},$ respectively, over an open subset of $S$ and $\diff : \mathcal{O}_{S} \rightarrow \Omega_{S / T}^{1}$ the exterior derivative.\pause
 
-    Given an element of the tangent space $t \in (\Omega_{S/T}^1)^*$ we can define
+    Given an element of the tangent bundle $t \in (\Omega_{S/T}^1)^*$ we can define
     \[
         \nabla_t \colon \mathcal E \to \mathcal{E} \otimes_{\mathcal{O}_{X}} \Omega_{S / T}^{1}\to \mathcal E
     \]
@@ -207,10 +207,10 @@
     The Gauss-Manin connection is a connection on $H^1_\dR(E/R)$, defined as a differential in a spectral sequence coming from taking $p$-forms with only $q$ terms from $E$.\pause
 
     To give the Gauss-Manin connection in this context we need only define
-    \(\nabla_\tau\), we do so via the dual connection on $H_1^\dR(E/R)$ as
+    \(\nabla_\tau = \nabla_{\diff/\diff \tau}\), we do so via the dual connection on $H_1^\dR(E/R)$ as
     \begin{equation*}
         \begin{array}{l}
-            \int_{\gamma_{{1}}} \nabla_{\tau}(\xi)=\frac{{\diff}}{{\diff} \tau} \int_{\gamma_{1}} \xi \quad \text { for } \quad \xi \in {H}_{\dR}^{1}({E} / {R}), \text { and } 1=1,2
+            \int_{\gamma_{{i}}} \nabla_{\tau}(\xi)=\frac{{\diff}}{{\diff} \tau} \int_{\gamma_{i}} \xi \quad \text { for } \quad \xi \in {H}_{\dR}^{1}({E} / {R}), \text { and } i=1,2
         \end{array}
     \end{equation*}
     \pdfnote{.}
@@ -255,7 +255,7 @@
     $$
     to invert this we note that
     $$
-    \eta_{1} \omega_{2}-\eta_{1} \omega_{2}=2 \pi i
+    \eta_{1} \omega_{2}-\eta_{2} \omega_{1}=2 \pi i
     $$
     so
     $$
@@ -389,7 +389,7 @@
     \only<2->{
         where
             \[
-                \zeta = \frac{1}{z} + \sum_{m} \sum_{n}{}^{\prime}\frac{1}{z-m \tau-n}+\frac{1}{m+n}+\frac{z}{(m \tau+n)^{2}}
+                \zeta = \frac{1}{z} + \sum_{m} \sum_{n}{}^{\prime}\left(\frac{1}{z-m \tau-n}+\frac{1}{m\tau+n}+\frac{z}{(m \tau+n)^{2}}\right)
             \]
         }
     \only<3->{
@@ -397,7 +397,7 @@
             \eta_{2}\only<3-4>{\amp=\int_{\gamma_{2}} \eta=\int_{0}^{1}(-\diff  \zeta(z))=\int_{\mathbf{z}}^{\mathbf{z}+1}(-\diff  \zeta(\mathbf{z}))=\zeta(\mathbf{z})-\zeta(\mathbf{z}+1)\\
          &=\frac{1}{2}-\frac{1}{z+1}+\sum_{m} \sum_{n}{}^{\prime}\left\{\frac{1}{z-m \tau-n}-\frac{1}{z-m \tau-n+1}-\frac{1}{(m \tau+n)^{2}}\right\} \\}
          \only<5->{&=\frac{1}{z}-\frac{1}{z+1}+\sum_{m \neq 0} \sum_{n} \frac{-1}{(m \tau+n)^{2}}+\sum_{n \neq 0}\left\{\frac{-1}{n^{2}}+\frac{1}{z-n}-\frac{1}{z+1-n}\right\} \\}
-         \only<6->{&=\sum_{m} \sum_{n}{}^{\prime} \frac{1}{(m \tau+n)^{2}}}
+         \only<6->{&=-\sum_{m} \sum_{n}{}^{\prime} \frac{1}{(m \tau+n)^{2}}}
         \end{align*}
     }
     \end{proof}
@@ -406,7 +406,7 @@
 \begin{frame}{Aside on $\eta_1$}
     Similarly
     \[
-        \eta_{1}=\zeta(z)-\zeta(z+\tau)=-\sum_{n} \sum_{m}^{\prime} \frac{\tau}{(m \tau+n)^{2}}
+        \eta_{1}=\zeta(z)-\zeta(z+\tau)=-\sum_{n} \sum_{m}{}^{\prime} \frac{\tau}{(m \tau+n)^{2}}
     \]
     giving
     \[
@@ -439,7 +439,7 @@
 \eta
 \end{array}\right)
 \]
-We can consider this in terms of $\omega_{\mathrm{can}}=2 \pi i \omega,\, \eta_{\mathrm{can}}=\frac{1}{2 \pi i} \eta$ and $\theta=\frac{1}{2 \pi i},\, \frac{\diff}{\diff \tau}=q \frac{\diff}{\diff q}$
+We can consider this in terms of $\omega_{\mathrm{can}}=2 \pi i \omega,\, \eta_{\mathrm{can}}=\frac{1}{2 \pi i} \eta$ and $\theta=\frac{1}{2 \pi i} \frac{\diff}{\diff \tau}=q \frac{\diff}{\diff q}$
 For the Tate curve over $\CC((q))$, we have $\omega_{can} = \diff t / t$.
 \[
 \nabla(\theta)\left(\begin{array}{c}
@@ -475,7 +475,7 @@ so
     We can take a nowhere vanishing invariant differential $\omega \in \Omega_{E/S}^1$ and a derivation $D\in Der(S/T)$ and form the cup product
     \[ \pair{\omega}{\nabla(D) \omega} \in \sheaf O_S\]
     as we have $\omega$ in both sides this defines a pairing between $Der(S/T)$ and $\underline \omega^2$ for
-    \[\underline \omega = f_{*} \Omega_{E / S}^{1} \]
+    \[\underline \omega = \pi_{*} \Omega_{E / S}^{1} \]
     this gives a map
     \[
         \underline{\omega}^{\otimes 2}\to \Omega_{\mathrm{S} / \mathrm{T}}^{1}
@@ -492,7 +492,7 @@ so
     \end{lemma}
     \begin{proof}
         We must check that
-        \[\pair{\omega_{can}}{\nabla(\theta) \omega_{can}} = 1\]
+        \[\pair{\omega_{can}}{\nabla(\theta) \omega_{can}}_\dR = 1\]
         but we already found
         \[
             \nabla(\theta)\left(\omega_{\mathrm{can}}\right)=\frac{-P}{12} \omega_{\mathrm{can}}+\eta_{\mathrm{can}}
@@ -517,7 +517,7 @@ so
 \begin{frame}
     We can tensor to get
     \[
-        \text {Symm}^{\mathrm{k}}\left(\mathrm{H}^{1}\right) \longrightarrow \text{Symm}^{\mathrm{k}}\left(\mathrm{H}^{1}\right) \otimes \Omega_{\mathrm{S}}^{\mathbf{1}} / \mathrm{T}
+        \nabla \colon \text {Symm}^{\mathrm{k}}\left(\mathrm{H}^{1}\right) \longrightarrow \text{Symm}^{\mathrm{k}}\left(\mathrm{H}^{1}\right) \otimes \Omega_{S/T}^{\mathbf{1}}
     \]
     if
     \[
