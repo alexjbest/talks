@@ -13,6 +13,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
+\usepackage{bm}
+
 
 \usepackage{amsthm}
 \theoremstyle{plain}
@@ -42,12 +44,12 @@
 
 \newcommand{\pdfnote}[1]{\marginnote{\pdfcomment[icon=note]{#1}}}
 
-\newcommand{\NN}{\mathbf{N}}
-\newcommand{\ZZ}{\mathbf{Z}}
-\newcommand{\QQ}{\mathbf Q}
-\newcommand{\CC}{\mathbf C}
-\newcommand{\RR}{\mathbf R}
-\newcommand{\FF}{\mathbf F}
+\newcommand{\NN}{\bm{N}}
+\newcommand{\ZZ}{\bm{Z}}
+\newcommand{\QQ}{\bm Q}
+\newcommand{\CC}{\bm C}
+\newcommand{\RR}{\bm R}
+\newcommand{\FF}{\bm F}
 \newcommand{\dR}{\mathrm{dR}}
 \newcommand{\lt}{<}
 \newcommand{\gt}{>}
@@ -65,9 +67,10 @@
 \DeclareMathOperator{\norm}{Nm}
 \DeclareMathOperator{\ord}{ord}
 \DeclareMathOperator{\divisor}{div}
-\DeclareMathOperator{\PP}{\mathbf{P}}
+\DeclareMathOperator{\PP}{\bm{P}}
 \DeclareMathOperator{\Hom}{Hom}
 \DeclareMathOperator{\coker}{coker}
+\newcommand{\pair}[2]{\left\langle #1, #2 \right\rangle}
 
 \newcommand{\lb}{[}
 \newcommand{\rb}{]}
@@ -81,9 +84,9 @@
 \begin{document}
 
 \begin{frame}
-  \titlepage
+    \titlepage
 
-  \pdfnote[item]{Thank the audience for attending remotely in times of Covid.}
+    \pdfnote[item]{Thank the audience for attending remotely in times of Covid.}
 \end{frame}
 
 %\begin{frame}
@@ -108,7 +111,7 @@
     \[f\colon \{(E \xrightarrow \pi R\text{ an ell.\ curve}, \omega\in \Gamma(E, \Omega^1_{E/R})\text{ nowhere vanishing})\}\to R\] \pause
     s.t.
     \begin{enumerate}
-        \item \(\forall \lambda\in R\units,  f(E, \lambda \omega) = \lambda ^{-k} f(E, \omega)\)g
+        \item \(\forall \lambda\in R\units,  f(E, \lambda \omega) = \lambda ^{-k} f(E, \omega)\)
         \item \(f(E, \omega)\) is isomorphism invariant.
         \item \(f\) is functorial w.r.t. $R$.
     \end{enumerate} \pause
@@ -120,9 +123,8 @@
 
 \begin{frame}{De Rham cohomology}
     The sheaf of values $\underline \omega_{E/R}$ is a subsheaf of the de Rham cohomology of $E/R$:
-    \[H_{\dR}^1(E/R) := \mathbb H^1(E, \Omega^\bullet_{E/R}) \]
-    \[0\to \underline \omega_{E/R} \to H^1_\dR(E/R) \to \underbrace{ H^1 (E, \sheaf O_E)}_{=\underline \omega_{E/R}} \to 0\]\pause
-    assuming $1/6\in R$ we can canonically split this sequence:\pause
+    \[0\to \underline \omega_{E/R} \to \overbrace{H^1_\dR(E/R)}^{ := \mathbb H^1(E, \Omega^\bullet_{E/R})} \to \underbrace{ H^1 (E, \sheaf O_E)}_{=\underline \omega_{E/R}^{\otimes-1}} \to 0\]\pause
+    assuming $1/6\in R$ we can canonically split this sequence:
 
     Fixing $(E, \omega)/R$ we have a unique pair of meromorphic functions with poles only at $\infty$, of orders $2$ and $3$ resp., denoted by $X,Y$ so that
     \[ \omega = \frac{\diff X }{Y}\text{ and } E \colon Y^2 = 4X^3  - g_2X - g_3,\,g_i\in R\]
@@ -141,27 +143,445 @@
     giving
     \begin{align*}
         H^1_\dR(E/R) \amp\cong \mathbb H^1(E, \sheaf O_E(\infty) \to  \Omega^1_{E/R}(2\infty))\\
-          \amp= \coker( H^0(E, \sheaf O_E(\infty)) \to H^0(E, \Omega^1_{E/R}(2\infty)))\\
-                                                                        \amp= \coker( R \xrightarrow 0  H^0(E, \Omega^1_{E/R}(2\infty)))        \\
-                                                                        \amp= H^0(E, \Omega^1_{E/R}(2\infty))
+        \amp= \coker( H^0(E, \sheaf O_E(\infty)) \to H^0(E, \Omega^1_{E/R}(2\infty)))\\
+        \amp= \coker( R \xrightarrow 0  H^0(E, \Omega^1_{E/R}(2\infty)))        \\
+        \amp= H^0(E, \Omega^1_{E/R}(2\infty))\\
+        \amp \quad\ni \underbrace{\frac{\diff X(E, \omega)}{Y(E, \omega)}}_{=\omega},
+        \underbrace{X(E, \omega)\cdot  \omega}_{=\eta}
     \end{align*}
     \pdfnote{.}
 \end{frame}
 
-\begin{frame}
+\begin{frame}{How does $R\units$ act?}
+    By uniqueness
+    \begin{equation*}
+        \begin{array}{l}
+            {X}\left({E}, \lambda{\omega}\right)=\lambda^{-2} \cdot {Y}({E}, \omega) \\
+            {Y}({E}, \lambda \omega)=\lambda^{-3} \cdot {Y}({E}, \omega) \\
+            {g}_{2}({E}, \lambda \omega)=\lambda^{-4} {g}_{2}({E}, \omega) \\
+            {g}_{3}({E}, \lambda \omega)=\lambda^{-6} {g}_{3}({E}, \omega)
+        \end{array}
+    \end{equation*}\pause
+    hence
+    \begin{equation*}
+        \lambda \omega=\frac{\diff {X}({E}, \lambda \omega)}{{Y}({E}, \lambda \omega)} \quad \text { and } \quad \lambda^{-1} \eta=\frac{{X}({E}, \lambda \omega) {\diff} {X}({E}, \lambda \omega)}{{Y}({E}, \lambda \omega)}
+    \end{equation*}
+    \begin{equation*}
+        {H}_{\dR}^1{({E} / {R})} \simeq \underline{\omega}_{{E} / {R}} \oplus \underline{\omega}_{{E} / {R}}^{-1}
+    \end{equation*}
+    \begin{equation*}
+        \text{Symm}^{{k}}\left({H}_{{\dR}}^{1}({E} / {R})\right) \simeq\left(\underline{\omega}_{{E} / {R}}\right)^{\otimes {k}} \oplus\left(\underline{\omega}_{{E} / {R}}\right)^{\otimes {k}-2} \oplus \cdots \oplus\left(\underline{\omega}_{{E} / {R}}\right)^{\otimes-{k}}
+    \end{equation*}
+    \pdfnote{.}
+\end{frame}
+
+\begin{frame}{Connections}
+    Let $f: S \rightarrow T$ be a smooth $T$-scheme, $\mathcal{E}$ a quasi-coherent sheaf of $\mathcal{O}_{S}$ -modules.
+    A \emph{connection} on $\mathcal{E}$ is a homomorphism
+    $$
+    \nabla: \mathcal{E} \rightarrow \mathcal{E} \otimes_{\mathcal{O}_{X}} \Omega_{S / T}^{1}
+    $$
+    of abelian sheaves satisfying the "Leibniz rule"
+    $$
+    \nabla(g e)=g \nabla(e)+\diff g \otimes e
+    $$
+    where $g$ and $e$ are sections of $\mathcal{O}_{S}$ and $\mathcal{E},$ respectively, over an open subset of $S$ and $\diff : \mathcal{O}_{S} \rightarrow \Omega_{S / T}^{1}$ the exterior derivative.\pause
+
+    Given an element of the tangent space $t \in (\Omega_{S/T}^1)^*$ we can define
+    \[
+        \nabla_t \colon \mathcal E \to \mathcal{E} \otimes_{\mathcal{O}_{X}} \Omega_{S / T}^{1}\to \mathcal E
+    \]
+    by ``contraction''.
+
+
+\end{frame}
+
+\begin{frame}{The Gauss-Manin connection -- complex case}
+    Let $R$ be the ring of holomorphic functions of $\tau$, and $E$ be the relative elliptic curve
+    \[\CC/ \ZZ + \ZZ \tau\]
+    which can be expressed as 
+    $y^{2}=4 x^{3}-\frac{E_4}{12} x+\frac{E_{6}}{216},\,E_i \in R$.\pause
+
+    The de Rham homology $H^\dR_1(E/R)$ is then free on $\gamma_1,\gamma_2$, the paths $\overset{\to}{0\tau},\overset{\to}{01}$ respectively.\pause
+
+    The Gauss-Manin connection is a connection on $H^1_\dR(E/R)$, defined as a differential in a spectral sequence coming from taking $p$-forms with only $q$ terms from $E$.\pause
+
+    To give the Gauss-Manin connection in this context we need only define
+    \(\nabla_\tau\), we do so via the dual connection on $H_1^\dR(E/R)$ as
+    \begin{equation*}
+        \begin{array}{l}
+            \int_{\gamma_{{1}}} \nabla_{\tau}(\xi)=\frac{{\diff}}{{\diff} \tau} \int_{\gamma_{1}} \xi \quad \text { for } \quad \xi \in {H}_{\dR}^{1}({E} / {R}), \text { and } 1=1,2
+        \end{array}
+    \end{equation*}
+    \pdfnote{.}
+\end{frame}
+
+\begin{frame}{Computation of the connection matrix}
+    Let
+    \[ \omega = \frac{\diff x}{y},\,\eta = \frac{x \diff x}{y}\]
+    Poincaré duality gives elements $\gamma_i \in H^1_\dR(E/R)$ also, satisfying
+    \[\pair{\gamma_2}{\gamma_1} = 1 = -\pair{\gamma_1}{\gamma_2} \]
+    \[\pair{\gamma_1}{\gamma_1} = 0 = \pair{\gamma_2}{\gamma_2} \]
+    we then define
+    \[ \omega_i  =\int_{\gamma_i} \omega = \pair{\omega}{\gamma_i},\,\eta_i = \int_{\gamma_i} \eta = \pair{\eta}{\gamma_i}\in R\]
+    so that we have
+    $$
+    \left(\begin{array}{cc}
+            \omega_{1} & -\omega_{2} \\
+            \eta_{1} & -\eta_{2}
+            \end{array}\right)\left(\begin{array}{l}
+            \gamma_{2} \\
+            \gamma_{1}
+            \end{array}\right)=\left(\begin{array}{l}
+            \omega \\
+            \eta
+    \end{array}\right)
+    $$
     \pdfnote{.}
 \end{frame}
 
 \begin{frame}
+    $$
+    \left(\begin{array}{cc}
+            \omega_{1} & -\omega_{2} \\
+            \eta_{1} & -\eta_{2}
+            \end{array}\right)\left(\begin{array}{l}
+            \gamma_{2} \\
+            \gamma_{1}
+            \end{array}\right)=\left(\begin{array}{l}
+            \omega \\
+            \eta
+    \end{array}\right)
+    $$
+    to invert this we note that
+    $$
+    \eta_{1} \omega_{2}-\eta_{1} \omega_{2}=2 \pi i
+    $$
+    so
+    $$
+    2 \pi i\left(\begin{array}{l}
+            \gamma_{2} \\
+            \gamma_{1}
+            \end{array}\right)=\left(\begin{array}{ll}
+            -\eta_{2} & \omega_{2} \\
+            -\eta_{1} & \omega_{1}
+            \end{array}\right)\left(\begin{array}{l}
+            \omega \\
+            \eta
+    \end{array}\right)
+    $$
+    \pdfnote{Legendre's period relations}
+    to which we want to apply $\nabla_\tau$
+    $$
+    \int_{{\gamma}_{{i}}} \nabla_{{\tau}}(\gamma_j)=\frac{\mathrm{d}}{\mathrm{d} \tau} \int_{\gamma_{{i}}}\gamma_j = 0
+    $$
+\end{frame}
+
+\begin{frame}
+    \begin{align*}
+        \left(\begin{array}{l}
+                0\\
+                0
+                \end{array}\right)\amp=\nabla_\tau\left(\left(\begin{array}{ll}
+                    -\eta_{2} & \omega_{2} \\
+                    -\eta_{1} & \omega_{1}
+                    \end{array}\right)\left(\begin{array}{l}
+                    \omega \\
+                    \eta
+        \end{array}\right)\right)\\\amp=
+        \left(\begin{array}{cc}
+                -\frac{\diff}{\diff\tau}\eta_{2}^{} & \frac{\diff}{\diff\tau}\omega_{2}^{} \\
+                -\frac{\diff}{\diff\tau} \eta_{1}^{} & \frac{\diff}{\diff\tau}\omega_{1}^{}
+                \end{array}\right)\left(\begin{array}{l}
+                \omega \\
+                \eta
+                \end{array}\right)+\left(\begin{array}{ll}
+                -\eta_{2} & \omega_{2} \\
+                -\eta_{1} & \omega_{1}
+                \end{array}\right)\left(\begin{array}{c}
+                \nabla_{\tau}(\omega) \\
+                \nabla_{\tau}(\eta)
+        \end{array}\right)
+    \end{align*}\pause
+    so we get
+    \begin{align*}
+        \left(\begin{array}{c}
+                \nabla_{\tau}(\omega) \\
+                \nabla_{\tau}(\eta)
+                \end{array}\right) &=\frac{-1}{2 \pi i}\left(\begin{array}{cc}
+                \omega_{1} & -\omega_{2} \\
+                \eta_{1} & -\eta_{2}
+                \end{array}\right)\left(\begin{array}{cc}
+                -\eta_{2}^{\prime} & \omega_{2}^{\prime} \\
+                -\eta_{1}^{\prime} & \omega_{1}^{\prime}
+                \end{array}\right)\left(\begin{array}{l}
+                \omega \\
+                \eta
+        \end{array}\right) \\
+&=\frac{-1}{2 \pi i}\left(\begin{array}{cc}
+        \eta_{1}^{\prime} \omega_{2}-\eta_{2}^{\prime} \omega_{1} & \omega_{1} \omega_{2}^{\prime}-\omega_{2} \omega_{1}^{\prime} \\
+        \eta_{2} \eta_{1}^{\prime}-\eta_{1} \eta_{2}^{\prime} & \eta_{1} \omega_{2}^{\prime}-\eta_{2} \omega_{1}^{\prime}
+        \end{array}\right)\left(\begin{array}{c}
+        \omega \\
+        \eta
+\end{array}\right)
+    \end{align*}
+
     \pdfnote{.}
 \end{frame}
 
 \begin{frame}
-
-\begin{theorem}[Katz, Manin-Vishik]
-\end{theorem}
+    In fact $\omega_1= \tau$ and $\omega_2 = 1$ so that $\omega_1' = 1, \omega_2' = 0$ and $\eta_1 - \tau \eta_2 = 2 \pi i$, giving $\eta_1' -\tau \eta_2' = \eta_2$ and we simplify 
+    \begin{align*}
+        \left(\begin{array}{c}
+                \nabla_{\tau}(\omega) \\
+                \nabla_{\tau}(\eta)
+        \end{array}\right)
+        \amp=\frac{-1}{2 \pi i}\left(\begin{array}{cc}
+                \eta_{1}^{\prime} \omega_{2}-\eta_{2}^{\prime} \omega_{1} & \omega_{1} \omega_{2}^{\prime}-\omega_{2} \omega_{1}^{\prime} \\
+                \eta_{2} \eta_{1}^{\prime}-\eta_{1} \eta_{2}^{\prime} & \eta_{1} \omega_{2}^{\prime}-\eta_{2} \omega_{1}^{\prime}
+                \end{array}\right)\left(\begin{array}{c}
+                \omega \\
+                \eta
+        \end{array}\right)\\
+        \amp=\frac{-1}{2 \pi i}\left(\begin{array}{cc}
+                \eta_{1}^{\prime}-\eta_{2}^{\prime} \tau & -1 \\
+                \eta_{2} \eta_{1}^{\prime}-\eta_{1} \eta_{2}^{\prime} & -\eta_{2}
+                \end{array}\right)\left(\begin{array}{c}
+                \omega \\
+                \eta
+        \end{array}\right)\\
+        \amp=\frac{-1}{2 \pi i}\left(\begin{array}{cc}
+                \eta_{2} & -1 \\
+                \left(\eta_{2}\right)^{2}-2 \pi i \eta_{2}^{\prime} & -\eta_{2}
+                \end{array}\right)\left(\begin{array}{l}
+                \omega \\
+                \eta
+        \end{array}\right)
+    \end{align*}
+    purely in terms of $\eta_2$.
     \pdfnote{.}
+\end{frame}
 
+\begin{frame}{Determining $\eta_2$}
+
+    Let $q = e^{2\pi i \tau}$, and
+    \[
+        P(q)=E_2(q) =1-
+        24 \sum_{n \geq 1} \sigma_{1}(n) q^{n}, \text { where } \sigma_{1}(n)=\sum_{d \geq 1, d | n} d
+    \] \pdfnote{quasi modular not modular} then
+    \begin{lemma}
+        $$
+        \eta_{2}=-\sum_{m} \sum_{n}\left.^{\prime}\right. \frac{1}{(m \tau+n)^{2}}=\frac{-\pi^{2}}{3} P
+        $$
+    \end{lemma}
+    \pdfnote{the order of this sum matters!}
+\end{frame}
+
+\begin{frame}
+    \begin{lemma}
+        $$
+    \eta_{2}=-\sum_{m} \sum_{n}{}^{\prime}\frac{1}{(m \tau+n)^{2}}=\frac{-\pi^{2}}{3} P
+        $$
+    \end{lemma}
+    \begin{proof}
+        \[ \eta=X \diff X / Y=\wp(z) \diff z = -\diff \zeta \]
+    \only<2->{
+        where
+            \[
+                \zeta = \frac{1}{z} + \sum_{m} \sum_{n}{}^{\prime}\frac{1}{z-m \tau-n}+\frac{1}{m+n}+\frac{z}{(m \tau+n)^{2}}
+            \]
+        }
+    \only<3->{
+            \begin{align*}
+            \eta_{2}\only<3-4>{\amp=\int_{\gamma_{2}} \eta=\int_{0}^{1}(-\diff  \zeta(z))=\int_{\mathbf{z}}^{\mathbf{z}+1}(-\diff  \zeta(\mathbf{z}))=\zeta(\mathbf{z})-\zeta(\mathbf{z}+1)\\
+         &=\frac{1}{2}-\frac{1}{z+1}+\sum_{m} \sum_{n}{}^{\prime}\left\{\frac{1}{z-m \tau-n}-\frac{1}{z-m \tau-n+1}-\frac{1}{(m \tau+n)^{2}}\right\} \\}
+         \only<5->{&=\frac{1}{z}-\frac{1}{z+1}+\sum_{m \neq 0} \sum_{n} \frac{-1}{(m \tau+n)^{2}}+\sum_{n \neq 0}\left\{\frac{-1}{n^{2}}+\frac{1}{z-n}-\frac{1}{z+1-n}\right\} \\}
+         \only<6->{&=\sum_{m} \sum_{n}{}^{\prime} \frac{1}{(m \tau+n)^{2}}}
+        \end{align*}
+    }
+    \end{proof}
+\end{frame}
+
+\begin{frame}{Aside on $\eta_1$}
+    Similarly
+    \[
+        \eta_{1}=\zeta(z)-\zeta(z+\tau)=-\sum_{n} \sum_{m}^{\prime} \frac{\tau}{(m \tau+n)^{2}}
+    \]
+    giving
+    \[
+        \eta_{2}(-1 / \tau)=\tau_{\eta_{1}}(\tau)
+    \]
+    so
+    \[
+        \begin{aligned}
+&\frac{\eta_{2}(-1 / \tau)}{\tau}-\tau \eta_{2}(\tau)=2 \pi i\\
+\implies&\eta_{2}(-1 / \tau)=\tau^{2} \eta_{2}(\tau)+2 \pi \mathbf{i} \tau
+        \end{aligned}
+    \]
+    \[
+        P(-1 / \tau)=\tau^{2} P(\tau)-\frac{6i \tau}{\pi}
+    \]
+    \pdfnote{.}
+\end{frame}
+
+\begin{frame}
+    In conclusion we have
+    \[
+        \left(\begin{array}{c}
+\nabla_\tau(\omega) \\
+\nabla_{\tau}(\eta)
+\end{array}\right)=\frac{1}{2 \pi i}\left(\begin{array}{cc}
+\frac{\pi^{2} P}{3} & 1 \\
+\frac{\pi^{4}}{9} P^{2}-\frac{12}{2 \pi i} P^{\prime} & -\frac{\pi^{2}}{3} P
+\end{array}\right)\left(\begin{array}{l}
+\omega \\
+\eta
+\end{array}\right)
+\]
+We can consider this in terms of $\omega_{\mathrm{can}}=2 \pi i \omega,\, \eta_{\mathrm{can}}=\frac{1}{2 \pi i} \eta$ and $\theta=\frac{1}{2 \pi i},\, \frac{\diff}{\diff \tau}=q \frac{\diff}{\diff q}$
+For the Tate curve over $\CC((q))$, we have $\omega_{can} = \diff t / t$.
+\[
+\nabla(\theta)\left(\begin{array}{c}
+\omega \\
+\eta
+\end{array}\right)=\left(\begin{array}{cc}
+\frac{-P}{12} & \frac{-1}{4 \pi^{2}} \\
+\frac{\pi^{2}}{36}\left(P ^{2}-12 \theta P \right) & \frac{P }{12}
+\end{array}\right)\left(\begin{array}{c}
+\omega \\
+\eta
+\end{array}\right)
+\]
+so
+\[
+    \nabla(\theta)\left(\begin{array}{c}
+\omega_{\mathrm{can}} \\
+\eta_{\mathrm{can}}
+\end{array}\right)=\left(\begin{array}{cc}
+\frac{-P}{12} & 1 \\
+\frac{P^{2}-12 \theta {P}}{144} & \frac{{P}}{12}
+\end{array}\right)\left(\begin{array}{l}
+\omega_{\mathrm{can}} \\
+\eta_{\mathrm{can}}
+\end{array}\right)
+\]
+    \pdfnote{.}
+\end{frame}
+
+\begin{frame}{Kodaira-Spencer}
+    As before let $f\colon S \rightarrow T$ be a smooth $T$-scheme, $E/S$ an elliptic curve.
+
+    We can take a nowhere vanishing invariant differential $\omega \in \Omega_{E/S}^1$ and a derivation $D\in Der(S/T)$ and form the cup product
+    \[ \pair{\omega}{\nabla(D) \omega} \in \sheaf O_S\]
+    as we have $\omega$ in both sides this defines a pairing between $Der(S/T)$ and $\underline \omega^2$ for
+    \[\underline \omega = f_{*} \Omega_{E / S}^{1} \]
+    this gives a map
+    \[
+        \underline{\omega}^{\otimes 2}\to \Omega_{\mathrm{S} / \mathrm{T}}^{1}
+    \]
+    \pdfnote{.}
+\end{frame}
+
+\begin{frame}
+    \begin{lemma}
+        On the Tate curve over $\ZZ((q))$
+        \[
+            \omega_{can}^{\otimes 2} \mapsto \diff q / q
+        \]
+    \end{lemma}
+    \begin{proof}
+        We must check that
+        \[\pair{\omega_{can}}{\nabla(\theta) \omega_{can}} = 1\]
+        but we already found
+        \[
+            \nabla(\theta)\left(\omega_{\mathrm{can}}\right)=\frac{-P}{12} \omega_{\mathrm{can}}+\eta_{\mathrm{can}}
+        \]
+    \end{proof}
+    \pdfnote{.}
+\end{frame}
+\begin{frame}{The Gauss-Manin connection}
+    To determine if a $q$-expansion $f(q) \in \CC\lb\lb q\rb\rb$ is a modular form of weight $k$ we must check if
+    \[f(q) (\omega_{can})^{\otimes k}\]
+    extends to all of $\underline \omega^{\otimes k}$.
+    Viewing this inside of $H^1_\dR$ we ask instead that there exist $a,b\in \NN$ with $a-b = k$ such that
+    \[f(q) (\omega_{can})^{\otimes a}(\eta_{can})^{\otimes b}\]
+    extends to 
+    \[\text{Symm}^{{a+b}}\left({H}_{{\dR}}^{1}({E} / {S})\right) \]\pause
+    The Gauss-Manin connection is
+    \[
+        \nabla: \mathrm{H}_{\mathrm{dR}}^{1}(\mathrm{E} / \mathrm{S}) \longrightarrow \mathrm{H}_{\mathrm{dR}}^{1}(\mathrm{E} / \mathrm{S}) \otimes \Omega_{\mathrm{S}/T}^{1} 
+    \]
+\end{frame}
+
+\begin{frame}
+    We can tensor to get
+    \[
+        \text {Symm}^{\mathrm{k}}\left(\mathrm{H}^{1}\right) \longrightarrow \text{Symm}^{\mathrm{k}}\left(\mathrm{H}^{1}\right) \otimes \Omega_{\mathrm{S}}^{\mathbf{1}} / \mathrm{T}
+    \]
+    if
+    \[
+        \Omega_{S / T}^{1} \simeq \underline{\omega}^{\otimes 2}
+    \]
+    we can view this as
+    \[
+    \sum_{{j}=0}^{k} \underline{\omega}^{\otimes {k}-2 {j}} \longrightarrow \sum_{{j}=0}^{{k}} \underline{\omega}^{\otimes {k}-2 {j}} \otimes \omega^{\otimes 2}=\sum_{j=0}^{{k}} \underline{\omega}^{\otimes {k}+2-2 {j}}
+    \]
+    \pdfnote{.}
+\end{frame}
+
+\begin{frame}{The image of $f(q)$}
+    Under the Gauss-Manin connection
+    \begin{align*}
+        f\mapsto
+\amp\theta(f) \cdot\left(\omega_{can}\right)^{\otimes 2} \cdot\left(\omega_{can}\right)^{\otimes a} \cdot\left(\eta_{can}\right)^{\otimes b} \\
+\amp+f \cdot a \cdot\left(\omega_{can}\right)^{\otimes a-1}\left(\frac{-P}{12} \omega_{can}+\eta_{can}\right) \otimes\left(\omega_{can}\right)^{\otimes 2} \otimes\left(\eta_{can}\right)^{b} \\
+\amp+f \cdot\left(\omega_{can}\right)^{\otimes a} \cdot b \cdot\left(\eta_{can}\right)^{\otimes b-1}\left(\frac{P^{2}-12 \theta P}{144} \omega_{can}+\frac{P}{12} \eta_{can}\right) \cdot\left(\omega_{can}\right)^{\otimes 2}
+    \end{align*}
+    \begin{align*}
+        =\amp \left( \theta(f) - (a-b)f \frac P{12}\right)\left(\omega_{can}\right)^{\otimes a+ 2}\left(\eta_{can}\right)^{\otimes b}\\
+    \amp+ \left( af \right)\left(\omega_{can}\right)^{\otimes a+ 1}\left(\eta_{can}\right)^{\otimes b + 1}\\
+    \amp+ \left( bf \frac{P^{2}-12 \theta P}{144} \right)\left(\omega_{can}\right)^{\otimes a+ 3}\left(\eta_{can}\right)^{\otimes b -1}
+    \end{align*}
+
+    \pdfnote{.}
+\end{frame}
+
+\begin{frame}
+    So if $f$ is modular of weight $k = a-b$ then
+    \[
+    \begin{cases}
+        \theta(f) - (a-b)f \frac P{12},\amp \text{ is modular of weight } a+ 2 - b\\
+     af,\amp \text{ is modular of weight } a - b \\
+    bf \frac{P^{2}-12 \theta P}{144},\amp \text{ is modular of weight } a + 3 - b + 1
+\end{cases}
+    \] 
+    the operator
+    \[ \partial (F ) = 12 \theta (f ) - k P f\]
+    due to Serre therefore raises the weight by 2.
+    
+\end{frame}
+
+\begin{frame}{$E_4$}
+    \begin{corollary}
+        \[P^2 - 12 \theta P\]
+        is modular of weight 4 and hence
+        \[P^2 - 12 \theta P = E_4 = Q\]
+    \end{corollary}
+    \begin{proof}
+        Start with $f=1$ modular of weight $1 -1 = 0$ to see $P^2 - 12 \theta P$ has weight 4.
+    \end{proof}
+\end{frame}
+
+\begin{frame}{$P$}
+    \begin{corollary}[Deligne]
+        \[P =  \frac{\theta \Delta}{\Delta}\]
+    \end{corollary}
+    \begin{proof}
+        \[ \theta(\Delta) -  \Delta P =  0\]
+        as it lies in weight 14 and level 1.
+
+    \end{proof}
 \end{frame}
 
 
