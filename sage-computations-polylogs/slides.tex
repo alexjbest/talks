@@ -325,12 +325,12 @@ sensitive=true}
         \item Near 0: use the power series $\displaystyle\Li_{n}(z)=\sum_{k=1}^{\infty} \frac{z^{k}}{k^{n}}$
         \item Near $\infty $: use the relation
             \[ \Li_{n}(z)+(-1)^{n} \Li_{n}\left(z^{-1}\right)=-\frac{1}{n !} \log ^{n}(z)\]
-            to reduce to the first case.\pause
+            to reduce to the first case.\pdfnote{explains why zeta 2 is zero}\pause
         \item Else: Must be near a $(p^k-1)$st root of unity for some $k$ (except near 1).
             Letting
             \[\Li_{n}^{(p)}(z)=\Li_{n}(z)-\frac{1}{p^{n}} \Li_{n}\left(z^{p}\right)\]
             Reduces to computing $\Li_{m}^{(p)}\left(\zeta^{p^{j}}\right)$ for $m\le n$ and $j<k$.
-        \item Near 1: see the paper!
+        \item Near 1: see the paper!\pdfnote{complicated, Li 1 not defined, but very easy good first ticket}
     \end{itemize}
 
 \end{frame}
@@ -338,7 +338,7 @@ sensitive=true}
 \begin{frame}{Application: The $S$-unit equation}
     One classic diophantine equation is the $S$-unit equation: for a fixed finite set of primes $S$
     \[u + v = 1,\,u,v\in \QQ^\times\]
-    where we ask that the only primes present in the factorization of $u,v$ are those in $S$.
+    where we ask that the only primes present in the factorization of $u,v$ are those in $S$.\pause
 
     So
     \[\frac 43 - \frac13 = 1\]
@@ -361,7 +361,7 @@ sensitive=true}
     \end{wrapfigure}
     Note that for any prime $p$, either $p|u$, $p|v$, or both $p|u\inv$ and $p|v\inv$.
 
-    Plotting $\nu_p(u)$ against $\nu_p(v)$ we get a diagonal Y shape:\pause
+    Plotting the possible $\nu_p(u)$ against $\nu_p(v)$ we get a diagonal Y shape:\pause
 
     This~is~an~instance~of~a~more general~phenomenon: the valuations lie on the tropical curve associated with the defining equation $u+v=1$.
 
