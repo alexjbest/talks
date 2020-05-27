@@ -58,7 +58,7 @@ Sage commandline, line 11::
 
 Sage commandline, line 24::
 
-                sage: K(1 + 5^5).polylog(2)
+                sage: K(1 + 5^6).polylog(2)
                 1
                 sage: K(1/2).polylog(2)
                 1
@@ -87,7 +87,7 @@ Sage commandline, line 11::
 
 Sage commandline, line 24::
 
-                sage: K(1 + 5^5).polylog(2)
+                sage: K(1 + 5^6).polylog(2)
                 1
                 sage: K(1/2).polylog(2)
                 1

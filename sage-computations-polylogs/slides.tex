@@ -170,7 +170,7 @@ sensitive=true}
 
     \pdfnote{to read along check, link will be at the bottom of all slides, thank the organisers}\pause
 
-    \textbf{Goal:}  Introduce you to ($p$-adic polylogarithms) in Sage and explain some applications of these computations to solving $S$-unit equations.
+    \textbf{Goal:}  Introduce you to ($p$-adic) polylogarithms in Sage and explain some applications of these computations to solving $S$-unit equations.
 
 \end{frame}
 
@@ -257,7 +257,7 @@ sensitive=true}
 \begin{frame}{$p$-adic integration}
     To define $\Li_n$, $p$-adically, we must define antiderivatives of $p$-adic functions.
 
-    Easy! Just write out power series locally and take the antiderivative termwise!
+    Easy! Just write out power series locally and take the antiderivative termwise!\pause
 
     \begin{wrapfigure}{r}{0.30\textwidth}
         \includegraphics[width=0.9\textwidth]{padic.jpg}
@@ -304,7 +304,7 @@ sensitive=true}
         \vrule{}
         \begin{column}{.65\textwidth}
             \begin{sagecommandline}
-                sage: K(1 + 5^5).polylog(2)
+                sage: K(1 + 5^6).polylog(2)
                 1
                 sage: K(1/2).polylog(2)
                 1
@@ -315,11 +315,11 @@ sensitive=true}
             \end{sagecommandline}
         \end{column}
     \end{columns}
-    \pdfnote{At the time I had no idea why this was useful!}
+    \pdfnote{At the time I had no idea why this was useful! Good first ticket to add 1, would be nice to work over extension fields}
 \end{frame}
 
 \begin{frame}{How does it work?}
-    Besser -- de Jeu: ``$\Li^p $-Service? An Algorithm for Computing $p$-Adic Polylogarithms.'' Math. Comp. 77, no. 262 (2008).
+    Besser -- de Jeu: ``$\Li^{(p)} $-Service? An Algorithm for Computing $p$-Adic Polylogarithms.'' Math. Comp. 77, no. 262 (2008).
 
     \begin{itemize}
         \item Near 0: use the power series $\displaystyle\Li_{n}(z)=\sum_{k=1}^{\infty} \frac{z^{k}}{k^{n}}$

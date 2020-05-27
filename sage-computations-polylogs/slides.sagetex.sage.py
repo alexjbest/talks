@@ -77,7 +77,7 @@ except:
 try:
  _st_.current_tex_line = _sage_const_24 
  _st_.commandline(_sage_const_6 , r"""
-                sage: K(1 + 5^5).polylog(2)
+                sage: K(1 + 5^6).polylog(2)
                 1
                 sage: K(1/2).polylog(2)
                 1
@@ -115,7 +115,7 @@ except:
 try:
  _st_.current_tex_line = _sage_const_24 
  _st_.commandline(_sage_const_9 , r"""
-                sage: K(1 + 5^5).polylog(2)
+                sage: K(1 + 5^6).polylog(2)
                 1
                 sage: K(1/2).polylog(2)
                 1
