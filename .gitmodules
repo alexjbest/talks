@@ -1,0 +1,3 @@
+[submodule "lean-generalisation/reveal.js"]
+	path = lean-generalisation/reveal.js
+	url = https://github.com/hakimel/reveal.js.git
