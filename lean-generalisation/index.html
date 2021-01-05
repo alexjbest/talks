@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Generalising typeclass assumptions in Lean</title>
+
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/white.css" id="theme">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Lato&family=Roboto&family=Roboto+Mono&display=swap" rel="stylesheet">
+
+
+        <link rel="stylesheet" href="plugin/highlight/github.css">
+        <style type="text/css">
+            h2, h3 { font-family: 'Lato', sans-serif !important; text-transform: none !important; }
+            p { font-family: 'Roboto', sans-serif !important; }
+            p { text-align: left;}
+            section {font-size: 0.87em !important;}
+            code {font-family: 'Roboto Mono', monospace !important;}
+            pre {font-size: 0.7em !important;}
+        </style>
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+
+                <!-- Use external markdown resource, separate slides by three newlines; vertical slides by two newlines 
+                <section data-markdown="markdown.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"></section> -->
+
+                <!-- Slides are separated by three dashes (quick 'n dirty regular expression) -->
+                <section data-markdown data-separator="---">
+                    <script type="text/template">
+                        ## Generalising typeclass assumptions - in Lean
+                        ### Alex J. Best (Boston University)
+                        This is a prerecorded talk for [Lean Together 2021](https://leanprover-community.github.io/lt2021/)
+                        <!-- .element: class="fragment" -->
+                        Come ask questions on Thursday 7th Jan 2021 at 1pm EST (7pm CET) in the conference wonder room, or ask me on Zulip / via email!
+                        <!-- .element: class="fragment" -->
+                        ---
+                        ## Motivation
+                        1. When developing a formal mathematical library there is a human cost to adding / modifying results that is more noticeable than in pen and paper maths.
+                        2. Want to prototype / demonstrate potential applications of formalization to mathematical practice, develop tools that might genuinely help in research math.
+                        <!-- .element: class="fragment" -->
+
+                        Problem: Often theorems are stated with stronger assumptions than are really needed, can this be detected automatically?
+                        <!-- .element: class="fragment" -->
+                        ---
+
+                        ## Example
+                        <!--[finset.abs_sum_le_sum_abs](https://leanprover-community.github.io/mathlib_docs/algebra/big_operators/order.html#finset.abs_sum_le_sum_abs):-->
+                        ```lean
+                        theorem finset.abs_sum_le_sum_abs {α : Type u} {β : Type v}
+                          [linear_ordered_field α] {f : β → α} {s : finset β} :
+                        abs (∑ (x : β) in s, f x) ≤ ∑ (x : β) in s, abs (f x)
+                        ```
+
+                        This assumes `[linear_ordered_field α]` but makes no mention of inverses, or even multiplication! Maybe the proof uses them though, or maybe it doesn't.
+
+                        At some point in the future someone may come along and try to apply this to the integers, and get an error message! <br />
+                        The "correct" assumption is `[linear_ordered_add_comm_group α]`.
+                        <!-- .element: class="fragment" -->
+                        ---
+                        ## What do we already have?
+                        Many linters! The most similar is the unused arguments arguments linter
+                        ```lean
+                        variables {G₀ : Type*} [group_with_zero G₀]
+                        @[simp] lemma mul_self_div_self (a : G₀) (h : a ≠ 0) : a * a / a = a :=
+                        mul_self_mul_inv
+                        /- The `unused_arguments` linter reports: -/
+                        /- UNUSED ARGUMENTS: -/
+                        #print mul_self_div_self /- argument 4: (h : a ≠ 0) -/
+                        ```
+
+                        in
+                        <!-- .element: class="fragment" data-fragment-index="2" -->
+                        ```lean
+                        theorem finset.abs_sum_le_sum_abs {α : Type u} {β : Type v} [linear_ordered_field α]
+                        {f : β → α} {s : finset β} : abs (∑ (x : β) in s, f x) ≤ ∑ (x : β) in s, abs (f x)
+                        ```
+                        <!-- .element: class="fragment" data-fragment-index="2" -->
+                        the argument is used, via `linear_ordered_field.to_linear_ordered_comm_ring`.
+                        <!-- .element: class="fragment" data-fragment-index="2" -->
+                        This linter also notices duplicate typeclasses when one is unused.
+                        <!-- .element: class="fragment" data-fragment-index="2" -->
+                        ---
+                        ## How do typeclasses work?
+                        Lean generates the applications
+                        ```lean
+                        @linear_ordered_field.to_linear_ordered_comm_ring α _inst_1
+                        @linear_ordered_comm_ring.to_linear_ordered_ring ...
+                        @linear_ordered_ring.to_linear_ordered_add_comm_group ...
+                        ```
+                        automatically, via typeclass resolution.
+
+                        Typeclasses are only used when the structure being inferred is somehow canonical and locally unique.
+
+                        The numerous steps that typeclass resolution can take for you are a big part of making Lean usable for mathematics, but it does make it easy to forget exactly what you are assuming or need for each lemma.
+                        ---
+                        ## Why is a linter for this reasonable?
+
+                        - Because the aim is only to change the typeclass assumptions to match those actually used in the proof, the proof script will (likely) not need changing.
+                        - The linter shouldn't need to do any nontrivial proving itself, so it should be comparatively fast.
+
+                        A metaprogram which attempts to weaken assumptions and then fix the proofs would need to be far more involved!
+
+                        ---
+                        ## Caveats
+
+                        - It is easy to end up with proofs that "fool" such a linter:
+                            ```lean
+                            /-- Given a monoid hom `f : M →* N` and submonoid `S ⊆ M` such that
+                            `f(S) ⊆ units N`, for all `w : M, z : N` and `y ∈ S`, we have
+                            `z = w * (f y)⁻¹ ↔ z * f y = w`. -/
+                            lemma submonoid.localization_map.mul_inv_right {M : Type*}
+                            [comm_monoid M] {S : submonoid M} {N : Type*} [comm_monoid N]
+                            {f : M →* N} (h : ∀ y : S, is_unit (f y)) (y : S) (w z) :
+                            z = w * ↑(is_unit.lift_right (f.mrestrict S) h y)⁻¹ ↔
+                            z * f y = w := by rw [eq_comm, mul_inv_left h, mul_comm, eq_comm]
+                            ```
+                            the use of `mul_comm` here isn't actually needed, but its inclusion is enough to make it seem like `[comm_monoid M]` is required.
+
+                        - Stating each lemma in as much generality as possible may result in unnecessary complication in the library, and maybe even slow down some proofs if typeclass resolution needs to do more work.
+
+                        ---
+                        ## What are the most general typeclass assumptions?
+
+                        1. For each original assumption we could find all of the typeclasses it implies that are used in the proof, then take a meet in
+
+                        ---
+                        ## What does the Lean typeclass graph actually look like?
+
+                        See [this Observable notebook](https://observablehq.com/@alexjbest2/lean-generalisation) and generated svg
+                        ![tc graph](svg.svg) <!-- .element style="width: 70%;margin:0;" -->
+                        ---
+                        ## Implementation
+
+                        This is implemented in Lean, still a WIP but coming soon!
+
+                        - Implemented using the linter framework (very convenient!)
+                        - Uses `native.rb_map` to represent DAGs, find reachable sets and topological sorts, unfortunately nothing can be proven about this implementation! 
+
+                        ### Technical gotchas
+
+                        - Must inspect the statement as well as the proof! Sometimes the proof is "just" `rfl`
+                        - Some things look like generalisations when analysing the proof term but aren't (solution: keep a list of bad type synonyms)
+                        - Sometimes terms need to be eta reduced (e.g. see the term `(λ a b, _inst_1 a b)` in the proof instead of `_inst_1`)
+
+                        ---
+                        ## Thanks!
+
+                        For listening and for everyone whose 
+                        ---
+                        In another example
+                        sub_le_of_abs_sub_le_left
+                        @linear_ordered_ring.to_linear_order α _inst_1
+                        @linear_ordered_ring.to_linear_ordered_add_comm_group α _inst_1
+                        @linear_ordered_ring.to_ordered_comm_ring α _inst_1
+
+                    </script>
+                </section>
+
+            </div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+        <script src="plugin/markdown/markdown.js"></script>
+        <script src="plugin/highlight/highlight.js"></script>
+        <script src="plugin/notes/notes.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
+
+
+		<script>
+
+			Reveal.initialize({
+                width: 1200,
+                height: 720,
+				controls: false,
+				progress: true,
+				history: true,
+				center: false,
+				previewLinks: false,
+
+				plugins: [ RevealMarkdown, RevealNotes ]
+			});
+            Reveal.addEventListener('ready', (event) => {
+                hljs.initHighlightingOnLoad();
+                hljs.registerLanguage("lean",function(){"use strict";return function(e){var n={keyword:"theorem|10 lemma|10 definition def class structure instance example inductive coinductive axiom axioms hypothesis constant constants universe universes variable variables parameter parameters begin end import open theory prelude renaming hiding exposing calc  match do  by let in extends fun assume #check #eval #reduce #print",built_in:"Type Prop|10 Sort rw|10 rewrite rwa erw subst substs simp dsimp simpa simp_intros finish unfold unfold1 dunfold unfold_projs unfold_coes delta cc ac_reflexivity ac_refl existsi|10 cases rcases with intro intros introv by_cases refl rfl funext propext exact exacts refine apply eapply fapply apply_with apply_instance induction rename assumption revert generalize specialize clear contradiction by_contradiction by_contra trivial exfalso symmetry transitivity destruct constructor econstructor left right split injection injections repeat try continue skip swap solve1 abstract all_goals any_goals done fail_if_success success_if_fail guard_target guard_hyp have replace at suffices show from congr congr_n congr_arg norm_num ring ",literal:"tt ff",meta:"noncomputable|10 private protected meta mutual",section:"section namespace end",strong:"sorry admit"},t=e.COMMENT("--","$"),a=e.COMMENT("/-[^-]","-/"),s={className:"theorem",beginKeywords:"def theorem lemma class instance structure",end:":=",excludeEnd:!0,contains:[{className:"keyword",begin:/extends/},e.inherit(e.TITLE_MODE,{begin:/[A-Za-z_][\\w\u207F-\u209C\u1D62-\u1D6A\u2079\']*/}),{className:"params",begin:/[([{]/,end:/[)\]}]/,endsParent:!1,keywords:n},{className:"symbol",begin:/:/,endsParent:!0}],keywords:n};return{name:"lean",keywords:n,contains:[e.QUOTE_STRING_MODE,e.NUMBER_MODE,t,a,{className:"doctag",begin:"/-[-!]",end:"-/"},s,{className:"meta",begin:"@\\[",end:"\\]"},{className:"meta",begin:"^attribute",end:"$"},{begin:/⟨/}]}}}());hljs.registerLanguage("lean",function(){"use strict";return function(e){var n={keyword:"theorem|10 lemma|10 definition def class structure instance example inductive coinductive axiom axioms hypothesis constant constants universe universes variable variables parameter parameters begin end import open theory prelude renaming hiding exposing calc  match do  by let in extends fun assume #check #eval #reduce #print",built_in:"Type Prop|10 Sort rw|10 rewrite rwa erw subst substs simp dsimp simpa simp_intros finish unfold unfold1 dunfold unfold_projs unfold_coes delta cc ac_reflexivity ac_refl existsi|10 cases rcases with intro intros introv by_cases refl rfl funext propext exact exacts refine apply eapply fapply apply_with apply_instance induction rename assumption revert generalize specialize clear contradiction by_contradiction by_contra trivial exfalso symmetry transitivity destruct constructor econstructor left right split injection injections repeat try continue skip swap solve1 abstract all_goals any_goals done fail_if_success success_if_fail guard_target guard_hyp have replace at suffices show from congr congr_n congr_arg norm_num ring ",literal:"tt ff",meta:"noncomputable|10 private protected meta mutual",section:"section namespace end",strong:"sorry admit"},t=e.COMMENT("--","$"),a=e.COMMENT("/-[^-]","-/"),s={className:"theorem",beginKeywords:"def theorem lemma class instance structure",end:":=",excludeEnd:!0,contains:[{className:"keyword",begin:/extends/},e.inherit(e.TITLE_MODE,{begin:/[A-Za-z_][\\w\u207F-\u209C\u1D62-\u1D6A\u2079\']*/}),{className:"params",begin:/[([{]/,end:/[)\]}]/,endsParent:!1,keywords:n},{className:"symbol",begin:/:/,endsParent:!0}],keywords:n};return{name:"lean",keywords:n,contains:[e.QUOTE_STRING_MODE,e.NUMBER_MODE,t,a,{className:"doctag",begin:"/-[-!]",end:"-/"},s,{className:"meta",begin:"@\\[",end:"\\]"},{className:"meta",begin:"^attribute",end:"$"},{begin:/⟨/}]}}}());
+                //hljs.registerLanguage("lean",function(e){var r="([a-zA-Z]|\\.[a-zA-Z.])[a-zA-Z0-9._]*";return {c: [ e.HCM,e.CBCM,{b:r,l:r,k:{keyword:"maximize subject to var ",literal:""},r:90},{cN:"number",b:"\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",r:0}]} });
+
+                // console.log(hljs.listLanguages());
+                document.querySelectorAll('pre code').forEach((block) => { hljs.highlightBlock(block); });
+            });
+
+
+		</script>
+
+    </body>
+</html>
