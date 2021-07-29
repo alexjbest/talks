@@ -6,14 +6,13 @@
 
 		<title>Generalising typeclass assumptions in Lean</title>
 
-		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/white.css" id="theme">
-        <link rel="preconnect" href="https://fonts.gstatic.com">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/reveal.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/theme/white.min.css">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Lato&family=Roboto&family=Roboto+Mono&display=swap" rel="stylesheet">
 
 
-        <link rel="stylesheet" href="plugin/highlight/github.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs@latest/styles/github.css">
         <style type="text/css">
             h2, h3 { font-family: 'Lato', sans-serif !important; text-transform: none !important; }
             p { font-family: 'Roboto', sans-serif !important; }
@@ -254,10 +253,10 @@
             </div>
 		</div>
 
-		<script src="dist/reveal.js"></script>
-        <script src="plugin/markdown/markdown.js"></script>
-        <script src="plugin/highlight/highlight.js"></script>
-        <script src="plugin/notes/notes.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/reveal.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/plugin/markdown/markdown.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/plugin/highlight/highlight.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/plugin/notes/notes.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
 
 
@@ -275,12 +274,114 @@
 				plugins: [ RevealMarkdown, RevealNotes ]
 			});
             Reveal.addEventListener('ready', (event) => {
-                hljs.initHighlightingOnLoad();
-                hljs.registerLanguage("lean",function(){"use strict";return function(e){var n={keyword:"theorem|10 lemma|10 definition def class structure instance example inductive coinductive axiom axioms hypothesis constant constants universe universes variable variables parameter parameters begin end import open theory prelude renaming hiding exposing calc  match do  by let in extends fun assume #check #eval #reduce #print",built_in:"Type Prop|10 Sort rw|10 rewrite rwa erw subst substs simp dsimp simpa simp_intros finish unfold unfold1 dunfold unfold_projs unfold_coes delta cc ac_reflexivity ac_refl existsi|10 cases rcases with intro intros introv by_cases refl rfl funext propext exact exacts refine apply eapply fapply apply_with apply_instance induction rename assumption revert generalize specialize clear contradiction by_contradiction by_contra trivial exfalso symmetry transitivity destruct constructor econstructor left right split injection injections repeat try continue skip swap solve1 abstract all_goals any_goals done fail_if_success success_if_fail guard_target guard_hyp have replace at suffices show from congr congr_n congr_arg norm_num ring ",literal:"tt ff",meta:"noncomputable|10 private protected meta mutual",section:"section namespace end",strong:"sorry admit"},t=e.COMMENT("--","$"),a=e.COMMENT("/-[^-]","-/"),s={className:"theorem",beginKeywords:"def theorem lemma class instance structure",end:":=",excludeEnd:!0,contains:[{className:"keyword",begin:/extends/},e.inherit(e.TITLE_MODE,{begin:/[A-Za-z_][\\w\u207F-\u209C\u1D62-\u1D6A\u2079\']*/}),{className:"params",begin:/[([{]/,end:/[)\]}]/,endsParent:!1,keywords:n},{className:"symbol",begin:/:/,endsParent:!0}],keywords:n};return{name:"lean",keywords:n,contains:[e.QUOTE_STRING_MODE,e.NUMBER_MODE,t,a,{className:"doctag",begin:"/-[-!]",end:"-/"},s,{className:"meta",begin:"@\\[",end:"\\]"},{className:"meta",begin:"^attribute",end:"$"},{begin:/⟨/}]}}}());hljs.registerLanguage("lean",function(){"use strict";return function(e){var n={keyword:"theorem|10 lemma|10 definition def class structure instance example inductive coinductive axiom axioms hypothesis constant constants universe universes variable variables parameter parameters begin end import open theory prelude renaming hiding exposing calc  match do  by let in extends fun assume #check #eval #reduce #print",built_in:"Type Prop|10 Sort rw|10 rewrite rwa erw subst substs simp dsimp simpa simp_intros finish unfold unfold1 dunfold unfold_projs unfold_coes delta cc ac_reflexivity ac_refl existsi|10 cases rcases with intro intros introv by_cases refl rfl funext propext exact exacts refine apply eapply fapply apply_with apply_instance induction rename assumption revert generalize specialize clear contradiction by_contradiction by_contra trivial exfalso symmetry transitivity destruct constructor econstructor left right split injection injections repeat try continue skip swap solve1 abstract all_goals any_goals done fail_if_success success_if_fail guard_target guard_hyp have replace at suffices show from congr congr_n congr_arg norm_num ring ",literal:"tt ff",meta:"noncomputable|10 private protected meta mutual",section:"section namespace end",strong:"sorry admit"},t=e.COMMENT("--","$"),a=e.COMMENT("/-[^-]","-/"),s={className:"theorem",beginKeywords:"def theorem lemma class instance structure",end:":=",excludeEnd:!0,contains:[{className:"keyword",begin:/extends/},e.inherit(e.TITLE_MODE,{begin:/[A-Za-z_][\\w\u207F-\u209C\u1D62-\u1D6A\u2079\']*/}),{className:"params",begin:/[([{]/,end:/[)\]}]/,endsParent:!1,keywords:n},{className:"symbol",begin:/:/,endsParent:!0}],keywords:n};return{name:"lean",keywords:n,contains:[e.QUOTE_STRING_MODE,e.NUMBER_MODE,t,a,{className:"doctag",begin:"/-[-!]",end:"-/"},s,{className:"meta",begin:"@\\[",end:"\\]"},{className:"meta",begin:"^attribute",end:"$"},{begin:/⟨/}]}}}());
+                hljs.registerLanguage("lean",function(){"use strict";return function(hljs){
+  var LEAN_KEYWORDS = {
+    keyword:
+      'theorem|10 lemma|10 definition def class structure instance ' +
+      'example inductive coinductive ' +
+      'axiom axioms hypothesis constant constants ' +
+      'universe universes variable variables parameter parameters ' +
+      'begin end ' +
+      'import open theory prelude renaming hiding exposing ' +
+      'calc  match do  by let in extends ' +
+      'fun assume ' +
+      '#check #eval #reduce #print',
+    built_in:
+      'Type Prop|10 Sort rw|10 rewrite rwa erw subst substs ' +
+      'simp dsimp simpa simp_intros finish ' +
+      'unfold unfold1 dunfold unfold_projs unfold_coes ' +
+      'delta cc ac_reflexivity ac_refl ' +
+      'existsi|10 cases rcases with intro intros introv by_cases ' +
+      'refl rfl funext propext exact exacts ' +
+      'refine apply eapply fapply apply_with apply_instance ' +
+      'induction rename assumption revert generalize specialize clear ' +
+      'contradiction by_contradiction by_contra trivial exfalso ' +
+      'symmetry transitivity destruct constructor econstructor ' +
+      'left right split injection injections ' +
+      'repeat try continue skip swap solve1 abstract all_goals any_goals done ' +
+      'fail_if_success success_if_fail guard_target guard_hyp ' +
+      'have replace at suffices show from ' +
+      'congr congr_n congr_arg norm_num ring ',
+    literal:
+      'tt ff',
+    meta:
+      'noncomputable|10 private protected meta mutual',
+    section:
+      'section namespace',
+    strong:
+      'sorry admit',
+  };
+
+  var LEAN_IDENT_RE = /[A-Za-z_][\\w\u207F-\u209C\u1D62-\u1D6A\u2079\']*/;
+
+  var DASH_COMMENT = hljs.COMMENT('--', '$');
+  var MULTI_LINE_COMMENT = hljs.COMMENT('/-[^-]', '-/');
+  var DOC_COMMENT = {
+    className: 'doctag',
+    begin: '/-[-!]',
+    end: '-/'
+  };
+
+  var ATTRIBUTE_DECORATOR = {
+    className: 'meta',
+    begin: '@\\[',
+    end: '\\]'
+  };
+
+  var ATTRIBUTE_LINE = {
+    className: 'meta',
+    begin: '^attribute',
+    end: '$'
+  };
+
+  var LEAN_DEFINITION =	{
+    className: 'theorem',
+    beginKeywords: 'def theorem lemma class instance structure',
+    end: ':=',
+    excludeEnd: true,
+    contains: [
+      {
+        className: 'keyword',
+        begin: /extends/
+      },
+      hljs.inherit(hljs.TITLE_MODE, {
+        begin: LEAN_IDENT_RE
+      }),
+      {
+        className: 'params',
+        begin: /[([{]/, end: /[)\]}]/, endsParent: false,
+        keywords: LEAN_KEYWORDS,
+      },
+      {
+        className: 'symbol',
+        begin: /:/,
+        endsParent: true
+      },
+    ],
+    keywords: LEAN_KEYWORDS
+  };
+  return {
+    name: "lean",
+    keywords: LEAN_KEYWORDS,
+    contains: [
+      hljs.QUOTE_STRING_MODE,
+      hljs.NUMBER_MODE,
+      DASH_COMMENT,
+      MULTI_LINE_COMMENT,
+      DOC_COMMENT,
+      LEAN_DEFINITION,
+      ATTRIBUTE_DECORATOR,
+      ATTRIBUTE_LINE,
+      { begin: /⟨/ } // relevance booster
+    ]
+  };
+
+            }}());
                 //hljs.registerLanguage("lean",function(e){var r="([a-zA-Z]|\\.[a-zA-Z.])[a-zA-Z0-9._]*";return {c: [ e.HCM,e.CBCM,{b:r,l:r,k:{keyword:"maximize subject to var ",literal:""},r:90},{cN:"number",b:"\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",r:0}]} });
 
                 // console.log(hljs.listLanguages());
-                document.querySelectorAll('pre code').forEach((block) => { hljs.highlightBlock(block); });
+                document.querySelectorAll('pre code').forEach((block) => { hljs.highlightElement(block); });
+                //hljs.highlightAll();
             });
 
 
