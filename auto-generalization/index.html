@@ -7,6 +7,8 @@
 		<title>Automatically Generalizing Theorems Using Typeclasses</title>
 
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/reveal.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+		<link rel="stylesheet" href="plugin/chalkboard.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/theme/white.min.css">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Lato&family=Roboto&family=Roboto+Mono&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -17,7 +19,7 @@
             h2, h3 { font-family: 'Lato', sans-serif !important; text-transform: none !important; }
             p { font-family: 'Roboto', sans-serif !important; }
             p { text-align: left;}
-            section {font-size: 0.87em !important;}
+            section {font-size: 0.90em !important;}
             code {font-family: 'Share Tech Mono', monospace !important; max-height: 500px !important;}
             pre {font-size: 0.7em !important;}
         </style>
@@ -38,8 +40,8 @@
                         ## Automatically Generalizing Theorems Using Typeclasses
                         ### Alex J. Best - Vrije Universiteit Amsterdam
                         #### FMM 2021 (part of CICM 2021)
-                        <br/>
-                        <br/>
+
+                        ![vu logo](VUlogo.png) <!-- .element style="display: block; width: 50%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
 
 
                         These slides are online at:
@@ -48,14 +50,15 @@
 
                         ---
                         ## Motivation
-                        1. When developing a formal mathematical library there is a human cost to adding / modifying results, the barriers to formalization are often not having small lemmas in precisely the right form.
-                        2. Want to prototype / demonstrate potential applications of formalization to mathematical practice, i.e. develop tools that might genuinely help in research mathematics.
-                        <!-- .element: class="fragment" -->
+                        1. When developing a formal mathematical library it is time consuming to add and modify basic results, the barriers to formalization are often not having small lemmas in precisely the right form.
+
+                        2. <!-- .element: class="fragment" -->Want to prototype / demonstrate potential applications of formalization to mathematical practice, i.e. develop tools that might genuinely help in research mathematics.
+                        
 
                         **Problem**: Often theorems are stated with stronger assumptions than are really needed, can this be detected automatically?
                         <br/>
                         <br/>
-                        More specifically: this happens easily when typeclasses are used to manage hierarchies of mathematical structures (e.g. algebraic, topological and order structures)
+                        **More specifically**: this commonly occurs when typeclasses are used to manage hierarchies of mathematical structures (e.g. algebraic, topological and order structures)
                         <br/>
                         <br/>
                         Examples will be in Lean but the idea should apply more generally.
@@ -63,21 +66,34 @@
 
                         ---
 
-                        ## Example
-                        A fake Lean lemma:
+                        ## Examples
+                        **A fake Lean lemma**:
                         ```lean
-                        lemma mul_inv {G : Type*} [ordered_comm_group G] (a b : G) :
-                            (a * b)⁻¹ = a⁻¹ * b⁻¹ :=
+                        lemma mul_inv {G : Type*} [ordered_comm_group G] (a b : G) : (a * b)⁻¹ = a⁻¹ * b⁻¹ :=
                         by rw [mul_inv_rev, mul_comm]
                         ```
 
                         This assumes `[ordered_comm_group G]` but makes no mention of an order! In principle the proof could still require it, but it doesn't.
 
-                        Anyone trying to use this theorem for a regular group would get an error message! <br />
+                        Anyone trying to use this theorem for a  `comm_group G` would get an error! <br />
 
-                        The "correct" assumption is `[comm_group G]`.
-                        When this is  changed the proof script does not need modifying.
-                        <!-- .element: class="fragment" -->
+                        The "correct" assumption is `[comm_group G]`,
+                        when this is  changed the proof script does not need modifying.
+                        
+                        **A real lemma from `mathlib`**:
+                        <!-- .element: class="fragment" data-fragment-index="2" -->
+                        ```lean
+                        lemma ring_hom.char_p_iff_char_p {K L : Type*} [field K] [field L]
+                        (f : K →+* L) (p : ℕ) : char_p K p ↔ char_p L p :=
+                        begin
+                          split;
+                          { introI _c, constructor, intro n,
+                            rw [← @char_p.cast_eq_zero_iff _ _ p _c n, ← f.injective.eq_iff, f.map_nat_cast, f.map_zero] }
+                        end
+                        ```
+                        <!-- .element: class="fragment" data-fragment-index="2" -->
+                        Correct assumptions: `[division_ring K] [nontrivial L] [semiring L]`
+                        <!-- .element: class="fragment" data-fragment-index="2" -->
                         <!--
                         ## What do we already have?
                         Many linters, including the unused arguments linter (by Floris van Doorn)
@@ -100,22 +116,31 @@
                         -->
                         ---
                         ## How do typeclasses work?
-                        Lean generates the applications
+                        Lean automatically generates the terms used in the proof:
                         ```lean
                         @ordered_comm_group.to_ordered_cancel_comm_monoid G _inst_1
                         @ordered_cancel_comm_monoid.to_ordered_comm_monoid ...
                         @ordered_comm_group.to_comm_group G _inst_1
                         ...
                         ```
-                        automatically, via typeclass resolution.
+                        via typeclass resolution. The following instances appear in the proof term:
                          <!-- .element style="font-size:0.9em;" -->
                         ![tc graph](tcchain.svg) <!-- .element style="display: block; width: 50%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
 
-                        Typeclasses are used when the structure being inferred  is locally unique.
+                        Typeclasses are used when the structure being inferred  is (locally) unique.
 
                         <!--The numerous steps that typeclass resolution can take for you are a big part of making Lean usable for mathematics, but it does make it easy to forget exactly what you are assuming or need for each lemma.-->
                         ---
-                        ## Why is a detecting this reasonable?
+                        ## What does the `mathlib` typeclass graph actually look like?
+
+                        See https://observablehq.com/@alexjbest2/lean-generalisation for a (small) sample:
+                         <!-- .element style="font-size:0.8em;" -->
+                        ![tc graph](svg.svg) <!-- .element style="display: block; width: 80%;margin-left: auto; margin-right: auto; object-fit: cover; margin-top:-50px;margin-bot:0;" -->
+
+                        (*) Only terms reachable from `linear_ordered_field` here, generated Jan 2021, it has grown since then!
+                         <!-- .element style="font-size:0.7em;" -->
+                        ---
+                        ## Why is detecting this reasonable?
 
                         - Because the aim is only to change the typeclass assumptions to match those actually used in the proof, the proof script will (likely) not need changing (*).
                         - The linter shouldn't need to do any nontrivial proving itself, so it should be comparatively fast.
@@ -128,9 +153,25 @@
                          <!-- .element style="font-size:0.7em;" -->
 
                         ---
+                        ## What are the most general typeclass assumptions?
+
+                        - Looking at the proof term, we can determine the instances actually used to invoke the lemmas used.
+                        - Can then look at the global typeclass graph to determine minimal assumptions providing instances of the used facts
+                        - Uniqueness is important, we must not introduce unequal instances of one class, but we
+                        - To do this we take a meet in the typeclass graph of subsets of the used instances, that conflict 
+
+
+                        ---
                         ## Caveats
 
-                        - It is easy to "fool" such a tool:
+                        - Just looking at the typeclasses defined in the library is not enough.
+
+                            Partially applied typeclasses also show up in the instance graph.
+
+                            Want to generalize `[group G]` to `[has_pow G ℤ]` if possible or `monoid G` to `has_pow G ℕ`, so we treat these partially applied typeclasses as the basic objects of interest.
+
+                        - <!-- .element: class="fragment" data-fragment-index="2" -->It is easy to "fool" such a tool:
+                            
                             ```lean
                             /-- Given a monoid hom `f : M →* N` and submonoid `S ⊆ M` such that
                             `f(S) ⊆ units N`, for all `w : M, z : N` and `y ∈ S`, we have
@@ -146,29 +187,16 @@
                         <!--- Stating each lemma in as much generality as possible may result in unnecessary complication in the library, and maybe even slow down some proofs if typeclass resolution needs to do more work.-->
 
                         ---
-                        ## What are the most general typeclass assumptions?
-
-
-                        ---
-                        ## What does the `mathlib` typeclass graph actually look like?
-
-                        See https://observablehq.com/@alexjbest2/lean-generalisation for a (small) sample:
-                         <!-- .element style="font-size:0.8em;" -->
-                        ![tc graph](svg.svg) <!-- .element style="display: block; width: 80%;margin-left: auto; margin-right: auto; object-fit: cover; margin-top:-50px;margin-bot:0;" -->
-
-                        (*) Only terms reachable from `linear_ordered_field` shown, generated earlier this year, it has grown since then!
-                         <!-- .element style="font-size:0.7em;" -->
-                        ---
                         ## Implementation
 
                         This is implemented in Lean (no external dependencies):
 
                         > https://github.com/alexjbest/lean-generalisation
 
-                        - Implemented using the linter framework (very convenient!)
+                        - Implemented using the linter framework, just import the tool and add `#lint` after your declaration.
                         - Uses `native.rb_lmap` to represent DAGs, find reachable sets and topological sorts - untrusted, nothing can be proven about this implementation! 
-                        - Caches the typeclass graph and useful associated data
-                        - Quick enough for interactive use in _most_ files
+                        - Caches the typeclass graph and useful associated data.
+                        - Now quick enough for interactive use in _most_ files.
 
                         ### Some technical gotchas
 
@@ -177,59 +205,10 @@
                         - Sometimes terms need to be eta reduced (e.g. TC mechanism puts the term `(λ a b, _inst_1 a b)` in the proof instead of `_inst_1`)
 
                         ---
-                        ## Results
-
-                        Running this on my laptop 
-                        ---
-                        ## Some common replacements in `mathlib`
-
-                        Original typeclass | Replacement typeclasses (number of times replaced)
-                         ----- | ----
-                        comm_ring | comm_semiring (42), ring (40), semiring (27), has_zero (8)
-                        add_comm_group | add_comm_monoid (96), add_group (5), sub_neg_monoid (5), {has_add, has_neg, has_zero} (3)
-                        semiring | non_assoc_semiring (53), non_unital_non_assoc_semiring (23), {add_comm_semigroup, has_one} (13), {add_comm_monoid, has_mul} (8), has_mul (7), has_zero (5)
-                        field | division_ring (23), comm_ring (12), integral_domain (12), semiring (7), domain (4), ring (4), has_inv ring (3)
-                        ring | semiring (55), non_assoc_semiring (8), {add_group, has_mul} (4), {has_add, has_neg, mul_zero_one_class} (4)
-                        preorder | has_lt (36), has_le (31), {has_le, is_refl} (3), {has_lt, is_asymm} (3), {has_lt, is_irrefl, is_trans} (3)
-                        comm_semiring | semiring (26), monoid (10), add_zero_class (4), {has_mul, is_associative, is_commutative} (4), has_pow (4), mul_one_class (4)
-                        normed_space | module (23), semi_normed_space (38)
-                        add_monoid | add_zero_class (51), {has_add, has_zero} (5)
-                        monoid | mul_one_class (34), has_mul (11), {has_mul, has_one} (5), has_pow (5)
-                        module | has_scalar (20), distrib_mul_action (8), mul_action (6)
-                        normed_group | semi_normed_group (36), has_norm (10), has_nnnorm (3)
-                        integral_domain | comm_ring (15), domain (8), {comm_ring, no_zero_divisors} (7), comm_monoid (3), {has_mul, has_zero, no_zero_divisors} (2), {no_zero_divisors, semiring} (2)
-                        partial_order | preorder (33)
-                        <!-- .element style="font-size:0.65em;" -->
-
-                        ---
-                        ## Demo time
-
-                        ### Highlights
-
+                        ### Example output:
                         ```lean
-                        lemma ring_hom.char_p_iff_char_p {K L : Type*} [field K] [field L]
-                        (f : K →+* L) (p : ℕ) : char_p K p ↔ char_p L p :=
-                        begin
-                          split;
-                          { introI _c, constructor, intro n,
-                            rw [← @char_p.cast_eq_zero_iff _ _ p _c n, ← f.injective.eq_iff, f.map_nat_cast, f.map_zero] }
-                        end
-                        ```
-                        <!-- .element: class="fragment" data-fragment-index="2" -->
-                        ```lean
-                        lemma ring_hom.char_p_iff_char_p {K L : Type*} [division_ring K]
-                        [nontrivial L] [semiring L] (f : K →+* L) (p : ℕ) : char_p K p ↔ char_p L p :=
-                        ```
-                        <!-- .element: class="fragment" data-fragment-index="3" -->
-                        The linter can guide us to create intermediate definitions too:
-                        <!-- .element: class="fragment" data-fragment-index="4" -->
-                        ```lean
-                        #print multiset.sum_map_mul_right /- _inst_1: semiring ↝ add_comm_monoid distrib mul_zero_class -/
-                        ```
-                        <!-- .element: class="fragment" data-fragment-index="4" -->
-                        ---
-                        ### Highlights
-                        ```lean
+                        /- The `generalisation_linter` linter reports: -/
+                        /- typeclass generalisations may be possible -/
                         -- topology\algebra\group.lean
                         #print nhds_translation_mul_inv /- _inst_3: topological_group ↝ has_continuous_mul
                          -/
@@ -259,8 +238,31 @@
                          -/
                         ````
                         This is naturally an iterative process: once the assumptions lemmas are changed dependent declarations may become generalizable.
-                        - Either need a system to transform declarations in place when working through the environment, or
-                        - a system fast enough for interactive use
+                        - The current implementation is fast enough for interactive use.
+                        - Alternative would be to transform declarations in place when working through the environment
+                        ---
+                        ### Some common replacements in `mathlib`
+
+                        Running this on my laptop on the 80,000 declarations in  `mathlib` finished overnight.
+
+                        Original typeclass | Replacement typeclasses (number of times replaced)
+                         ----- | ----
+                        comm_ring | comm_semiring (42), ring (40), semiring (27), has_zero (8)
+                        add_comm_group | add_comm_monoid (96), add_group (5), sub_neg_monoid (5), {has_add, has_neg, has_zero} (3)
+                        semiring | non_assoc_semiring (53), non_unital_non_assoc_semiring (23), {add_comm_semigroup, has_one} (13), {add_comm_monoid, has_mul} (8), has_mul (7), has_zero (5)
+                        field | division_ring (23), comm_ring (12), integral_domain (12), semiring (7), domain (4), ring (4), has_inv ring (3)
+                        ring | semiring (55), non_assoc_semiring (8), {add_group, has_mul} (4), {has_add, has_neg, mul_zero_one_class} (4)
+                        preorder | has_lt (36), has_le (31), {has_le, is_refl} (3), {has_lt, is_asymm} (3), {has_lt, is_irrefl, is_trans} (3)
+                        comm_semiring | semiring (26), monoid (10), add_zero_class (4), {has_mul, is_associative, is_commutative} (4), has_pow (4), mul_one_class (4)
+                        normed_space | module (23), semi_normed_space (38)
+                        add_monoid | add_zero_class (51), {has_add, has_zero} (5)
+                        monoid | mul_one_class (34), has_mul (11), {has_mul, has_one} (5), has_pow (5)
+                        module | has_scalar (20), distrib_mul_action (8), mul_action (6)
+                        normed_group | semi_normed_group (36), has_norm (10), has_nnnorm (3)
+                        integral_domain | comm_ring (15), domain (8), {comm_ring, no_zero_divisors} (7), comm_monoid (3), {has_mul, has_zero, no_zero_divisors} (2), {no_zero_divisors, semiring} (2)
+                        partial_order | preorder (33)
+                        <!-- .element style="font-size:0.65em;" -->
+
                         ---
                         ## Other systems
 
@@ -271,22 +273,24 @@
                         ## Future work
                         <!-- .element: class="fragment" data-fragment-index="2" -->
 
-                        - Cleanup, PR and then lint mathlib!
+                        - <!-- .element: class="fragment" data-fragment-index="2" --> Cleanup, PR and then lint mathlib!
+                        - <!-- .element: class="fragment" data-fragment-index="2" -->Can we generalize explicit types to only their used properties, e.g. `ℝ` to `{R : Type*} [linear_ordered_field R]`?
                         <!-- .element: class="fragment" data-fragment-index="2" -->
-                        - Could such a metaprogram be run by the typeclass system itself when it is invoked (in Lean 4)
+                        - <!-- .element: class="fragment" data-fragment-index="2" -->Could such a metaprogram be run by the typeclass system itself when it is invoked (in Lean 4)
                         <!-- .element: class="fragment" data-fragment-index="2" -->
-                        - Can new definitions be suggested by such a tool? 
-                        <!-- .element: class="fragment" data-fragment-index="2" -->
-                        - Bundled things... not typeclass assumptions per se?
-                        <!-- .element: class="fragment" data-fragment-index="2" -->
-                        - Suggestions?
-                        <!-- .element: class="fragment" data-fragment-index="2" -->
+                        - <!-- .element: class="fragment" data-fragment-index="2" -->Can new definitions be suggested by such a tool? 
+
+                        - <!-- .element: class="fragment" data-fragment-index="2" -->Better source transform tools, to reduce human input to make desired changes.
+
+                        - <!-- .element: class="fragment" data-fragment-index="2" -->Bundled things... not typeclass assumptions per se?
+
+                        - <!-- .element: class="fragment" data-fragment-index="2" -->Suggestions?
                         ---
                         ## Thanks!
 
                         To the organisers, Lean development team, everyone whose tactics I've repurposed for this, the community, and you for listening!
-                        ![tc graph](svg.svg) <!-- .element style="display: block; width: 50%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
-                        <https://github.com/leanprover-community/mathlib/compare/generalising_typeclasses>
+                        ![tc graph](svg.svg) <!-- .element style="display: block; width: 60%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+                        > https://github.com/alexjbest/lean-generalisation
 
                     </script>
                 </section>
@@ -296,6 +300,7 @@
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/reveal.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/plugin/markdown/markdown.js"></script>
+        <script src="plugin/chalkboard.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/plugin/highlight/highlight.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/plugin/notes/notes.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
@@ -310,9 +315,12 @@
 				progress: false,
 				history: true,
 				center: false,
-				previewLinks: true,
+				previewLinks: false,
+                chalkboard: {
+                    toggleChalkboardButton: false,
+                    toggleNotesButton: false,},
 
-				plugins: [ RevealMarkdown, RevealNotes ]
+				plugins: [ RevealMarkdown, RevealNotes, RevealChalkboard ]
 			});
             Reveal.addEventListener('ready', (event) => {
                 hljs.registerLanguage("lean",function(){"use strict";return function(hljs){
