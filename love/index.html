@@ -6,10 +6,10 @@
 
 		<title>Automatically Generalizing Theorems Using Typeclasses</title>
 
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/reveal.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/reveal.min.css">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
 		<link rel="stylesheet" href="plugin/chalkboard.css">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/theme/white.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/theme/white.min.css">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Lato&family=Roboto&family=Roboto+Mono&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
@@ -53,8 +53,6 @@
                         Mathematics is language of abstraction, and certainty in proof
                         ##
 
-                        examples 
-                        - 
                         ---
                         ### Example 1: integer multiplication
                         > In 2015 Harvey, Joris van der Hoeven and Lecerf[7] gave a new algorithm that achieves a running time of {\displaystyle O(n\log n\cdot 2^{3\log ^{*}n})}{\displaystyle O(n\log n\cdot 2^{3\log ^{*}n})} making explicit the implied constant in the {\displaystyle O(\log ^{*}n)}O(\log ^{*}n) exponent. They also proposed a variant of their algorithm which achieves {\displaystyle O(n\log n\cdot 2^{2\log ^{*}n})}{\displaystyle O(n\log n\cdot 2^{2\log ^{*}n})} but whose validity relies on standard conjectures about the distribution of Mersenne primes.
@@ -75,12 +73,18 @@
                         https://arxiv.org/abs/1605.06702
 
                         ---
+                        ### Example 3: Cryptography
+
+                        ---
                         ## How can we make formalizing less time consuming
+
                         1. Don't reinvent the wheel!
                         1. Create and use high level tactics to speed through conceptually simple proofs
 
                         ---
-                        Don't reinvent the wheel
+                        ## Don't reinvent the wheel
+
+                        $$hi$$
 
                         Benefits of living in a monolith
 
@@ -88,27 +92,59 @@
 
                         Benefits of starting from scratch
                         ---
-                        Translating between proof assistants
+                        ## What is `mathlib`?
+
+                        - Collaborative open-source library of lean (3) formalizations
+                        - 30,000 definitions, 71,000 theorems
+                    
+                        - 10-20 PRs of new material merged per day
+                        
+                        - Over 200 contributors so far
+
+                        - 2,200 files
+                        ---
+                        Translating between / within proof assistants
 
                         mm0
 
                         lean3->4
+
+                        to_additive
 
                         ---
                         Other proof assistants
 
                         Coq, Isabelle auto hammers
                         ---
-                        tactics
+                        ## Powerful tactics
 
-                        finish/tauto
+                        (already seen?)
+                        - finish/tauto
 
-                        linarith
+                        - linarith
+
+                        - library_search
+
+                        - abel
+
+                        - norm_cast
+                        
+                        - ring
+
+
+
+
+                        - suggest using
+
 
                         ring/group/noncomm_ring
                         CAP game example
 
                         norm_num
+
+                        obviously / tidy
+
+                        rewrite search / rewrite hint
 
                         ---
                         linters
@@ -124,8 +160,13 @@
                         unnecessary case splits
 
                         removable edge cases
+
                         ---
                         generalizing typeclasses
+                        ---
+                        Removing imports
+                        ---
+                        ## Gpt-f
                         ---
                         1. When developing a formal mathematical library it is time consuming to add and modify basic results, the barriers to formalization are often not having small lemmas in precisely the right form.
 
@@ -388,11 +429,12 @@
             </div>
 		</div>
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/reveal.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/plugin/markdown/markdown.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/reveal.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/plugin/markdown/markdown.js"></script>
         <script src="plugin/chalkboard.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/plugin/highlight/highlight.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.1.2/plugin/notes/notes.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/plugin/highlight/highlight.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/plugin/notes/notes.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/plugin/math/math.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
 
 
@@ -410,8 +452,16 @@
                 chalkboard: {
                     toggleChalkboardButton: false,
                     toggleNotesButton: false,},
-
-				plugins: [ RevealMarkdown, RevealNotes, RevealChalkboard ]
+                mathjax2: {
+                    mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js',
+                    config: 'TeX-AMS_HTML-full',
+                    // pass other options into `MathJax.Hub.Config()`
+                    tex2jax: {
+                      inlineMath: [ [ '$', '$' ], [ '\\(', '\\)' ] ],
+                      skipTags: [ 'script', 'noscript', 'style', 'textarea', 'pre' ]
+                  }
+                },
+				plugins: [ RevealMarkdown, RevealNotes, RevealChalkboard, RevealMath.MathJax3 ]
 			});
             Reveal.addEventListener('ready', (event) => {
                 hljs.registerLanguage("lean",function(){"use strict";return function(hljs){
