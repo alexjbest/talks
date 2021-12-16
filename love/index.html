@@ -52,14 +52,18 @@ These slides are online at:
 
 - Researcher in the mathematics department
 - Mathematical research is in number theory / arithmetic geometry
-- Interested in computation, 
+- Interested in computation, algorithms to calculate interesting things in my area of mathematics, but also more generally
+- Have been interested in formalization for a few years, first as a hobby, but now part of my work
+
 
 ## Motivation
 
-Why formalize advanced mathematics?
+*Why formalize advanced mathematics?*
 
-My long-term hope is that formalization / verification will enable mathematics research.
-No more skimming papers for relevant material, just `library_search`, all definitions consistently stated, and available at the click of a button.
+My long-term hope is that formalization / verification will enable more effective research.
+No more skimming papers for relevant material, just `library_search`, easy access to a consistent reference work with all definitions consistently stated, and available at the click of a button.
+
+But why might you care?
 
 ---
 ### Example 1: Integer Multiplication
@@ -73,6 +77,8 @@ What is the bit complexity of multiplying extremely large integers? From [Wikipe
 > 
 > In March 2019, Harvey and van der Hoeven published a long-sought after $O(n\log n)$ integer multiplication algorithm, which is conjectured to be asymptotically optimal. Because Schönhage and Strassen predicted that n log(n) is the ‘best possible’ result Harvey said: “...our work is expected to be the end of the road for this problem, although we don't know yet how to prove this rigorously.”
 <!-- .element style="font-size:0.7em;" -->
+
+Asymptotically optimal integer multiplication is based on high-level maths.
 
 ---
 ### Example 2: Matrix Multiplication
@@ -89,7 +95,7 @@ Most successful  approach so far relates this problem to a group ring $\mathbf C
 
 In 2016 Ellenberg-Gijswijt proved the Cap-Set conjecture, which in turn implies that this method with $G$ an abelian group cannot prove $\omega = 2$.
 
-In 2019 Sander R. Dahmen, Johannes Hölzl, and Robert Y. Lewis [formalized the Ellenberg-Gijswijt result](https://github.com/lean-forward/cap_set_problem).
+In 2019 Sander R. Dahmen, Johannes Hölzl, and Robert Y. Lewis [formalized the Ellenberg-Gijswijt result](https://github.com/lean-forward/cap_set_problem) in Lean.
 
 References:
 <https://arxiv.org/abs/1712.02302> <https://arxiv.org/abs/1605.06702>
@@ -102,18 +108,36 @@ Modern cryptography is based on turning difficult mathematical problems into met
 
 E.g. factoring, elliptic curves, isogenies, lattices.
 
-Internet security is therefore based extensively on these problems.
+Internet security is therefore based extensively on the hardness of problems in these areas.
+
+When choosing parameters we want to be sure that no known attack works.
+
+When implementing the mathematical parts of these cryptographic algorithms we want to be sure the implementation is correct in all cases.
 
 ---
-## How can we make formalizing less time consuming?
+### Example 4: the Sensitivity conjecture
+
+From [Scott Aaronson's blog](https://www.scottaaronson.com/blog/?p=4229):
+> The Sensitivity Conjecture, says that, for every Boolean function $f:\{0,1\}^n\to \{0,1\}$, the sensitivity of $f$—that is, the maximum, over all $2^n$ input strings $x\in \{0,1\}^n$, of the number of input bits such that flipping them changes the value of $f$—is at most polynomially smaller than a bunch of other complexity measures of $f$, including $f$’s block sensitivity, degree as a real polynomial, and classical and quantum query complexities.
+
+This was proved in a [stunningly short 6 page paper](https://arxiv.org/abs/1907.00847) by Hao Huang in 2019, and the proof was formalized in Lean within a couple of months by Reid Barton, Johan Commelin, Jesse Han, Chris Hughes, Robert Y. Lewis, Patrick Massot.
+[github link](https://github.com/leanprover-community/mathlib/blob/master/archive/sensitivity.lean)
+---
+
+
+## How can we make formalizing easier / less time consuming?
+
+*Formalization is still hard*, harder than writing paper proofs down, at least.
+
+How can we reduce this:
 
 1. Don't reinvent the wheel!
 1. Create and use high level tactics to speed through conceptually simple proofs
-1. Create and use tools to make repetative or automatable tasks easier
+1. Create and use tools to make repetitive or automatable tasks easier
 
 ---
 ### Don't reinvent the wheel
-Mix and match code reuse is harder when formalizing your code. Consider building on existing foundations instead
+Mix and match code reuse is harder when formalizing your code. Consider building on existing foundations instead:
 ![monolith](monolith.jpg) <!-- .element style="display: block; width: 40%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
 The “Monolith”, by Jean Nouvel – a steel cube with an edge length of 34 feet – Expo 02 Arteplage in Morat
 
@@ -122,107 +146,298 @@ The “Monolith”, by Jean Nouvel – a steel cube with an edge length of 34 fe
 
 <nbsp/> | pros | cons
  ---- | ------ | -------- 
-starting from scratch | independence, not forced into any implementation  | have to reinvent the wheel
-building on a monolith | lots of things for free | breakage if the monolith
-living in a monolith | many essentials already there | unweildy project size, extra support needed
+starting from scratch | complete independence, not forced into any implementation  | have to reinvent the wheel
+building on a monolith / other libraries | lots of things for free | breakage if the other libraries change, incompatible versions, nobody will fix your code for you
+living in a monolith | many results already there, everything is almost guarenteed to interact nicely | unwieldy project size, extra tools needed to deal with this, higher standards for code, many people with conflicting opinions on the way things should be done
+
+The community of users of Lean has tended towards investing the most effort into a monolith (`mathlib`).
+
+Other projects do exist that build on top of `mathlib`.
 
 ---
 ## What is `mathlib`?
 
-- Collaborative open-source library of lean (3) formalizations
+- Collaborative open-source library of Lean (3) formalizations
 - 30,000 definitions, 71,000 theorems
 
-- 10-20 PRs of new material merged per day
+- 10-20 PRs of new material merged per day, some big some small
 
-- Over 200 contributors so far
+- Over 200 contributors so far, from a huge range of people
 
-- 2,200 files
+- 2,200 files, covering Algebra, Analysis, Geometry, Logic, Topology, Probability, some computability theory and combinatorics, basic utilities for lists, strings and other programming essentials.
 
-[Open demo project](vscode://file/Users/alex/talks/love/)
+[Open demo project](vscode://file/Users/alex/talks/love/) - [Import graph](https://alexjbest.github.io/mathlib-import-graph/?highlight=core:data.dlist&docs_url=https://leanprover-community.github.io/mathlib_docs/) by Eric Wieser
+
+But there are other systems out there with libraries too, why not build on those?
+
+Translation between systems is difficult.
 ---
-Translating between / within proof assistants
+## Translating between / within proof assistants
 
-mm0
+- Metamath is a more bare-bones proof checker than Lean, that contains a large body of mathematics based on ZFC set theory (not type theory).
 
-lean3->4
+  Mario Carneiro has implemented a translator (`mm0-lean`) that embeds such proofs in Lean.
+Using this it is possible to transfer results such as Dirichlet's theorem on primes in arithmetic progressions, or the prime number theorem into valid Lean proofs based on those in Metamath.
 
-to_additive
+  So: Translating correct proofs from one logic/implementation to anther is possible, but actually using the output is far harder. It is usable if a single theorem about simple objects is the desired result, but aligning larger types or whole theories is not simple.
 
----
-Other proof assistants
+- The project of porting the entire `mathlib` library from Lean 3 to Lean 4 is currently underway, although the implementation and logic of these systems are very similar porting the library successfully means producing reasonable looking Lean 4 source code, rather than just transferring results.
 
-Coq, Isabelle auto hammers
+  Even within one system automatically producing modifications of existing results is useful.
+  E.g. `to_additive`.
+
 ---
 ## Powerful tactics
 
-(already seen?)
-- finish/tauto
+You have (possibly) already seen:
+- `finish`/`tauto`
+- `(n)linarith` - [geometry.manifold.instances](vscode://file/Users/alex/talks/love/_target/deps/mathlib/src/geometry/manifold/instances/sphere.lean:203:5)
+- `library_search`
+- `abel`
+- `norm_cast`
+- `ring` - [algebra.group_power.identities](vscode://file/Users/alex/talks/love/_target/deps/mathlib/src/algebra/geometry/identities.lean:62:3)
 
-- linarith
-[geometry.manifold.instances](vscode://file/Users/alex/talks/love/_target/deps/mathlib/src/geometry/manifold/instances/sphere.lean:203:5)
+Some others:
+- `suggest using` - [demo](vscode://file/Users/alex/talks/love/src/demo_suggest_using.lean:9:3)
+- `group`/`noncomm_ring` - [demo](vscode://file/Users/alex/talks/love/src/demo_group.lean:164:3)
+- `norm_num` - Normalizes numerical expressions in any ring
+- `obviously` / `tidy` - Apply other tactics in a chain, most useful for proofs that have a particular style, used heavily in categorical machinery
+- `rewrite_search` - [tests](vscode://file/Users/alex/talks/love/_target/deps/mathlib/test/rewrite_search/rewrite_search.lean:59:1)
 
-- library_search
+Most of these have specific uses and purposes, this is good, but general purpose automation would be better!
+---
+## General purpose automation, aka magic button that does my work for me
 
-- abel
+In the proof assistant `Isabelle` there is good integration with external automated theorem provers (ATPs), called Sledgehammer, due to Jasmin!
 
-- norm_cast
+As this functions by calling an external program to find the proof there are two stages, translation into the external logic and format, and reconstruction of the resulting proof based on the output of the ATP.
 
-- ring
+Isabelle has a very different logical foundation to `Lean`, so exactly the same approach will not have the same successes.
 
+The proof assistant `Coq` which is similar in many respects to `Lean` has a version of this called `CoqHammer`, it looks quite effective.
 
-
-
-- suggest using
-
-
-ring/group/noncomm_ring
-CAP game example
-
-norm_num
-
-obviously / tidy
-
-rewrite search / rewrite hint
+In `Lean` and `mathlib` there have been some promising experiments, but nothing concrete has landed... yet!
 
 ---
-linters
+## GPT-f
 
-unused arguments
+Jesse Michael Han, Jason Rute, Yuhuai Wu, Edward W. Ayers and Stanislas Polu, supported by the company Open-AI have built a transformer language model to predict tactic calls.
 
-bad simp lemmas
+By applying machine learning trained on Mathlib, other mathematical and scientific literature on the internet, and large text corpuses they achieve pretty incredible results.
 
-syntactic tautologies
+[Demo](vscode://file/Users/alex/talks/love/src/demo_group.lean:162:3)
 
-unused haves / suffices
-
-unnecessary case splits
-
-removable edge cases
+<https://arxiv.org/abs/2102.06203>
 
 ---
-generalizing typeclasses
+## Linters
+
+If the proof assistant can not only helping us verify proofs, but also check that our results are as useful as possible, we can work more effectively and reduce the human work involved.
+
+If we can think less about the small stuff we can spend more time on the big issues!
+
+Let's talk about several ways we can do this, in some examples.
+
+I'll mention about a few ways we can use meta-programming in Lean to inspect the entirety of a large library and suggest improvements and help fix oversights.
 ---
-Removing imports
+### Unused arguments
+What's wrong with the following?
+```lean
+variables {A S : Type*} [comm_ring A] [is_domain A] [comm_ring S]
+variables {M : submonoid A} [algebra A S] [is_localization M S]
+
+lemma scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero {p : polynomial A} {r : A} {s : M}
+  (hr : aeval (mk' S r s) p = 0) :
+  aeval (algebra_map A S r) (scale_roots p s) = 0 :=
+begin
+  convert scale_roots_eval₂_eq_zero (algebra_map A S) hr,
+  rw [aeval_def, mk'_spec' _ r s]
+end
+```
+The fact `[is_domain A]` is never used in the proof, this is essentially impossible to tell just by looking at the proof on a slide! Only way to work this out is by inspecting the proof step by step, or thinking about what generality the lemma should be true in, waste of time!
+
+This was originally written by Floris van Doorn.
+
+
 ---
-## Gpt-f
+### Syntactic tautologies
+What is wrong with the following definition?
+```
+/-- The identity linear isometry. -/
+def id : E →ₗᵢ[R] E := ⟨linear_map.id, λ x, rfl⟩
+
+@[simp] lemma coe_id : ⇑(id : E →ₗᵢ[R] E) = id := rfl
+```
+
+### Duplicate lemmas
+Lemmas can be duplicates of each other with different proofs, most of the time this is unintentional.
+
+By hashing the types of lemmas and throwing them into a dictionary we can quickly find these.
+
+There were around 100 pairs of duplicates in mathlib last time I checked, many due to copy-paste errors:
+```
+lemma differentiable_at_cosh {x : ℂ} : differentiable_at ℂ cos x :=
+differentiable_cos x
+```
+
 ---
-1. When developing a formal mathematical library it is time consuming to add and modify basic results, the barriers to formalization are often not having small lemmas in precisely the right form.
+### Unused haves / suffices
+If we have a proof using
+```
+have h : some_fact := <proof_of_fact>,
+<rest_of_proof>
+```
+or
+```
+suffices h : some_fact,
+<rest_of_proof>,
+<proof_of_fact>
+```
+and where `rest_of_proof` doesn't make use of the hypothesis `h`, then introducing and proving `h` in this way was unnecessary.
+Such a proof looks like this under the hood.
 
-2. <!-- .element: class="fragment" -->Want to prototype / demonstrate potential applications of formalization to mathematical practice, i.e. develop tools that might genuinely help in research mathematics.
+```
+lemma a : true :=
+have 1 = 1 := rfl,
+trivial
 
+lemma b : true :=
+(λ h : 1 = 1, trivial) rfl
+```
 
-**Problem**: Often theorems are stated with stronger assumptions than are really needed, can this be detected automatically?
-<br/>
-<br/>
-**More specifically**: this commonly occurs when typeclasses are used to manage hierarchies of mathematical structures (e.g. algebraic, topological and order structures)
-<br/>
-<br/>
-Examples will be in Lean but the idea should apply more generally.
-<!-- .element: class="fragment" -->
+By looping over all the produced proofs in the environment we can find instances of this.
 
 ---
 
-## Examples
+Such as
+```
+lemma mem_traverse {f : α' → set β'} :
+  ∀(l : list α') (n : list β'), n ∈ traverse f l ↔ forall₂ (λb a, b ∈ f a) n l
+| []      []      := by simp
+| (a::as) []      := by simp; exact assume h, match h with end
+| []      (b::bs) := by simp
+| (a::as) (b::bs) :=
+  suffices (b :: bs : list β') ∈ traverse f (a :: as) ↔ b ∈ f a ∧ bs ∈ traverse f as,
+    by simp [mem_traverse as bs],
+  iff.intro
+    (assume ⟨_, ⟨b, hb, rfl⟩, _, hl, rfl⟩, ⟨hb, hl⟩)
+    (assume ⟨hb, hl⟩, ⟨_, ⟨b, hb, rfl⟩, _, hl, rfl⟩)
+```
+can become
+```
+lemma mem_traverse {f : α' → set β'} :
+  ∀(l : list α') (n : list β'), n ∈ traverse f l ↔ forall₂ (λb a, b ∈ f a) n l
+| []      []      := by simp
+| (a::as) []      := by simp
+| []      (b::bs) := by simp
+| (a::as) (b::bs) := by simp [mem_traverse as bs]
+````
+
+Simpler proofs are easier to understand (for both humans and computers!), easier fix when they break, and easier generalize / copy to different contexts.
+
+---
+### Unnecessary case splits
+Similarly if we begin make use of a split into cases in a proof, but then don't use the hypothesis it is unnecessary
+```
+lemma uniformly_extend_spec {α β γ : Type*} [uniform_space α] [uniform_space β] [uniform_space γ]
+  {e : β → α} (h_e : uniform_inducing e) (h_dense : dense_range e) {f : β → γ}
+  (h_f : uniform_continuous f) [separated_space γ] [complete_space γ] (a : α) :
+  tendsto f (comap e (𝓝 a)) (𝓝 (ψ a)) :=
+let de := (h_e.dense_inducing h_dense) in
+begin
+  by_cases ha : a ∈ range e,
+  { rcases ha with ⟨b, rfl⟩,
+    rw [uniformly_extend_of_ind _ _ h_f, ← de.nhds_eq_comap],
+    exact h_f.continuous.tendsto _ },
+  { simp only [dense_inducing.extend, dif_neg ha],
+    exact tendsto_nhds_lim (uniformly_extend_exists h_e h_dense h_f _) }
+end
+```
+in this example `ha` is only used in the first branch, and when we remove the split, it turns out the hypothesis `[separated_space γ]` is no longer needed.
+The proof becomes
+```
+by simpa only [dense_inducing.extend] using tendsto_nhds_lim (uniformly_extend_exists h_e ‹_› h_f _)
+```
+and we can consequently remove the `separated_space` assumption from 10 other lemmas in the library.
+
+We just avoided someone potentially having to do this by hand later.
+
+---
+### Removable edge cases
+So far we have talked a lot about simplifying proofs, what about simplifying statements?
+
+One common and annoying way statements can be sub-optimal is that they have conditions about edge cases that need verifying.
+This is one of the things that makes formal proof more time consuming than informal proof.
+
+The following is an example of a statement about a `group` `G`.
+```
+lemma exponent_dvd_of_forall_pow_eq_one (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n = 1) :
+  exponent G ∣ n :=
+begin
+  apply nat.dvd_of_mod_eq_zero,
+  by_contradiction h,
+  have h₁ := nat.pos_of_ne_zero h,
+  have h₂ : n % exponent G < exponent G := nat.mod_lt _ (exponent_pos_of_exists _ n hpos hG),
+  have h₃ : exponent G ≤ n % exponent G,
+  { apply exponent_min' _ _ h₁,
+    simp_rw ←pow_eq_mod_exponent,
+    exact hG },
+  linarith,
+end
+```
+---
+By changing the type from
+```
+lemma exponent_dvd_of_forall_pow_eq_one (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n = 1) : exponent G ∣ n
+```
+to
+```
+lemma exponent_dvd_of_forall_pow_eq_one (n : ℕ) (hG : ∀ g : G, g ^ n = 1) : exponent G ∣ n
+```
+the whole first half of the following proof in the same file becomes unnecessary:
+```
+lemma lcm_order_eq_exponent {H : Type*} [fintype H] [left_cancel_monoid H] :
+  (finset.univ : finset H).lcm order_of = exponent H :=
+begin
+  apply nat.dvd_antisymm (lcm_order_of_dvd_exponent H),
+  apply exponent_dvd_of_forall_pow_eq_one,
+  { apply nat.pos_of_ne_zero,
+    by_contradiction,
+    rw finset.lcm_eq_zero_iff at h,
+    cases h with g hg,
+    simp only [true_and, set.mem_univ, finset.coe_univ] at hg,
+    exact ne_of_gt (order_of_pos g) hg },
+  { intro g,
+    have h : (order_of g) ∣ (finset.univ : finset H).lcm order_of,
+    { apply finset.dvd_lcm,
+      exact finset.mem_univ g },
+    cases h with m hm,
+    rw [hm, pow_mul, pow_order_of_eq_one, one_pow] },
+end
+```
+---
+## Removing imports
+
+Check out the [Import graph](https://alexjbest.github.io/mathlib-import-graph/?highlight=core:data.dlist&docs_url=https://leanprover-community.github.io/mathlib_docs/) again
+
+- Each file imports many others that contain results that are then built on.
+
+- Having a lot of things imported is great when writing a file
+
+- But when we have a project on the scale of mathlib, where rechecking the library from scratch takes over 3 hours the more dependencies a file has, the more work needs to be done to rebuild when the file is changed.
+
+For example `number_theory.class_number.admissible_abs` is a file about an inherently algebraic notion which somehow ended up importing `analysis.special_functions.pow` and therefore a whole bunch of analysis.
+
+Me and Johan Commelin wrote a metaprogram in Lean to find which declarations are actually needed for each Lean file, and minimise the set of imports to only those files.
+
+To do this we construct a directed acylic graph of all files, and have to find a minimal set of nodes such that the subgraph of their descendents still contains all the material needed for a given file.
+
+---
+### Generalizing typeclasses
+
+
+**Problem**: Often theorems are stated with stronger, but still used, typeclass assumptions than are really needed, can this be detected automatically?
+
 **A fake Lean lemma**:
 ```lean
 lemma mul_inv {G : Type*} [ordered_comm_group G] (a b : G) : (a * b)⁻¹ = a⁻¹ * b⁻¹ :=
@@ -237,7 +452,6 @@ The "correct" assumption is `[comm_group G]`,
 when this is  changed the proof script does not need modifying.
 
 **A real lemma from `mathlib`**:
-<!-- .element: class="fragment" data-fragment-index="2" -->
 ```lean
 lemma ring_hom.char_p_iff_char_p {K L : Type*} [field K] [field L]
 (f : K →+* L) (p : ℕ) : char_p K p ↔ char_p L p :=
@@ -247,29 +461,8 @@ begin
     rw [← @char_p.cast_eq_zero_iff _ _ p _c n, ← f.injective.eq_iff, f.map_nat_cast, f.map_zero] }
 end
 ```
-<!-- .element: class="fragment" data-fragment-index="2" -->
 Correct assumptions: `[division_ring K] [nontrivial L] [semiring L]`
-<!-- .element: class="fragment" data-fragment-index="2" -->
-<!--
-## What do we already have?
-Many linters, including the unused arguments linter (by Floris van Doorn)
-```lean
-variables {G₀ : Type*} [group_with_zero G₀]
-@[simp] lemma mul_self_div_self (a : G₀) (h : a ≠ 0) : a * a / a = a :=
-mul_self_mul_inv
-/- The `unused_arguments` linter reports: -/
-/- UNUSED ARGUMENTS: -/
-#print mul_self_div_self /- argument 4: (h : a ≠ 0) -/
-```
 
-in
-```lean
-theorem finset.abs_sum_le_sum_abs {α : Type u} {β : Type v} [linear_ordered_field α]
-{f : β → α} {s : finset β} : abs (∑ (x : β) in s, f x) ≤ ∑ (x : β) in s, abs (f x)
-```
-the argument is used, via `linear_ordered_field.to_linear_ordered_comm_ring`.
-This linter also notices duplicate typeclasses when one is unused.
--->
 ---
 ## How do typeclasses work?
 Lean automatically generates the terms used in the proof:
@@ -429,37 +622,19 @@ partial_order | preorder (33)
 ---
 ## Other systems
 
-Typeclasses are used in a similar way in Coq, Isabelle/HOL, Haskell, ... I don't know of this having been attempted in any of these systems, but would love to know if it has (or will be)!
+Typeclasses are used in a similar way in Coq, Isabelle/HOL, Haskell, ...
 
 Some related, but different work:
 - "Eliciting Implicit Assumptions of Mizar Proofs by Property Omission" by Jesse Alama
 - "Generalization in Type Theory Based Proof Assistants" by Olivier Pons
 
-## Future work
-<!-- .element: class="fragment" data-fragment-index="2" -->
-
-- <!-- .element: class="fragment" data-fragment-index="2" --> Finish/cleanup the implementation.
-
-- <!-- .element: class="fragment" data-fragment-index="2" --> PR linter changes to the mathlib library!
-
-- <!-- .element: class="fragment" data-fragment-index="2" -->Can we generalize explicit types to only their used properties, e.g. ℝ to {R : Type*} [linear_ordered_field R]?
-
-- <!-- .element: class="fragment" data-fragment-index="2" -->Could such a metaprogram be run by the typeclass system itself when it is invoked (in Lean 4)
-
-- <!-- .element: class="fragment" data-fragment-index="2" -->Can new definitions be suggested by such a tool? 
-
-- <!-- .element: class="fragment" data-fragment-index="2" -->Better source transform tools, to reduce human input to make desired changes.
-
-- <!-- .element: class="fragment" data-fragment-index="2" -->Bundled things... not typeclass assumptions per se?
-
-- <!-- .element: class="fragment" data-fragment-index="2" -->Suggestions?
 
 ---
-## Thanks!
+## Thanks for listening!
 
-To the organisers, Lean development team, everyone whose tactics I've repurposed for this, the community, and you for listening!
 ![tc graph](svg.svg) <!-- .element style="display: block; width: 60%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
 > https://github.com/alexjbest/lean-generalisation
+> https://github.com/alexjbest/dag-tools
 
                     </script>
                 </section>
