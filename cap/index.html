@@ -1,0 +1,629 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Computer proof assists - CAP</title>
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/reveal.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+		<link rel="stylesheet" href="plugin/chalkboard.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/theme/white.min.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Lato&family=Roboto&family=Roboto+Mono&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs@latest/styles/github.css">
+        <style type="text/css">
+            h2, h3 { font-family: 'Lato', sans-serif !important; text-transform: none !important; }
+            p { font-family: 'Roboto', sans-serif !important; }
+            p { text-align: left;}
+            section {font-size: 0.80em !important;}
+            code {font-family: 'Share Tech Mono', monospace !important; max-height: 500px !important; background-color: lightcyan;}
+            pre {font-size: 0.7em !important;}
+            .reveal pre { box-shadow:none;}
+        </style>
+        <link rel="stylesheet" type="text/css" href="https://sagecell.sagemath.org/static/sagecell_embed.css">
+
+
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+
+                <!-- Use external markdown resource, separate slides by three newlines; vertical slides by two newlines 
+                <section data-markdown="markdown.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"></section> -->
+
+                <!-- Slides are separated by three dashes (quick 'n dirty regular expression) -->
+                <section data-markdown data-separator="^---">
+                    <script type="text/template">
+# Computer Assisted Proofs - CAP
+
+But today:
+<!-- .element: class="fragment" -->
+# Computer Proof Assistants - CPA
+<!-- .element: class="fragment" -->
+
+![computer](computer.jpeg) <!-- .element style="display: block; width: 70%;margin-left: auto; margin-right: auto; object-fit: cover; margin-bot:0;" -->
+<!-- .element: class="fragment" -->
+
+Please interrupt to ask questions, or ask me to repeat something!
+<!-- .element: class="fragment" -->
+
+---
+### Goals
+
+Learn:
+- what a proof proof assistant is
+<!-- .element: class="fragment" -->
+- what one does (and what one does not do)
+<!-- .element: class="fragment" -->
+- how to read reading statements written in a proof assistant (Lean)
+<!-- .element: class="fragment" -->
+- the basics of writing proofs written in a proof assistant (Lean)
+<!-- .element: class="fragment" -->
+
+---
+## What is a proof assistant / formalization?
+
+Proof assistant: An interactive program that **understands** mathematics
+
+Not just **calculating** with data and algorithms to verify parts of a proof.
+Instead we use a language for representing arbitrary **proofs** to represent every step, from
+axioms to a finished theorem.
+<!-- .element: class="fragment" -->
+
+Has a logical foundation that only permits us to do things that are valid from the axioms we start with.
+<!-- .element: class="fragment" -->
+
+What does this logical foundation look like?
+<br />
+Many possibilities, most involve some notion of **Types**.
+<br />
+This can be initially unfamiliar and confusing, but you can learn some interesting perspectives on mathematics from *type theory*, even if you don't like the idea of proof assistants.
+<!-- .element: class="fragment" -->
+
+---
+
+### Types in Regular programming languages
+
+<div class="sage">
+for x in range(10):
+    print(1/x)
+</div>
+
+<div class="sage">
+Zmod(13)
+</div>
+---
+
+### Regular programming languages can detect some errors
+
+**Types** are a fundamental technique for catching errors in programs, even in SageMath (Python)
+
+- If the **type** of 0 is an integer, `1/0` is not allowed
+<!-- .element: class="fragment" -->
+
+- If it is a **real number** then `1/0` gives `+infinity` in Sage.
+<!-- .element: class="fragment" -->
+
+- Adding two numbers of different types may or may not be allowed
+<!-- .element: class="fragment" -->
+
+- Taking the square root of a negative float gives an error, but a real con be square rooted to a complex
+<!-- .element: class="fragment" -->
+
+The type of an object determines what functions apply to it, and produces errors if you do something that doesn't make sense.
+<!-- .element: class="fragment" -->
+
+Code that relies on a mathematical property might help you find mathematical mistakes if you hit one of these errors, but this rare.
+<!-- .element: class="fragment" -->
+
+You don't get a proof that your implementation is correct by compiling and running your code once!
+Or any sort of guarantees that there aren't any mistakes.
+<!-- .element: class="fragment" -->
+
+---
+## Intro to Type theory of Lean
+
+In this theory every object has a type, lets look at some examples.
+
+- `π : ℝ` says...
+  <span>that $\pi$ is an element of the real numbers</span> <!-- .element: class="fragment" -->
+- `(π, 2) : ℝ × ℕ` says...
+  <span>that the pair $(\pi,2)$ is an element of the product of the real numbers with the naturals</span> <!-- .element: class="fragment" -->
+- `f : ℝ × ℕ → ℕ` says...
+  <span>that $f$ is a function from a pair of reals and a natural to the naturals</span>
+<!-- .element: class="fragment" -->
+- `f (π, 2) : ℕ` says...
+  <span>that $f(\pi, 2)$ is a natural number</span>
+<!-- .element: class="fragment" -->
+- `f (π, 2) = 2 : Prop` says...
+  <span>that the statement $f (\pi, 2) = 2$ is a proposition (maybe false)</span>
+<!-- .element: class="fragment" -->
+- `prod.fst : ℝ × ℕ → ℝ` says...
+- `prod.snd : ℝ × ℕ → ℕ` says...
+  <span>these are functions from the product that project on to the factors</span>
+<!-- .element: class="fragment" -->
+- `prod.snd (π, 2) = 3 : Prop` says...
+  <span>that the statement `prod.snd`$(\pi, 2) = 3$ is a proposition</span>
+<!-- .element: class="fragment" -->
+- `prod.snd = f : Prop` says...
+  <span>that the second projection equals $f$ is a proposition</span>
+<!-- .element: class="fragment" -->
+- `prod.fst = f` is?
+  <span>This doesn't have a valid type! only elements of the same type can be compared</span>
+<!-- .element: class="fragment" -->
+- `prod.snd = f ↔ ∀ a : ℝ × ℕ, f a = prod.snd a : Prop` says ...
+  <span>is a proposition expressing that functions are equal if their evaluations are equal</span>
+<!-- .element: class="fragment" -->
+- `h₁ : f (π, 2) = 3` says ...
+  <span>that $h₁$ is a proof of the fact that $f (π,2)=3$ </span>
+- `h : prod.snd ≠ f` says ...
+  <span>that $h$ is a proof of the fact that `prod.snd`$ ≠ f$</span>
+<!-- .element: class="fragment" -->
+- `f (π, 2) = 3 → prod.snd ≠ f : Prop` says ...
+  <span>that $f(π,2)=3$ implies $f$ is not the projection</span>
+<!-- .element: class="fragment" -->
+- `λ a : ℝ × ℕ, f a = prod.snd a : ℝ × ℕ → Prop` says ...
+  <span>defines a function from pairs to propositions (a predicate), could be true or false for each value of $a$, brackets!</span>
+<!-- .element: class="fragment" -->
+- `ℝ : Type` says...
+  <span>that the real numbers are a type</span> <!-- .element: class="fragment" -->
+
+Checking the ***type*** of statements, by following simple rules is the fundamental logical foundation of the proof assistant
+<!-- .element: class="fragment" -->
+
+---
+## Using `mathlib` to look up material
+
+`mathlib` is a large (https://leanprover-community.github.io/mathlib_stats.html) library of formalized statements and proofs in Lean, 30.000 definitions 75.000 theorems right now, over 200 authors:
+![mathlib](mathlibgraph.png) <!-- .element style="display: block; width: 50%;margin-left: auto; margin-right: auto; object-fit: cover; margin-bot:0;" -->
+
+
+Look at <https://leanprover-community.github.io/undergrad.html> (link in chat)
+pick a random topic that you recognize: Answer these questions:
+
+1. Which parts of the definition make sense / which don't?
+<!-- .element: class="fragment" -->
+2. Are there any keywords you haven't seen before, what do you think they mean?
+<!-- .element: class="fragment" -->
+3. How is it different from how you might state the result normally?
+<br>
+<br>
+Come back in 5 mins and each breakout room can tell the group about one result they looked at
+<!-- .element: class="fragment" -->
+
+---
+## Differences between formal and informal
+
+- In formal mathematics there are lots of tiny lemmas! Things that normally you wouldn't think of as stating are all written down.
+  E.g. `n - m + a - b = n - b + a - m`, you wouldn't want to prove this every time you used it, so make it a lemma
+- When writing proofs takes longer generalizing your results becomes more worthwhile, rather than reproving them in different places (more on this later)
+- Definitions take on a more important role
+  <https://leanprover-community.github.io/mathlib_docs/find/quotient_group.quotient_ker_equiv_range>
+
+---
+
+## Why do people care about formalizing mathematics
+
+* Correctness
+
+* Reproducibility
+
+* Creating comprehensive + consistent references
+
+* Searching and generalization
+
+* Automatic theorem proving - small and large scale
+
+* New modes of mathematical collaboration
+
+* Its fun! (and interesting)
+
+
+---
+## Why care?: Correctness
+
+```lean
+import data.real.basic
+
+example (x y : ℝ) (h : x = y) : (2 : ℝ) = 1 :=
+begin
+  have : x ^ 2 = y * x,                    simp [h, pow_two],
+  have : x ^ 2 - y ^ 2 = y * x - y ^ 2,    rw [this],
+  have : (x + y) * (x - y) = y * (x - y),  ring_nf; exact this,
+  have : x + y = y,                        refine mul_right_cancel₀ _ this, swap,
+  have : 2 * y = y,                        linarith,
+  have : 2 * y = 1 * y,                    simp [this],
+  have : (2 : ℝ) = 1,                      refine mul_right_cancel₀ _ this, swap,
+  exact this,
+end
+```
+
+[Open demo project](vscode://file/Users/alex/talks/cap/)
+
+```lean
+def f (n : ℕ) : ℕ := n + 1
+#eval 3
+lemma f_pos : ∀ n, 0 < f n :=
+begin
+  intro n,
+  rw f,
+  induction n,
+  { rw [zero_add],
+    exact zero_lt_one, },
+  { transitivity n_n + 1,
+    exact n_ih,
+    apply add_lt_add_right,
+    exact lt_add_one n_n, },
+end
+```
+
+---
+## Correctness: an example
+
+A corrected quantitative version of the Morse lemma - Sébastien Gouëzel, Vladimir Shchur
+> There is a gap in the proof of the main theorem in the
+> article [5] on optimal bounds for the Morse lemma in Gromovhyperbolic spaces. We correct this gap, showing that the
+> main theorem of [5] is true. We also describe a computer
+> certification of this result.
+
+https://perso.univ-rennes1.fr/sebastien.gouezel/articles/morse_lemma.pdf
+
+### What can go wrong with formal proofs still:
+
+The core logical system could have a bug, or be logically inconsistent (unlikely)
+<!-- .element: class="fragment" -->
+
+Definitions can not mean what you think they mean!
+<!-- .element: class="fragment" -->
+
+Notation could also be misleading, maybe you aren't proving what you think you are.
+<!-- .element: class="fragment" -->
+
+The whole thing could be unreadable
+<!-- .element: class="fragment" -->
+
+---
+## Why care?: Reproducibility
+
+Similar to correctness, idea is that we don't just get confidence the proof is correct.
+But also the ability to inspect the proof at every stage.
+
+Might not always be as nice as a well-explained human proof, but the steps are all there.
+Hopefully we can have human readable intuition and comments right next to the formal language, best of both worlds.
+
+Less chance of knowledge being lost.
+
+E.g. Classification of finite simple groups, major achievement of 20th century mathematics,
+but as time goes on, there are less and less people who claim to understand a significant portion of it.
+Many thousands pages, taking years to write, and if they never get written is the theorem still true?
+
+---
+## Why care?: Creating comprehensive + consistent references
+
+Reference works and textbooks mostly just give the results they need for the content of their book.
+If you open two different books on the same topic, they might use slightly different definitions, are they always compatible?
+
+Some projects such as the Bourbaki books aim to be references for foundations of most areas of mathematics.
+
+![bourbaki](bourbaki.jpg) <!-- .element style="display: block; width: 40%;margin-left: auto; margin-right: auto; object-fit: cover; margin-bot:0;" -->
+
+[Import graph](https://alexjbest.github.io/mathlib-import-graph/)
+
+---
+## Why care?: Searchability
+
+There are several types of search we might want to do related to mathematics, that currently computes aren't so helpful for
+
+- What do you do if you have an idea for a proof, but you need a lemma that looks true but you aren't sure about, or haven't found a proof of yet?
+
+- What about if you can remember the definition of something but want to know what it is called?
+
+- Or if you come up with a mathematical concept and want to see if it has been studied before, or find examples of it.
+
+Best methods?
+<!-- .element: class="fragment" -->
+
+- Google/search engines
+- Ask someone (in the university, online, ...)
+- Find a book you hope is relevant and look at the table of contents / index.
+
+<!-- .element: class="fragment" -->
+
+
+![shazam](shazam.svg) <!-- .element style="display: block; width: 40%;margin-left: auto; margin-right: auto; object-fit: cover; margin-bot:0;" -->
+<!-- .element: class="fragment" -->
+
+---
+## Why care?: Generalization
+
+When a proof is already formalized, rechecking the whole proof is very fast, with formalized proofs
+it becomes easier to answer the following sort of questions than with a proof in a book
+- Does the proof still work if I remove one assumption?
+- What parts of the proof break when assumptions are removed or weakened?
+- Does the same proof work in a similar but not directly comparable context?
+
+It is even possible to create tools that automatically tell you when you didn't use assumptions, or
+try to generalize your results for you.
+
+For example:
+https://leanprover-community.github.io/mathlib_docs/topology/metric_space/baire.html
+
+---
+## Why care?: Automatic theorem proving
+
+Tools on top of the core logic of a proof assistant can attempt to find proofs for you!
+
+If they succeed the proof is checked like normal, if they fail then you have to write more yourself.
+
+- `ring` - [Sander's problem](vscode://file/Users/alex/talks/cap/src/demo_sander.lean)
+- `(n)linarith` - [geometry.manifold.instances](vscode://file/Users/alex/talks/cap/_target/deps/mathlib/src/geometry/manifold/instances/sphere.lean:203:5)
+- `ring` - [algebra.group_power.identities](vscode://file/Users/alex/talks/cap/_target/deps/mathlib/src/algebra/group_power/identities.lean:62:3)
+- `rewrite_search` - [tests](vscode://file/Users/alex/talks/love/_target/deps/mathlib/test/rewrite_search/rewrite_search.lean:59:1)
+
+People have also applied machine learning to help suggest proofs.
+
+---
+## Why care?: New modes of mathematical collaboration
+
+Sphere eversion:
+<iframe width="1609" height="815" src="https://www.youtube.com/embed/iynrV-3I9CY?controls=0&rel=0&loop=1&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; modestbranding; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<https://leanprover-community.github.io/sphere-eversion/blueprint/dep_graph.html>
+
+---
+## Why care?: Its fun! (and interesting)
+
+Proving a theorem with no possible errors once and for all feels satisfying!
+
+Interesting problems take on a different flavours when formalized
+
+New problems, how do you organize all of mathematics? How do you let people find what they need?
+How do you make it easier to prove things in the future?
+
+
+---
+## Tactic Demo
+
+I'll demo how to use some tactics for proofs now:
+`rw, apply, intros, split, induction`
+
+[demo](vscode://file/Users/alex/talks/cap/src/demo_tac.lean)
+
+
+
+
+---
+
+## Break time: here's something to read
+### Getting interesting mathematics from errors
+
+How do you factor a 60 digit number?
+
+Best method known, due to Lenstra, is the Elliptic curve method.
+
+Let $N$ be a large integer, which may or may not be composite.
+We want to find some $1 \lt \ell \lt N$ with $\gcd(\ell , N) \gt 1$.
+
+If we fix  $a,b \in \mathbf Z$ then
+$$\\{(x,y) \in (\mathbf Z/N\mathbf Z)^2 : y^2 = x^3 + ax + b\\}$$
+can be turned into a group (when we add an identity element).
+
+The group law is defined by some polynomials
+$$(x_1,y_1) + (x_2, y_2) = (\lambda^2 + 2x_1,\lambda(\lambda^2 + 2x_1) - y_1)$$
+where, when $x_1\ne x_2$, we have
+$\lambda = \frac{y_2 - y_1}{x_2 - x_1}.$
+
+From a starting point $(x_1,y_1)$, we can keep adding the same point to itself, ... until we get lucky we eventually see `ZeroDivisionError: inverse of Mod(l, N) does not exist`.
+
+This procedure will never error if $\mathbf Z /N$ is a field, but likely will fail if $N$ is composite.
+
+---
+
+## Exercise time:
+
+Continue with level 2 of the CAP game.
+<https://alexjbest.github.io/CAP-game/>
+<!-- `intros, rw, split, apply, -->
+
+Following cheat-sheet may be helpful too.
+<https://www.ma.imperial.ac.uk/~buzzard/xena/formalising-mathematics-2022/Part_C/Part_C.html>
+(link in chat)
+
+After a while I will show you some more tactics
+
+<!-- have, cases, induction` -->
+[demo](vscode://file/Users/alex/talks/cap/src/demo_tac.lean)
+
+
+
+
+
+
+
+---
+## Powerful tactics
+
+You have (possibly) already seen:
+- `finish`/`tauto`
+- `(n)linarith` - [geometry.manifold.instances](vscode://file/Users/alex/talks/love/_target/deps/mathlib/src/geometry/manifold/instances/sphere.lean:203:5)
+- `library_search`
+- `abel`
+- `norm_cast`
+- `ring` - [algebra.group_power.identities](vscode://file/Users/alex/talks/love/_target/deps/mathlib/src/algebra/group_power/identities.lean:62:3)
+
+Some others:
+- `suggest using` - [demo](vscode://file/Users/alex/talks/love/src/demo_suggest_using.lean:9:3)
+- `group`/`noncomm_ring` - [demo](vscode://file/Users/alex/talks/love/src/demo_group.lean:164:3)
+- `norm_num` - Normalizes numerical expressions in any ring
+- `obviously` / `tidy` - Apply other tactics in a chain, most useful for proofs that have a particular style, used heavily in categorical machinery
+- `rewrite_search` - [tests](vscode://file/Users/alex/talks/love/_target/deps/mathlib/test/rewrite_search/rewrite_search.lean:59:1)
+
+Most of these have specific uses and purposes, this is good, but general purpose automation would be better!
+
+---
+## GPT-f
+
+Jesse Michael Han, Jason Rute, Yuhuai Wu, Edward W. Ayers and Stanislas Polu, supported by the company Open-AI have built a transformer language model to predict tactic calls.
+
+By applying machine learning trained on Mathlib, other mathematical and scientific literature on the internet, and large text corpuses they achieve pretty incredible results.
+
+[Demo](vscode://file/Users/alex/talks/cap/src/demo_group.lean:162:3)
+
+<https://arxiv.org/abs/2102.06203>
+
+                    </script>
+                </section>
+
+            </div>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/reveal.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/plugin/markdown/markdown.js"></script>
+        <script src="plugin/chalkboard.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/plugin/highlight/highlight.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/plugin/notes/notes.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/plugin/math/math.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
+
+
+		<script>
+
+			Reveal.initialize({
+                width: 1600,
+                height: 900,
+				controls: false,
+				progress: false,
+				history: true,
+				center: false,
+				previewLinks: false,
+                transition: 'none',
+                chalkboard: {
+                    toggleChalkboardButton: false,
+                    toggleNotesButton: false,},
+				plugins: [ RevealMarkdown, RevealNotes, RevealChalkboard, RevealMath.MathJax3 ]
+			});
+            Reveal.addEventListener('ready', (event) => {
+                hljs.registerLanguage("lean",function(){"use strict";return function(hljs){
+  var LEAN_KEYWORDS = {
+    keyword:
+      'theorem|10 lemma|10 definition def class structure instance ' +
+      'example inductive coinductive ' +
+      'axiom axioms hypothesis constant constants ' +
+      'universe universes variable variables parameter parameters ' +
+      'begin end ' +
+      'import open theory prelude renaming hiding exposing ' +
+      'calc  match do  by let in extends ' +
+      'fun assume ' +
+      '#check #eval #reduce #print',
+    built_in:
+      'Type Prop|10 Sort rw|10 rewrite rwa erw subst substs ' +
+      'simp dsimp simpa simp_intros finish ' +
+      'unfold unfold1 dunfold unfold_projs unfold_coes ' +
+      'delta cc ac_reflexivity ac_refl ' +
+      'existsi|10 cases rcases with intro intros introv by_cases ' +
+      'refl rfl funext propext exact exacts ' +
+      'refine apply eapply fapply apply_with apply_instance ' +
+      'induction rename assumption revert generalize specialize clear ' +
+      'contradiction by_contradiction by_contra trivial exfalso ' +
+      'symmetry transitivity destruct constructor econstructor ' +
+      'left right split injection injections ' +
+      'repeat try continue skip swap solve1 abstract all_goals any_goals done ' +
+      'fail_if_success success_if_fail guard_target guard_hyp ' +
+      'have replace at suffices show from ' +
+      'congr congr_n congr_arg norm_num ring ',
+    literal:
+      'tt ff',
+    meta:
+      'noncomputable|10 private protected meta mutual',
+    section:
+      'section namespace',
+    strong:
+      'sorry admit',
+  };
+
+  var LEAN_IDENT_RE = /[A-Za-z_][\\w\u207F-\u209C\u1D62-\u1D6A\u2079\']*/;
+
+  var DASH_COMMENT = hljs.COMMENT('--', '$');
+  var MULTI_LINE_COMMENT = hljs.COMMENT('/-[^-]', '-/');
+  var DOC_COMMENT = {
+    className: 'doctag',
+    begin: '/-[-!]',
+    end: '-/'
+  };
+
+  var ATTRIBUTE_DECORATOR = {
+    className: 'meta',
+    begin: '@\\[',
+    end: '\\]'
+  };
+
+  var ATTRIBUTE_LINE = {
+    className: 'meta',
+    begin: '^attribute',
+    end: '$'
+  };
+
+  var LEAN_DEFINITION =	{
+    className: 'theorem',
+    beginKeywords: 'def theorem lemma class instance structure',
+    end: ':=',
+    excludeEnd: true,
+    contains: [
+      {
+        className: 'keyword',
+        begin: /extends/
+      },
+      hljs.inherit(hljs.TITLE_MODE, {
+        begin: LEAN_IDENT_RE
+      }),
+      {
+        className: 'params',
+        begin: /[([{]/, end: /[)\]}]/, endsParent: false,
+        keywords: LEAN_KEYWORDS,
+      },
+      {
+        className: 'symbol',
+        begin: /:/,
+        endsParent: true
+      },
+    ],
+    keywords: LEAN_KEYWORDS
+  };
+  return {
+    name: "lean",
+    keywords: LEAN_KEYWORDS,
+    contains: [
+      hljs.QUOTE_STRING_MODE,
+      hljs.NUMBER_MODE,
+      DASH_COMMENT,
+      MULTI_LINE_COMMENT,
+      DOC_COMMENT,
+      LEAN_DEFINITION,
+      ATTRIBUTE_DECORATOR,
+      ATTRIBUTE_LINE,
+      { begin: /⟨/ } // relevance booster
+    ]
+  };
+
+            }}());
+                //hljs.registerLanguage("lean",function(e){var r="([a-zA-Z]|\\.[a-zA-Z.])[a-zA-Z0-9._]*";return {c: [ e.HCM,e.CBCM,{b:r,l:r,k:{keyword:"maximize subject to var ",literal:""},r:90},{cN:"number",b:"\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",r:0}]} });
+
+                // console.log(hljs.listLanguages());
+                document.querySelectorAll('pre code').forEach((block) => { hljs.highlightElement(block); });
+                //hljs.highlightAll();
+            });
+
+
+		</script>
+        <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+        <script>sagecell.makeSagecell({"inputLocation": ".sage"});</script>
+
+    </body>
+</html>
