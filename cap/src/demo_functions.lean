@@ -9,7 +9,7 @@ F       --- the thing we are defining is called F
 :=      --- define the left hand side to be the right side
 n + 1   --- the input + 1
 
-#eval 3
+#eval f 3
 
 lemma f_pos : ∀ n, 0 < f n :=
 begin
@@ -23,3 +23,5 @@ begin
     apply add_lt_add_right,
     exact lt_add_one n_n, },
 end
+
+lemma f_pos' (n : ℕ) : 0 < f n := nat.succ_pos n
