@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Big Data in Pure Mathematics 2022: Mathematical results as structured data</title>
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/reveal.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+		<link rel="stylesheet" href="plugin/chalkboard.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/theme/white.min.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Lato&family=Open+Sans&family=Roboto&family=Roboto+Mono&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs@latest/styles/github.css">
+        <style type="text/css">
+            h2, h3 { font-family: 'Lato', sans-serif !important; text-transform: none !important; }
+            p { font-family: 'Open Sans', sans-serif !important; }
+            body { font-family: 'Open Sans', sans-serif !important; }
+            p { text-align: left;}
+            section {font-size: 0.90em !important;}
+            code {font-family: 'Share Tech Mono', monospace !important; max-height: 500px !important;}
+            pre {font-size: 0.7em !important;}
+        </style>
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+
+                <!-- Use external markdown resource, separate slides by three newlines; vertical slides by two newlines 
+                <section data-markdown="markdown.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"></section> -->
+
+                <!-- Slides are separated by three dashes (quick 'n dirty regular expression) -->
+                <section data-markdown data-separator="^---">
+                    <script type="text/template">
+## Mathematical results as structured data
+### Alex J. Best - Vrije Universiteit Amsterdam
+#### Big Data in Pure Mathematics 2022
+
+
+
+These slides are online at:
+
+> <https://alexjbest.github.io/talks/big-data/>
+
+---
+## Who am I?
+
+- Postdoc in number theory / arithmetic geometry
+- Have worked a lot in the past on the LMFDB, website and data, a "traditional" database of mathematical objects
+- Lots of computational work designing and implementing algorithms in Sage, underlying C and assembly libraries, Julia, ...
+- Few years ago got interested in how proof assistants might let us write mathematical code with less bugs, or even write the description of an algorithm and the proof of correctness all together.
+
+---
+
+## This talk
+
+From the workshop website:
+
+> With the emergence of increasingly complex data sets throughout mathematics, new database related issues arise, such as accessibility and searchability, long-term storage and stable referencing, collaborations, contributions and **quality control**, as well as the interlinking of data, also with other databases and computer algebra systems. The aim of this workshop is to exchange ideas and to build bridges, perhaps making a step towards a utopian ideal platform for mathematical data.
+
+Like Kevin I'll talk about Lean and `mathlib` projects specifically, but with a focus on the contribution workflow how we ensure quality.
+
+I'll talk about several tools and infrastructure, developed by the community, but some particular credit for tooling and CI belongs to, Floris van Doorn, Gabriel Ebner, Bryan Gin-Ge Chen, Robert Lewis, Scott Morrison, Eric Wieser. [[1]](https://florisvandoorn.com/papers/maintenance.pdf).
+
+---
+
+## The case for automating proof quality checkers
+
+- In many databases, once an algorithm is designed to generate data, more can be generated as required (with enough $$ and time)
+
+- Person power is a limiting factor for expanding databases / libraries of proofs
+- For nLab / OEIS / Wikipedia the barrier to entry is lower than for `mathlib`, no need to learn a new language to contribute, doesn't matter if there are small spelling / grammar mistakes (quick turnaround)
+- Generating proofs automatically is very hard
+- Checking / analysing existing statements and proofs is a lot easier, so we can relieve pressure on the reviewers there
+
+---
+## What is *quality* for a formalized statement or proof?
+
+Even if proofs are correct they may be less useful than expected:
+
+- A theorem could be unnecessarily specific and therefore less helpful to others / harder to find by automated tools
+- Theorems with unnecessary hypotheses place a burden on those using them to prove these side conditions, even if they do hold
+- Proofs can be unnecessarily complicated, simpler proofs are easier to understand (for both humans and computers!), easier fix when they break, and easier generalize / copy to different contexts.
+- Any theorem with contradictory or false hypotheses will be provable, but likely useless not what was intended unless the conclusion is actually a contradiction!
+
+Can occur due to the collaborative and revisionary nature of the project, most proofs are not written once and set in stone, but revised often by different authors, this can lead to oversights and inconsistencies.
+Some of these issues are caught by human reviewers when the results are added to the library, sometimes not.
+<!-- .element: class="fragment" -->
+
+Eventually we would love proof assistants to be genuinely helpful assistants when working on mathematics, in addition to simply checking that we haven't made mistakes, if they could also suggest genuine improvements.
+<!-- .element: class="fragment" -->
+
+---
+### Mathlib Continuous Integration (CI)
+
+In the `mathlib` library:
+- Continuous integration is run on every commit
+- It can take up to 5 hours in the worst case, if a basic file is modified as it involves:
+  - Checking the proofs
+  - Caching a low level version for download so others don't have to check the entire library on their computer
+  - Running linters to catch common mistakes, and ensure documentation is added
+  - Basic syntax / formatting linting to make the source files more uniform (makes searching by text more effective)
+
+People can (and do) make small contributions from the web browser, making changes via the `github` interface or `gitpod`, and letting CI find what broke and the [location of the error](https://github.com/leanprover-community/mathlib/pull/13835/files).
+<!-- .element: class="fragment" -->
+
+#### Speeding up CI
+<!-- .element: class="fragment" -->
+In order for CI to be as fast as possible it is important that any files that don't need to be rebuilt are not.
+To do this we have to ensure files don't import things they don't need.
+<!-- .element: class="fragment" -->
+
+Me and Johan Commelin wrote a tool (in Lean) to inspect Lean files and print only the imports that are actually needed from the ~2200 files.
+<!-- .element: class="fragment" -->
+
+---
+### Anatomy of a proof
+
+Proofs are written in an interactive style using commands (tactics) such as
+- `by_cases` - to split into cases based on some hypothesis holding or its negation
+- `use` - to pick a witness of an existential statement
+- `rewrite` - to substitute some known equality in
+- `contrapose`
+- `contradiction`
+- `linarith` - prove statements involving linear inequalities on reals
+- `ring` - prove ring theoretic identities
+completely customisable, aim to represent a logical step in a somewhat human level, source code
+
+In the process of checking they are converted into a low level format (compiled code) of expressions that consists only of the primitive pieces:
+<!-- .element: class="fragment" -->
+- A reference to another definition or statement in the library, `nat.even`
+- An (partial) application of a function to some argument, `nat.even 2`
+- An anonymous function, `λ x, x + 1`
+- The type of all functions from one type to another
+- Let `x = blah` in the following
+
+<!-- .element: class="fragment" -->
+
+---
+Can think of this as a tree of subexpressions
+$$a_{i}=\int_{\sqrt{\frac{a-b}{2}}}^{\sqrt{\frac{a+b}{2}}} x^{2} d x$$
+
+![tc graph](exprtree.png) <!-- .element style="display: block; width: 30%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+
+By iterating over such trees we can study compiled proofs after the fact, and find and suggest improvements, this is what is done in CI, not studying the source.
+
+---
+
+### Unused assumptions
+In the following
+```lean
+lemma add_one_sq {R : Type*} [comm_ring R] [is_domain R] (r : R) :
+  (r + 1) ^ 2 = r ^ 2 + 2 * r + 1 :=
+begin
+  simp [mul_add, add_mul],
+  abel,
+end
+```
+The fact `[is_domain R]` is never used in the proof!
+
+In the tree of expressions generated for the proof we will see that the assumption `[is_domain R]` never appears by name, and is therefore removable.
+
+This is actually quite common, when working on a long file we normally set the assumptions at the top, and leave them for a whole section. Its easy on paper and in Lean to neglect to think back on what the working hypothesis for some section is.
+
+---
+
+### Duplicate lemmas
+Lemmas can be duplicates of each other with different proofs, most of the time this is unintentional, leads to fragmentation and missed opportunities for improvements.
+
+By hashing the types of lemmas and throwing them into a dictionary we can quickly find these.
+Being a bit smarter we can hash up to common variations, such as rearranging the arguments.
+
+There more than 100 pairs of duplicates in mathlib last time I checked, many due to copy-paste errors:
+```
+lemma differentiable_at_cosh {x : ℂ} : differentiable_at ℂ cos x :=
+differentiable_cos x
+```
+Requires an inhumanly detailed reviewer to catch something like this in PR review!
+
+
+---
+### Unnecessary case splits
+Similarly if we make use of a case split in a proof, but then don't use one of the new hypothesis we didn't need to split into cases originally:
+```
+lemma uniformly_extend_spec {α β γ : Type*} [uniform_space α] [uniform_space β] [uniform_space γ]
+  {e : β → α} (h_e : uniform_inducing e) (h_dense : dense_range e) {f : β → γ}
+  (h_f : uniform_continuous f) [separated_space γ] [complete_space γ] (a : α) :
+  tendsto f (comap e (𝓝 a)) (𝓝 (ψ a)) :=
+let de := (h_e.dense_inducing h_dense) in
+begin
+  by_cases ha : a ∈ range e,
+  { rcases ha with ⟨b, rfl⟩,
+    rw [uniformly_extend_of_ind _ _ h_f, ← de.nhds_eq_comap],
+    exact h_f.continuous.tendsto _ },
+  { simp only [dense_inducing.extend, dif_neg ha],
+    exact tendsto_nhds_lim (uniformly_extend_exists h_e h_dense h_f _) }
+end
+```
+in this example `ha` is only used in the first branch, and when we remove the split, it turns out the hypothesis `[separated_space γ]` is no longer needed.
+The proof becomes
+```
+by simpa only [dense_inducing.extend] using tendsto_nhds_lim (uniformly_extend_exists h_e ‹_› h_f _)
+```
+and we can consequently remove the `separated_space` assumption from 10 other lemmas in the library.
+
+We just avoided someone potentially having to do this by hand later.
+
+---
+### Generalizing (typeclass) assumptions
+
+
+**Problem**: Often theorems are stated with stronger, but still used, typeclass assumptions than are really needed, can this be detected automatically?
+
+**A fake Lean lemma**:
+```lean
+lemma mul_inv {G : Type*} [ordered_comm_group G] (a b : G) : (a * b)⁻¹ = a⁻¹ * b⁻¹ :=
+by rw [mul_inv_rev, mul_comm]
+```
+
+This assumes `[ordered_comm_group G]` but makes no mention of an order! In principle the proof could still require it, but it doesn't.
+
+Anyone trying to use this theorem for a  `comm_group G` would get an error! <br />
+
+The "correct" assumption is `[comm_group G]`,
+when this is  changed the proof script does not need modifying.
+
+**A real lemma from `mathlib`**:
+```lean
+lemma ring_hom.char_p_iff_char_p {K L : Type*} [field K] [field L]
+  (f : K →+* L) (p : ℕ) : char_p K p ↔ char_p L p :=
+begin
+  split;
+  { introI _c, constructor, intro n,
+    rw [← @char_p.cast_eq_zero_iff _ _ p _c n, ← f.injective.eq_iff, f.map_nat_cast, f.map_zero] }
+end
+```
+Correct assumptions: `[division_ring K] [nontrivial L] [semiring L]`
+
+---
+## How do typeclasses work?
+Lean automatically generates the terms used in the proof:
+```lean
+@ordered_comm_group.to_ordered_cancel_comm_monoid G _inst_1
+@ordered_cancel_comm_monoid.to_ordered_comm_monoid ...
+@ordered_comm_group.to_comm_group G _inst_1
+...
+```
+via typeclass resolution. The following instances appear in the proof term:
+ <!-- .element style="font-size:0.9em;" -->
+![tc graph](tcchain.svg) <!-- .element style="display: block; width: 30%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+
+It is possible to determine after the fact what the real assumptions needed are by finding least common anscestors in a large graph of possibilities.
+
+<!--Typeclasses are used when the structure being inferred  is (locally) unique. -->
+
+<!--The numerous steps that typeclass resolution can take for you are a big part of making Lean usable for mathematics, but it does make it easy to forget exactly what you are assuming or need for each lemma.-->
+---
+## The graph of all these structures is rather big
+
+See https://observablehq.com/@alexjbest2/lean-generalisation for a (small) sample:
+ <!-- .element style="font-size:0.8em;" -->
+![tc graph](svg.svg) <!-- .element style="display: block; width: 80%;margin-left: auto; margin-right: auto; object-fit: cover; margin-top:-50px;margin-bot:0;" -->
+
+(*) Only terms reachable from `linear_ordered_field` here, generated Jan 2021, it has grown since then!
+ <!-- .element style="font-size:0.7em;" -->
+---
+### Example output:
+```lean
+/- The `generalisation_linter` linter reports: -/
+/- typeclass generalisations may be possible -/
+-- topology\algebra\group.lean
+#print nhds_translation_mul_inv /- _inst_3: topological_group ↝ has_continuous_mul
+ -/
+#print nhds_translation_add_neg /- _inst_3: topological_add_group ↝ has_continuous_add
+ -/
+#print quotient_add_group.is_open_map_coe /- _inst_3: topological_add_group ↝ has_continuous_add
+ -/
+#print quotient_group.is_open_map_coe /- _inst_3: topological_group ↝ has_continuous_mul
+ -/
+#print is_open.add_left /- _inst_3: topological_add_group ↝ has_continuous_add
+ -/
+#print is_open.mul_left /- _inst_3: topological_group ↝ has_continuous_mul
+ -/
+#print is_open.add_right /- _inst_3: topological_add_group ↝ has_continuous_add
+ -/
+#print is_open.mul_right /- _inst_3: topological_group ↝ has_continuous_mul
+ -/
+#print topological_group.t1_space /- _inst_3: topological_group ↝ has_continuous_mul
+ -/
+#print compact_open_separated_mul /- _inst_3: topological_group ↝ has_continuous_mul
+ -/
+#print compact_open_separated_add /- _inst_3: topological_add_group ↝ has_continuous_add
+ -/
+#print compact_covered_by_mul_left_translates /- _inst_3: topological_group ↝ has_continuous_mul
+ -/
+#print compact_covered_by_add_left_translates /- _inst_3: topological_add_group ↝ has_continuous_add
+ -/
+````
+This is naturally an iterative process: once the assumptions lemmas are changed dependent declarations may become generalizable.
+- The current implementation is fast enough for interactive use.
+- Alternative would be to transform declarations in place when working through the environment
+---
+### Some common replacements in `mathlib`
+
+Running a single pass of this on my laptop on the 80,000 declarations in  `mathlib` finished overnight.
+
+Original typeclass | Replacement typeclasses (number of times replaced)
+ ----- | ----
+comm_ring | comm_semiring (42), ring (40), semiring (27), has_zero (8)
+add_comm_group | add_comm_monoid (96), add_group (5), sub_neg_monoid (5), {has_add, has_neg, has_zero} (3)
+semiring | non_assoc_semiring (53), non_unital_non_assoc_semiring (23), {add_comm_semigroup, has_one} (13), {add_comm_monoid, has_mul} (8), has_mul (7), has_zero (5)
+field | division_ring (23), comm_ring (12), integral_domain (12), semiring (7), domain (4), ring (4), has_inv ring (3)
+ring | semiring (55), non_assoc_semiring (8), {add_group, has_mul} (4), {has_add, has_neg, mul_zero_one_class} (4)
+preorder | has_lt (36), has_le (31), {has_le, is_refl} (3), {has_lt, is_asymm} (3), {has_lt, is_irrefl, is_trans} (3)
+comm_semiring | semiring (26), monoid (10), add_zero_class (4), {has_mul, is_associative, is_commutative} (4), has_pow (4), mul_one_class (4)
+normed_space | module (23), semi_normed_space (38)
+add_monoid | add_zero_class (51), {has_add, has_zero} (5)
+monoid | mul_one_class (34), has_mul (11), {has_mul, has_one} (5), has_pow (5)
+module | has_scalar (20), distrib_mul_action (8), mul_action (6)
+normed_group | semi_normed_group (36), has_norm (10), has_nnnorm (3)
+integral_domain | comm_ring (15), domain (8), {comm_ring, no_zero_divisors} (7), comm_monoid (3), {has_mul, has_zero, no_zero_divisors} (2), {no_zero_divisors, semiring} (2)
+partial_order | preorder (33)
+<!-- .element style="font-size:0.65em;" -->
+
+---
+## Connections with other databases
+
+A proof assistant can be used to write code that is proven to compute what is intended correctly
+
+This can be used in several stages of the "traditional" mathematical database pipeline:
+- Data generation
+- Data update / modification
+- Tracking range / completeness of database (complicated constraints)
+- Display of the data, provably correct printing
+- Using known results to optimize searches
+
+Why not try to write your next update script in Lean? (other ITPs are available)
+This is hard without a library that understands the objects you are studying rigorously.
+
+Can your database eat `mathlib`?
+
+---
+### Removable edge cases
+So far we have talked a lot about simplifying proofs, what about simplifying statements?
+
+One common and annoying way statements can be sub-optimal is that they have conditions about edge cases that need verifying.
+This is one of the things that makes formal proof more time consuming than informal proof.
+
+The following is an example of a statement about a `group` `G`.
+```
+lemma exponent_dvd_of_forall_pow_eq_one (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n = 1) :
+  exponent G ∣ n :=
+begin
+  apply nat.dvd_of_mod_eq_zero,
+  by_contradiction h,
+  have h₁ := nat.pos_of_ne_zero h,
+  have h₂ : n % exponent G < exponent G := nat.mod_lt _ (exponent_pos_of_exists _ n hpos hG),
+  have h₃ : exponent G ≤ n % exponent G,
+  { apply exponent_min' _ _ h₁,
+    simp_rw ←pow_eq_mod_exponent,
+    exact hG },
+  linarith,
+end
+```
+---
+By changing the type from
+```
+lemma exponent_dvd_of_forall_pow_eq_one (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n = 1) : exponent G ∣ n
+```
+to
+```
+lemma exponent_dvd_of_forall_pow_eq_one (n : ℕ) (hG : ∀ g : G, g ^ n = 1) : exponent G ∣ n
+```
+the whole first half of the following proof in the same file becomes unnecessary:
+```
+lemma lcm_order_eq_exponent {H : Type*} [fintype H] [left_cancel_monoid H] :
+  (finset.univ : finset H).lcm order_of = exponent H :=
+begin
+  apply nat.dvd_antisymm (lcm_order_of_dvd_exponent H),
+  apply exponent_dvd_of_forall_pow_eq_one,
+  { apply nat.pos_of_ne_zero,
+    by_contradiction,
+    rw finset.lcm_eq_zero_iff at h,
+    cases h with g hg,
+    simp only [true_and, set.mem_univ, finset.coe_univ] at hg,
+    exact ne_of_gt (order_of_pos g) hg },
+  { intro g,
+    have h : (order_of g) ∣ (finset.univ : finset H).lcm order_of,
+    { apply finset.dvd_lcm,
+      exact finset.mem_univ g },
+    cases h with m hm,
+    rw [hm, pow_mul, pow_order_of_eq_one, one_pow] },
+end
+```
+
+---
+### Unused haves / suffices
+If we have a proof using
+```
+have h : some_fact := <proof_of_fact>,
+<rest_of_proof>
+```
+or
+```
+suffices h : some_fact,
+<rest_of_proof>,
+<proof_of_fact>
+```
+and where `rest_of_proof` doesn't make use of the hypothesis `h`, then introducing and proving `h` in this way was unnecessary.
+From the perspective of the expression trees this is a branch that doesn't refer to some variable.
+
+<!-- ```
+lemma a : true :=
+have 1 = 1 := rfl,
+trivial
+
+lemma b : true :=
+(λ h : 1 = 1, trivial) rfl
+```
+
+By looping over all the produced proofs in the environment we can find instances of this. -->
+
+---
+
+Such as
+```
+lemma mem_traverse {f : α' → set β'} :
+  ∀(l : list α') (n : list β'), n ∈ traverse f l ↔ forall₂ (λb a, b ∈ f a) n l
+| []      []      := by simp
+| (a::as) []      := by simp; exact assume h, match h with end
+| []      (b::bs) := by simp
+| (a::as) (b::bs) :=
+  suffices (b :: bs : list β') ∈ traverse f (a :: as) ↔ b ∈ f a ∧ bs ∈ traverse f as,
+    by simp [mem_traverse as bs],
+  iff.intro
+    (assume ⟨_, ⟨b, hb, rfl⟩, _, hl, rfl⟩, ⟨hb, hl⟩)
+    (assume ⟨hb, hl⟩, ⟨_, ⟨b, hb, rfl⟩, _, hl, rfl⟩)
+```
+can become
+```
+lemma mem_traverse {f : α' → set β'} :
+  ∀(l : list α') (n : list β'), n ∈ traverse f l ↔ forall₂ (λb a, b ∈ f a) n l
+| []      []      := by simp
+| (a::as) []      := by simp
+| []      (b::bs) := by simp
+| (a::as) (b::bs) := by simp [mem_traverse as bs]
+```
+
+                    </script>
+                </section>
+
+            </div>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/reveal.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/plugin/markdown/markdown.js"></script>
+        <script src="plugin/chalkboard.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/plugin/highlight/highlight.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/plugin/notes/notes.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.2.1/plugin/math/math.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
+
+
+		<script>
+
+			Reveal.initialize({
+                width: 1600,
+                height: 900,
+				controls: false,
+				progress: false,
+				history: true,
+				center: false,
+				previewLinks: false,
+                transition: 'none',
+                chalkboard: {
+                    toggleChalkboardButton: false,
+                    toggleNotesButton: false,},
+				plugins: [ RevealMarkdown, RevealNotes, RevealChalkboard, RevealMath.MathJax3 ]
+			});
+            Reveal.addEventListener('ready', (event) => {
+                hljs.registerLanguage("lean",function(){"use strict";return function(hljs){
+  var LEAN_KEYWORDS = {
+    keyword:
+      'theorem|10 lemma|10 definition def class structure instance ' +
+      'example inductive coinductive ' +
+      'axiom axioms hypothesis constant constants ' +
+      'universe universes variable variables parameter parameters ' +
+      'begin end ' +
+      'import open theory prelude renaming hiding exposing ' +
+      'calc  match do  by let in extends ' +
+      'fun assume ' +
+      '#check #eval #reduce #print',
+    built_in:
+      'Type Prop|10 Sort rw|10 rewrite rwa erw subst substs ' +
+      'simp dsimp simpa simp_intros finish ' +
+      'unfold unfold1 dunfold unfold_projs unfold_coes ' +
+      'delta cc ac_reflexivity ac_refl ' +
+      'existsi|10 cases rcases with intro intros introv by_cases ' +
+      'refl rfl funext propext exact exacts ' +
+      'refine apply eapply fapply apply_with apply_instance ' +
+      'induction rename assumption revert generalize specialize clear ' +
+      'contradiction by_contradiction by_contra trivial exfalso ' +
+      'symmetry transitivity destruct constructor econstructor ' +
+      'left right split injection injections ' +
+      'repeat try continue skip swap solve1 abstract all_goals any_goals done ' +
+      'fail_if_success success_if_fail guard_target guard_hyp ' +
+      'have replace at suffices show from ' +
+      'congr congr_n congr_arg norm_num ring ',
+    literal:
+      'tt ff',
+    meta:
+      'noncomputable|10 private protected meta mutual',
+    section:
+      'section namespace',
+    strong:
+      'sorry admit',
+  };
+
+  var LEAN_IDENT_RE = /[A-Za-z_][\\w\u207F-\u209C\u1D62-\u1D6A\u2079\']*/;
+
+  var DASH_COMMENT = hljs.COMMENT('--', '$');
+  var MULTI_LINE_COMMENT = hljs.COMMENT('/-[^-]', '-/');
+  var DOC_COMMENT = {
+    className: 'doctag',
+    begin: '/-[-!]',
+    end: '-/'
+  };
+
+  var ATTRIBUTE_DECORATOR = {
+    className: 'meta',
+    begin: '@\\[',
+    end: '\\]'
+  };
+
+  var ATTRIBUTE_LINE = {
+    className: 'meta',
+    begin: '^attribute',
+    end: '$'
+  };
+
+  var LEAN_DEFINITION =	{
+    className: 'theorem',
+    beginKeywords: 'def theorem lemma class instance structure',
+    end: ':=',
+    excludeEnd: true,
+    contains: [
+      {
+        className: 'keyword',
+        begin: /extends/
+      },
+      hljs.inherit(hljs.TITLE_MODE, {
+        begin: LEAN_IDENT_RE
+      }),
+      {
+        className: 'params',
+        begin: /[([{]/, end: /[)\]}]/, endsParent: false,
+        keywords: LEAN_KEYWORDS,
+      },
+      {
+        className: 'symbol',
+        begin: /:/,
+        endsParent: true
+      },
+    ],
+    keywords: LEAN_KEYWORDS
+  };
+  return {
+    name: "lean",
+    keywords: LEAN_KEYWORDS,
+    contains: [
+      hljs.QUOTE_STRING_MODE,
+      hljs.NUMBER_MODE,
+      DASH_COMMENT,
+      MULTI_LINE_COMMENT,
+      DOC_COMMENT,
+      LEAN_DEFINITION,
+      ATTRIBUTE_DECORATOR,
+      ATTRIBUTE_LINE,
+      { begin: /⟨/ } // relevance booster
+    ]
+  };
+
+            }}());
+                //hljs.registerLanguage("lean",function(e){var r="([a-zA-Z]|\\.[a-zA-Z.])[a-zA-Z0-9._]*";return {c: [ e.HCM,e.CBCM,{b:r,l:r,k:{keyword:"maximize subject to var ",literal:""},r:90},{cN:"number",b:"\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",r:0}]} });
+
+                // console.log(hljs.listLanguages());
+                document.querySelectorAll('pre code').forEach((block) => { hljs.highlightElement(block); });
+                //hljs.highlightAll();
+            });
+
+
+		</script>
+
+    </body>
+</html>
