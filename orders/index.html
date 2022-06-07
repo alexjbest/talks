@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">    
+<head>
+    <meta charset="utf-8">
+    <title>Finding orders with prescribed index in number fields</title>
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/simple.css" id="theme">
+    <script src="https://sagecell.sagemath.org/static/jquery.min.js"></script>
+    <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+    <!--<script>
+        sagecell.makeSagecell({linked:true,
+                                inputLocation:".sage",
+                                evalButtonText:"Go",
+                                editor:"textarea",
+                                hide:["editorToggle","language","permalink","done"],
+                                callback: function() {
+                                    $(".sagecell_evalButton").get(0).click(); // So much hax
+                                }, });
+    </script>
+    <link rel="stylesheet" href="css/sage.css">-->
+    <!--Add support for earlier versions of Internet Explorer -->
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+ 
+<body>
+    <!-- Wrap the entire slide show in a div using the "reveal" class. -->
+    <div class="reveal">
+        <!-- Wrap all slides in a single "slides" class -->
+        <div class="slides">
+ 
+            <!-- ALL SLIDES GO HERE -->
+            <!-- Each section element contains an individual slide -->
+            <section>
+                <h1>Finding orders with prescribed index in number fields</h1>
+                <h2>Alex J. Best</h2>
+                <h3>supervised by Lassina Demb&eacute;l&eacute;</h3>
+            </section>
+ 
+            <section id="show-a-link">
+                <h2>This talk:</h2>
+                <ul>
+                    <li>Background</li>
+                    <li>The problem</li>
+                    <li>Approaches</li>
+                    <li>Examples/demo</li>
+                    <li>Project management</li>
+                </ul>
+            </section>
+ 
+            <section id="fragments">
+                <h2>Background</h2>
+                <h3>Number fields</h3>
+                <p>A <u>number field</u> is a field that is also a finite dimensional vector space over $\mathbf{Q}$. If $K$ is a number field then this dimension is denoted $[K:\mathbf{Q}]$.</p>
+                <p class="fragment">e.g. $\{a+bi\mid a,b\in\mathbf{Q}\}$, <div class="fragment">$\{a+b\sqrt[3]{2}+c\sqrt[3]{4}\mid a,b,c\in\mathbf{Q}\}$, </div><div class="fragment">$\mathbf{Q}[x]/(x^2 -2)$.</div></p>
+            </section>
+ 
+            <section id="fragments">
+                <h2>Background</h2>
+                <h3>Orders</h3>
+                <p>An <u>order</u> is a subring of a number field that satisfies:
+                    <ul>
+                        <li class="fragment">Every element satisfies a polynomial of the form $x^n + a_{n-1}x^{n-1} + \cdots + a_1x + a_0$ with all $a_i\in\mathbf{Z}$ (integrality).</li>
+                        <li class="fragment">Is isomorphic to $\mathbf{Z}^{[K:\mathbf{Q}]}$ as an additive group (full rank).</li>
+                    </ul>
+                </p>
+                <p class="fragment">e.g. $\{a+bi\mid a,b\in\mathbf{Z}\}$, <div class="fragment">$\{a+b3\sqrt{2}\mid a,b\in\mathbf{Z}\}$.</div></p>
+            </section>
+
+            <section id="fragments">
+                <h2>Background</h2>
+                <h3>Maximal orders</h3>
+                <p>The orders of a number field can be ordered by inclusion, the maximal element of this set is the <u>ring of integers</u>.</p>
+                <p class="fragment">This is unique for a given number field $K$ and we denote it $\mathbf{Z}_K$.</p>
+
+                <div class="fragment">
+                <h3>Index of an order</h3>
+                <p>The <u>index</u> of an order $\mathcal{O}$ is the size of the quotient of the maximal order by $\mathcal{O}$, this is an integer.</p>
+                </div>
+            </section>
+ 
+            <section id="fragments">
+                <h2>The problem</h2>
+                <h3>Finding orders with a given index</h3>
+                <p>Given a number field $K$ and an integer $I$, what are all the orders in $K$ of index $I$?</p>
+                <p class="fragment">We have been developing methods to solve this problem efficiently and in generality.</p>
+            </section>
+
+            <section id="fragments">
+                <h2>Approaches</h2>
+                <h3>The Hermite normal form method</h3>
+                <p>There are many possible basis sets for an order $\mathcal{O}$.</p>
+                <p class="fragment">However looking at the transformation matrices from a fixed basis of $\mathbf{Z}_K$ we can find a unique matrix (the <u>Hermite normal form</u>) that we can use to represent $\mathcal{O}$.</p>
+                <p class="fragment">We can reverse this process and instead generate matrices in Hermite normal form that could represent the orders we are looking for.</p>
+                <p class="fragment">The index of an order is the determinant of this matrix. So we can generate matrices with the right determinant and then we only need to check that the matrices actually define orders.</p>
+            </section>
+
+            <section id="fragments">
+                <h3>Hermite normal form example</h3>
+                <p>
+                The Hermite normal form matrices of dimension 2 with determinant 3 are
+                \[
+                \begin{pmatrix}1&0\\0&3\end{pmatrix},
+                \begin{pmatrix}1&1\\0&3\end{pmatrix},
+                \begin{pmatrix}1&2\\0&3\end{pmatrix},
+                \begin{pmatrix}3&0\\0&1\end{pmatrix}.
+                \]
+                </p>
+                <p class="fragment">
+                If $K = \mathbf{Q}(i)$ with basis $\{1,i\}$ for $\mathbf{Z}_K$ the corresponding subgroups are
+                \[
+                (1)\mathbf{Z} + (3i)\mathbf{Z},
+                (1+i)\mathbf{Z} + (3i)\mathbf{Z},
+                \]
+                \[
+                (1+2i)\mathbf{Z} + (3i)\mathbf{Z},
+                (3)\mathbf{Z} + (i)\mathbf{Z}.
+                \]
+                </p>
+                <p class="fragment">
+                And so the only order of index 3 is $\mathbf{Z} + 3i\mathbf{Z}$.
+                </p>
+            </section>
+
+            <section id="fragments">
+                <h2>Approaches</h2>
+                <h3>The conductor method</h3>
+                <p>Each order in a number field, has an associated ideal, the conductor.</p>
+                <p class="fragment">
+                \[\mathfrak{f} = \{a\in\mathbf{Z}_K\mid a\mathbf{Z}_K \subseteq\mathcal{O}\}\]
+                </p>
+                <p class="fragment">When $\mathbf{Z}_K/\mathcal{O}$ is cyclic (i.e. $\mathbf{Z}/m\mathbf{Z}$), we have $\mathbf{Z}_K/\mathfrak{f} \cong (\mathbf{Z}_K/\mathcal{O})^2$ and $\mathcal{O} = \mathfrak{f} + \mathbf{Z}$.</p>
+                <p class="fragment">Using the factorisation of ideals in rings of integers allows us to quickly find such $\mathfrak{f}$ and hence $\mathcal{O}$.</p>
+            </section>
+
+            <section>
+                <h2>Demo</h2>
+                <p>Let's find the orders of index $8$ in the number field $\mathbf{Q}[x]/(x^3 - 16x + 16)$.</p>
+            </section>
+
+            <section id="fragments">
+                <h2>Finding elliptic curves</h2>
+                <p>Given an elliptic curve \[E\colon y^2 = x^3 + a_2x^2 + a_4x + a_6\] assuming there are no solutions with $y=0$ we can look at \[K = \mathbf{Q}[x]/(x^3 + a_2x^2 + a_4x + a_6).\]</p>
+                <p class="fragment">Then $\mathbf{Z}[x]/(x^3 + a_2x^2 + a_4x + a_6)$ is an order in $K$ whose index is related to one of the fundamental invariants of the curve (its discriminant).</p>
+                <p class="fragment">Given a number field as above and the discriminant of the curve we can find orders of this form with our methods.</p>
+                <p class="fragment">Then we can find a generator for the order and construct its minimal polynomial to give us the desired curve.</p>
+            </section>
+
+            <section id="fragments">
+                <h2>Project management</h2>
+                <p>The project has progressed well overall, but there were a couple of issues worth mentioning:
+                <ul>
+                    <li class="fragment">
+                        Some unexpected issues where properties I hoped to be general turned out not to be.
+                    </li>
+                    <li class="fragment">
+                        I had problems with the original computer algebra package MAGMA, so I switched to implementing things in Sage.
+                    </li>
+                </ul>
+                </p>
+            </section>
+
+            <section id="fragments">
+                <h2>Conclusion</h2>
+                <p>These algorithms are interesting and useful.</p>
+                <p class="fragment">Many ways they can still be improved.
+                <ul>
+                    <li class="fragment">
+                        Low-degree optimisations.
+                    </li>
+                    <li class="fragment">
+                        Conditions on ideals to be conductors and modules to be rings can be taken into account.
+                    </li>
+                    <li class="fragment">
+                        Generalising to relative number fields would be interesting.
+                    </li>
+                    <li class="fragment">
+                        There are likely more applications of these methods that we aren't aware of.
+                    </li> 
+                    <li class="fragment">
+                        There are possibly completely different methods to find these orders.
+                    </li>
+                </ul>
+                </p>
+            </section>
+
+            <section>
+                <h1>Questions?</h1>
+                <p>Thanks for listening</p>
+            </section>
+
+<!--            <section>
+                <h3>Demo of Sage code</h3>
+                <div class="sage hidden">
+                    <script type="text/x-sage">
+def expressions_as_product(n,k):
+    if k == 1:
+        return [[n]]
+    exps = []
+    for d in divisors(n):
+        for se in expressions_as_product(n/d,k-1):
+            exps.append(se + [d])
+    return exps
+
+def hnf_matrices_with_det(I,n):
+    matrices = []
+    for exp in expressions_as_product(I,n):
+        mats_for_exp = [diagonal_matrix(ZZ,n,exp)]
+        for i in range(1,n):
+            d = exp[i]
+            cur_matrices = []
+            for j in range(d**i):
+                if d == 1:
+                    digi = [0 for l in range(i)]
+                else:
+                    digi = Integer(j).digits(base=d,padto=i)
+                for m in mats_for_exp:
+                    cur_matrices.append(copy(m))
+                    for k in range(i):
+                        cur_matrices[-1][k,i] = digi[k]
+            mats_for_exp = cur_matrices
+        matrices += mats_for_exp
+    return matrices
+
+def orders_of_index_via_hnf(O,I):
+    n = O.rank()
+    K = O.fraction_field()
+    orders = []
+    for h in hnf_matrices_with_det(I,n):
+        #if not h.row(0).list() == [1] + [0 for i in range(n-1)]:
+        #    continue
+        try:
+            o = sage.rings.number_field.order.absolute_order_from_module_generators([sum([r[i]*O.gen(i) for i in range(n)]) for r in h.rows()])
+            #o = sage.rings.number_field.order.absolute_order_from_module_generators([O(r) for r in h.rows()])
+            if o.index_in(O) == I:
+                orders.append(o)
+            else:
+                print "hmm"
+        except:
+            pass
+    return orders
+                    </script>
+                </div>
+                <div class="sage">
+                    <script type="text/x-sage">
+f = x**4 +5*x + 13
+K = NumberField(f,'a')
+ords = orders_of_index_via_hnf(K.maximal_order(), 39)
+ords
+                    </script>
+                </div>
+            </section>
+
+            <section>
+                <h3>Demo</h3>
+                <div class="sage">
+                    <script type="text/x-sage">
+E = EllipticCurve([0,0,1,-1,0])
+P = x**3 + E.a2()*x**2 + E.a4()*x + E.a6()
+Q = E.a1()*x + E.a3()
+R = 4*P + Q**2
+f = 16*R.subs({x:x/4})
+K = NumberField(f,'a')
+index = sqrt((2**8 * E.discriminant())/K.disc())
+ords = orders_of_index(K.maximal_order(), index)
+curves = []
+for o in ords:
+    if len(o.ring_generators()) == 1: # Monogenic
+        coeffs = o.ring_generators()[0].minpoly().coeffs()
+        curves.append(EllipticCurve([0,coeffs[2],0,coeffs[1],coeffs[0]]).minimal_model())
+curves
+                    </script>
+                </div>
+            </section>
+ -->
+ 
+            </div>
+    </div>
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+ 
+    <script>
+        // Required, even if empty.
+        Reveal.initialize({
+            transition: 'none',
+            math: {
+                mathjax: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js',
+                config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+            },
+        
+            dependencies: [
+                { src: 'plugin/math/math.js', async: true }
+            ]
+        });
+    </script>
+</body>
+</html>
