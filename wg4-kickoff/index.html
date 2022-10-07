@@ -308,7 +308,7 @@ end
 Lean has quite an expressive notation and coercion system, built with typeclasses to overload notation, name lookup also uses the expected type.
 
 
-With great power comes great responsibility:
+With great power comes great responsibility, it is possible to trick yourself and state and even prove results that aren't what you expect:
 ```
 /-- The identity linear isometry. -/
 def linear_isometry.id : E →ₗᵢ[R] E := ⟨linear_map.id, λ x, rfl⟩
