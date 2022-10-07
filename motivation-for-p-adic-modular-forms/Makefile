@@ -21,6 +21,7 @@ all:	$(outputs)
 	pdflatex $(OPTS) -jobname=$(basename $<)_h "\documentclass[handout,notheorems]{beamer}\usepackage[final]{pdfcomment} \input{$<}"
 
 clean:
+	rm -f *.upa
 	rm -f *.snm
 	rm -f *.toc
 	rm -f *.out
