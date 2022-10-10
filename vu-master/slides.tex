@@ -8,6 +8,8 @@
 \beamertemplatenavigationsymbolsempty
 
 \usepackage{amsmath, amssymb, amsfonts, tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{through}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
@@ -67,6 +69,7 @@ theorem name,
 \newcommand{\NN}{\mathbb{N}}
 \newcommand{\ZZ}{\mathbb{Z}}
 \newcommand{\QQ}{\mathbb Q}
+\newcommand{\FF}{\mathbb F}
 \newcommand{\RR}{\mathbb R}
 \newcommand{\lt}{<}
 \newcommand{\gt}{>}
@@ -290,9 +293,48 @@ theorem name,
     \end{theorem}
 \end{frame}
 
-\begin{frame}{Result}
+\begin{frame}{Why is it strange?}
+    The inequality \[|x+y| \le \max(|x|, |y|)\] is called \terminology{ultrametric} and has some unusual properties:
+
+    Every triangle is isosceles.
+    \begin{tikzpicture}
+        \coordinate (Origin) at (0,0);
+        \draw [thick] ($(Origin)+(0,0)$) coordinate (Square) -- node[above]{$A$} ++(1,2) -- node[above]{$B$}++(2,0) -- node[below]{$C$}cycle;
+    \end{tikzpicture}
+
+
+    Every point of a ball is its center
+
+    \begin{tikzpicture}[scale=0.7]
+        \node [fill=black, shape=circle, inner sep=1pt, label=below:$O$] (O) at (0,0) {};
+        \node [fill=black, shape=circle, inner sep=1pt, label=below:$B$] (p) at (0.6,1.2) {};
+        \node [fill=black, shape=circle, inner sep=1pt, label=below:$A$] (fp) at
+            (-1.2,0.7) {};
+        \coordinate (X) at (2,0);
+        \coordinate (Y) at (2.4, 1.7);
+        \node (C) [draw, circle through=(X)] at (O) {};
+        \path [name path=fp--Y] (fp)--(Y);
+        %\path [name intersections={of=fp--Y and C, by=F}];
+        %\node [fill=black, shape=circle, inner sep=1pt, label=right:$B$] (rp) at (F) {};
+        %\draw [->] (fp)--(rp);
+    \end{tikzpicture}
+
+\end{frame}
+
+\begin{frame}{Completion}
+    We can define the real numbers as equivalence classes of Cauchy sequences of rationals, (with respect to the normal absolute value).
+
+    We can do the same thing with  $|\cdot |_p$ to get a topologically complete ring $\QQ_p$, which is analogous to $\RR$ but very different.
+
+    \(\{(x_n)_n : x_n \in \QQ,\, \forall \epsilon > 0, \exists N, n,m > N \implies | x_n - x_m| < \epsilon  \}/ \sim\)
+
+    The absolute value $|\cdot|_p$ extends to give one on $\QQ_p$ which is still ultrametric.
+\end{frame}
+
+\begin{frame}{Back to recurrences}
     With \(|\cdot|_p\) the integers are bounded!
     \pause
+    Going back to the problem of 
     Are the functions%
     \begin{equation*}
         \sum_{i=1}^m A_i(n)\alpha_i^n
@@ -330,10 +372,33 @@ theorem name,
 
 \begin{frame}{Finale}
     \begin{theorem}{Skolem \(\leadsto\) Mahler \(\leadsto\) Lech}{sml}
-        All except finitely many indices of the zeroes of a linear recurrence lie in a finite union of arithmetic progressions, i.e.\ they are all of the form \(nM + b\) for some \(b \in B \subset \{0, \ldots, M-1\}\), \(n \in \NN\).%
+        Let $x_n$ be a linear recurrence sequence in a field of characteristic 0 (i.e. containing $\QQ$).
+        Apart from finitely many exceptions except finitely many indices of the zeroes of a linear recurrence lie in a finite union of arithmetic progressions, i.e.\ they are all of the form \(nM + b\) for some \(b \in B \subset \{0, \ldots, M-1\}\), \(n \in \NN\).%
     \end{theorem}
     \pause
     \includegraphics[height = 0.6\textheight]{skolem.jpeg}
+\end{frame}
+
+\begin{frame}{Aside, positive }
+    What about for fields of positive characteristic?
+    \pause
+    For finite fields everything is periodic by default.
+    \pause
+    But for fields like $\FF_p(x)$ the theorem is false!
+    \pause
+
+    (Example from Harm Derksen) Consider the sequence $a_n \in \mathbb{F}_4(x)$ defined by
+    $$
+    a(n)=x^n+(x+1)^n+(x+\alpha)^n+(x+1+\alpha)^n,
+    $$
+    where $\alpha \in \mathbb{F}_4 \backslash \mathbb{F}_2$. We can compute $a(0)=a(1)=a(2)=0$ and $a(3)=1$. This sequence satisfies a recurrence relation of order 4
+    $$
+    a(n+4)=a(n+1)+\left(x^4+x\right) a(n) .
+    $$
+    the set of $n$ for which $a_n = 0$ is
+    \[
+        \left\{4^a+4^b | a, b \in \mathbb{N}\right\} \cup\left\{2 \cdot\left(4^a+4^b\right) | a, b \in \mathbb{N}\right\} \cup\{0,1\}
+    \]
 \end{frame}
 
 \end{document}
