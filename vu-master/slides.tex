@@ -10,6 +10,7 @@
 \usepackage{amsmath, amssymb, amsfonts, tikz}
 \usetikzlibrary{calc}
 \usetikzlibrary{through}
+\usetikzlibrary{intersections}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
@@ -69,6 +70,7 @@ theorem name,
 \newcommand{\NN}{\mathbb{N}}
 \newcommand{\ZZ}{\mathbb{Z}}
 \newcommand{\QQ}{\mathbb Q}
+\newcommand{\CC}{\mathbb C}
 \newcommand{\FF}{\mathbb F}
 \newcommand{\RR}{\mathbb R}
 \newcommand{\lt}{<}
@@ -97,9 +99,10 @@ theorem name,
     \begin{definition}{Linear recurrence sequence}{linrec}
         A \terminology{linear recurrence sequence}, is a sequence whose \(n\)th term is a linear combination of the previous \(k\) terms (for all \(n \ge k\)).
     \end{definition}
+    We often consider sequences of integers, but we will consider these over fields like $\QQ, \CC$ also.
 
     \only<2-3>{\begin{example}{Fibonacci}{example-27}
-            \(a_0 = 0, a_1 = 1\) and \(a_{n} = a_{n-1} + a_{n-2}\) for \(n \ge k =2\):
+            Let \(a_0 = 0, a_1 = 1\) and \(a_{n} = a_{n-1} + a_{n-2}\) for \(n \ge k =2\):
             \begin{equation*}
                 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946, 17711, 28657, 46368, 75025, 121393, 196418, 317811, 514229, 832040, 1346269, 2178309, 3524578, 5702887, 9227465, 14930352, 24157817, 39088169, 63245986, 102334155, \ldots\text{.}
             \end{equation*}
@@ -120,21 +123,38 @@ theorem name,
             \begin{equation*}
                 1,0,2,0,3,0,4,0,5,0,6,0,7,0,8,0,9,0,10,0,11,0,12,0,13,0,14,0,15,0,16,0,17,0,\ldots
             \end{equation*}
-            \only<7>{not periodic but the zeroes \emph{do} have a regular repeating pattern.}
+            \only<7>{not periodic but the zeroes \emph{do} have a regular repeating pattern, being zero half the time.}
     \end{example}}
+\end{frame}
+
+\begin{frame}{The ultimate question}
+    Can we describe the set
+    \(\{n :a_n= 0\}\)
+    for a general linear recurrence?
+
+    Is it ever finite?
+    \pause
+    Is it ever infinite?
+    \pause
+    Could it ever be the set $\{n : \exists m, n = m^2\}$?
+    \pause
+    \begin{question}{}{whatzeroes}
+        What possible patterns are there for the zeroes of a linear recurrence sequence?
+    \end{question}
 \end{frame}
 
 \begin{frame}{The ultimate question}
     \begin{question}{}{whatzeroes}
         What possible patterns are there for the zeroes of a linear recurrence sequence?
     \end{question}
-    \pause
+
+    To answer this we will use power series:
     \begin{observation}{}{obstaylor}
         A linear recurrence sequence is the Taylor expansion around 0 of a rational function
         \begin{equation*}
-            \frac{a_1  + a_2 x+ \cdots + a_\ell x^\ell}{b_1 + b_2 x \cdots + b_k x^k}
+            \frac{a_0  + a_1 x+ \cdots + a_\ell x^\ell}{b_0 + b_1 x + \cdots + b_k x^k}
         \end{equation*}
-        with \(b_1 \ne 0\) (so that the expansion makes sense).%
+        with \(b_0 \ne 0\) (so that the expansion makes sense).%
     \end{observation}
 \end{frame}
 
@@ -142,17 +162,17 @@ theorem name,
 
     \begin{example}{}{exlinear}
         \begin{equation*}
-            \frac{x}{1 - x - x^2}\text{.}
+            \frac{x}{1 - x - x^2}
             \leftrightarrow
             \text{Fibonacci}
         \end{equation*} \pause
         \begin{equation*}
-            \frac{1}{1 + x + x^2}\text{.}
+            \frac{1}{1 + x + x^2}
             \leftrightarrow
             1,0,-1,1,0,-1,1,0,-1,1,0,-1,1,0,-1,1,0,-1,1,0,-1,1,0,-1,1,0,-1,1,0,-1,1,0,-1,1,0,-1,1,0,-1,1,0,-1,\ldots
         \end{equation*} \pause
         \begin{equation*}
-            \frac{1}{(1-x^2)^2}\text{.}
+            \frac{1}{(1-x^2)^2}
             \leftrightarrow
             1,0,2,0,3,0,4,0,5,0,6,0,7,0,8,0,9,0,10,0,11,0,12,0,13,0,14,0,\ldots
         \end{equation*} \pause
@@ -169,10 +189,12 @@ theorem name,
 
 \begin{frame}{Consequences}
     \begin{observation}{}{}
-        The set of all linear recurrence sequences is a vector space! Hard to tell how the rule changes.
+        The set of all linear recurrence sequences over a field is a vector space! Hard to tell how the rule changes.
     \end{observation}
     \pause
-    We can always mess up a finite amount of behaviour. So assume \(a_n\) has infinitely many zeroes, what is the structure of the zero set?%
+    As we can add any finite sequence can always mess up the behaviour of finitely many initial terms. So we want to know what is the structure of the zero set asymptotically?%
+    \pause
+    We can also multiply rational functions, which convolutes the sequences!
 \end{frame}
 
 \begin{frame}{Linear recurrence sequences}
@@ -226,16 +248,18 @@ theorem name,
         \frac{p(x)}{q(x)} = \sum_{i = 1}^m \sum_{j=1}^{n_j} \frac{r_{ij}}{(1-\alpha_i x)^j}
     \end{equation*}
     \pause
-    do some math:
+    do some rearranging:
     \begin{equation*}
-        \sum_{n=0}^\infty \left(\sum_{i = 1}^m \sum_{j=1}^{n_j} r_{ij} \binom{n+j-1}{j-1}  \alpha_i^n\right) x^n
+        \sum a_n x^n = \sum_{n=0}^\infty \left(\sum_{i = 1}^m \sum_{j=1}^{n_j} r_{ij} \binom{n+j-1}{j-1}  \alpha_i^n\right) x^n
     \end{equation*}
     \pause
-    Upshot: there are polynomials \(A_i(n)\) such that%
+    Upshot: there are polynomials \(A_i(n)\) over $\CC$ such that%
     \begin{equation*}
         a_n = \sum_{i=1}^m A_i(n)\alpha_i^n\text{.}
     \end{equation*}
-    Like that formula for Fibonacci with the golden ratio in.
+    \begin{example}{Binet's formula for Fibonacci}{}
+        \(F_n = \frac{1}{\sqrt5}\phi ^n - \frac{1}{\sqrt 5}(-\phi^{-1})^{n}\)
+    \end{example}
 \end{frame}
 
 \begin{frame}{Approach}
@@ -244,8 +268,12 @@ theorem name,
     \par\pause
     Like \[\sin(\pi x)!\]
     \par\pause
+    What can we say about the zeros of this function?
+    \par\pause
+    For one: There are finitely many in any compact region (unless the function is zero)
+    \par\pause
     \begin{alertblock}{Ridiculous suggestion}
-        What if the integers were bounded? In that case infinitely many zeroes \(\implies\) the function is zero!
+        What if the integers were bounded? If that was true, infinitely many zeroes \(\implies\) the function is zero!
     \end{alertblock}
 \end{frame}
 
@@ -324,22 +352,42 @@ theorem name,
 \begin{frame}{Completion}
     We can define the real numbers as equivalence classes of Cauchy sequences of rationals, (with respect to the normal absolute value).
 
-    We can do the same thing with  $|\cdot |_p$ to get a topologically complete ring $\QQ_p$, which is analogous to $\RR$ but very different.
-
-    \(\{(x_n)_n : x_n \in \QQ,\, \forall \epsilon > 0, \exists N, n,m > N \implies | x_n - x_m| < \epsilon  \}/ \sim\)
-
+    We can do the same thing with  $|\cdot |_p$ to get the $p$-adics, a topologically complete ring $\QQ_p$, which is analogous to $\RR$ but very different.
+    \[\{(x_n)_n : x_n \in \QQ,\, \forall \epsilon > 0, \exists N, n,m > N \implies | x_n - x_m| < \epsilon  \}/ \sim\]
     The absolute value $|\cdot|_p$ extends to give one on $\QQ_p$ which is still ultrametric.
+\end{frame}
+
+\begin{frame}{How to think about $p$-adic numbers}
+    For real numbers we use a decimal expansion, to write a number with the most significant digits first.
+    This works as $\frac{1}{10^n}$ gets smaller ($|\cdot|\to0$) as $n \to \infty$.
+
+    \pause
+    For $\QQ_p$ we have $|p^n|_p = \frac1{p^n} \to 0$ as $n \to \infty$.
+    Because of this we can take the analogue of a decimal expansion:
+    For example for the $5$-adics:
+
+    \[15 = 3 \cdot 5\]
+    \pause
+        \[16 = 1 + 3 \cdot 5\]
+    \pause
+        \[16 + 1/5 = 1 \cdot 5^{-1} + 1 +  2 \cdot 5\]
+    \pause
+        \[-\frac14 = \frac1{1-5} = 1+ 5 + 5^2 + 5^3 + \cdots\]
 \end{frame}
 
 \begin{frame}{Back to recurrences}
     With \(|\cdot|_p\) the integers are bounded!
     \pause
-    Going back to the problem of 
-    Are the functions%
+    Going back to the problem of finding the zero's of
     \begin{equation*}
-        \sum_{i=1}^m A_i(n)\alpha_i^n
+        a_n = \sum_{i=1}^m A_i(n)\alpha_i^n
     \end{equation*}
+    as a function of $n$.
+    We can think of this as a function $\NN \to \overline{\mathbf Q}_p$.
+    And ask, are the $\alpha_i^n$
     \(p\)-adic analytic functions of \(n\)?%
+    
+    Do they have an expression as a $p$-adic power series?
     \par
     \pause
     \begin{alertblock}{Problem}
@@ -373,7 +421,7 @@ theorem name,
 \begin{frame}{Finale}
     \begin{theorem}{Skolem \(\leadsto\) Mahler \(\leadsto\) Lech}{sml}
         Let $x_n$ be a linear recurrence sequence in a field of characteristic 0 (i.e. containing $\QQ$).
-        Apart from finitely many exceptions except finitely many indices of the zeroes of a linear recurrence lie in a finite union of arithmetic progressions, i.e.\ they are all of the form \(nM + b\) for some \(b \in B \subset \{0, \ldots, M-1\}\), \(n \in \NN\).%
+        Then the $n$ for which $a_n = 0$ lie in a union of finitely many arithmetic progressions, i.e.\ they are all of the form \(tM + b\) for some fixed \(M\) and \(b \in B \subset \{0, \ldots, M-1\}\), as \(t \in \NN\) varies.%
     \end{theorem}
     \pause
     \includegraphics[height = 0.6\textheight]{skolem.jpeg}
