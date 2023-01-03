@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title> Formalized Class Group Computations and Integral Points on Mordell Elliptic Curves </title>
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/reveal.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+		<link rel="stylesheet" href="plugin/chalkboard.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/theme/white.min.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Lato&family=Roboto&family=Roboto+Mono&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs@latest/styles/github.css">
+        <style type="text/css">
+            h2, h3 { font-family: 'Lato', sans-serif !important; text-transform: none !important; }
+            p { font-family: 'Roboto', sans-serif !important; }
+            p { text-align: left;}
+            section {font-size: 0.90em !important;}
+            code {font-family: 'Share Tech Mono', monospace !important; max-height: 500px !important;}
+            pre {font-size: 0.7em !important;}
+        </style>
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+
+                <!-- Use external markdown resource, separate slides by three newlines; vertical slides by two newlines 
+                <section data-markdown="markdown.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"></section> -->
+
+                <!-- Slides are separated by three dashes (quick 'n dirty regular expression) -->
+                <section data-markdown data-separator="^---">
+                    <script type="text/template">
+                        ## Formalized Class Group Computations and Integral Points on Mordell Elliptic Curves
+                        ### Anne Baanen, <ins>Alex J. Best</ins>, Sander Dahmen, Nirvana Coppola
+                        #### CPP 2022
+
+                        ![vu logo](VUlogo.png) <!-- .element style="display: block; width: 50%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+
+
+                        These slides are online at:
+
+                        > <http://alexjbest.github.io/talks/cpp2023/>
+
+                        ---
+                        ## This project
+                        Interested in formalizing results in the field of Number Theory and arithmetic geometry: e.g.
+
+                        What are the integer solutions $x,y \in \mathbf Z$ of 
+                        $$y^2 = x^3 - 13\\,?$$
+
+                        ```lean
+                        theorem Mordell_minus13 (x y : ℤ) (h : y^2 = x^3 - 13) : (x, y) = (17, 70) ∨ (x, y) = (17, -70) := ...
+                        ```
+
+                        These types of problems are known as *Diophantine equations*.
+
+
+                        ## This talk
+                        1. <!-- .element: class="fragment" -->Will try and focus on the general, rather than the specific mathematics
+
+                        2. <!-- .element: class="fragment" -->Explain what makes these equations hard to formally resolve, compared to other Diophantine equations whose done before
+                        3. <!-- .element: class="fragment" -->Explain what makes this style of proof different to others in pure mathematics, and the challenges this presents to formalization
+                        ---
+                        ### Number theoretic tools
+                        #### Congruences
+                        $$2y^2 = 4x^3 - 13$$
+                        has no integer solutions, as the LHS is even and the RHS is odd.
+
+                        #### Descent
+                        $$2y^2 = 4x^3 - 13$$
+                        has no integer solutions, as the LHS is even and the RHS is odd.
+
+                        #### Quadratic Reciprocity
+                        $$y^2 - 2x^2 = 3$$
+
+                        $$y^2 + 3x^2 = 13\\,?$$
+                        But the proof that
+                        $$y^2 + 3x^2 = p\\,?$$
+                        has solutions only for ?????? was formalized already in 2007 in Isabelle (gron thesis)
+
+                        Why is
+                        $$y^2 = x^3 - 13$$
+                        suddenly harder?
+
+                        One reason, the solutions are bigger than the coefficients so any congruences are unlikely to pick them out
+                        ---
+                        
+
+                        <!-- .element: class="fragment" data-fragment-index="2" -->
+                        ```lean
+                        lemma ring_hom.char_p_iff_char_p {K L : Type*} [field K] [field L]
+                        (f : K →+* L) (p : ℕ) : char_p K p ↔ char_p L p :=
+                        begin
+                          split;
+                          { introI _c, constructor, intro n,
+                            rw [← @char_p.cast_eq_zero_iff _ _ p _c n, ← f.injective.eq_iff, f.map_nat_cast, f.map_zero] }
+                        end
+                        ```
+                        ## Future work
+
+                        - <!-- .element: class="fragment" data-fragment-index="2" --> Finish/cleanup the implementation.
+
+                        - <!-- .element: class="fragment" data-fragment-index="2" --> PR linter changes to the mathlib library!
+
+                        ---
+                        ## Thanks!
+
+                        To the organisers, Lean development team, everyone whose tactics I've repurposed for this, the community, and you for listening!
+                        ![tc graph](svg.svg) <!-- .element style="display: block; width: 60%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+                        > https://github.com/alexjbest/lean-generalisation
+
+                    </script>
+                </section>
+
+            </div>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/reveal.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/markdown/markdown.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/math/math.min.js"></script>
+        <script src="plugin/chalkboard.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/notes/notes.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
+
+
+		<script>
+
+			Reveal.initialize({
+                width: 1600,
+                height: 900,
+				controls: false,
+				progress: false,
+				history: true,
+				center: false,
+				previewLinks: false,
+                transition: 'none',
+                chalkboard: {
+                    toggleChalkboardButton: false,
+                    toggleNotesButton: false,},
+
+				plugins: [ RevealMarkdown, RevealNotes, RevealChalkboard, RevealMath.KaTeX ]
+			});
+            Reveal.addEventListener('ready', (event) => {
+                hljs.registerLanguage("lean",function(){"use strict";return function(hljs){
+  var LEAN_KEYWORDS = {
+    keyword:
+      'theorem|10 lemma|10 definition def class structure instance ' +
+      'example inductive coinductive ' +
+      'axiom axioms hypothesis constant constants ' +
+      'universe universes variable variables parameter parameters ' +
+      'begin end ' +
+      'import open theory prelude renaming hiding exposing ' +
+      'calc  match do  by let in extends ' +
+      'fun assume ' +
+      '#check #eval #reduce #print',
+    built_in:
+      'Type Prop|10 Sort rw|10 rewrite rwa erw subst substs ' +
+      'simp dsimp simpa simp_intros finish ' +
+      'unfold unfold1 dunfold unfold_projs unfold_coes ' +
+      'delta cc ac_reflexivity ac_refl ' +
+      'existsi|10 cases rcases with intro intros introv by_cases ' +
+      'refl rfl funext propext exact exacts ' +
+      'refine apply eapply fapply apply_with apply_instance ' +
+      'induction rename assumption revert generalize specialize clear ' +
+      'contradiction by_contradiction by_contra trivial exfalso ' +
+      'symmetry transitivity destruct constructor econstructor ' +
+      'left right split injection injections ' +
+      'repeat try continue skip swap solve1 abstract all_goals any_goals done ' +
+      'fail_if_success success_if_fail guard_target guard_hyp ' +
+      'have replace at suffices show from ' +
+      'congr congr_n congr_arg norm_num ring ',
+    literal:
+      'tt ff',
+    meta:
+      'noncomputable|10 private protected meta mutual',
+    section:
+      'section namespace',
+    strong:
+      'sorry admit',
+  };
+
+  var LEAN_IDENT_RE = /[A-Za-z_][\\w\u207F-\u209C\u1D62-\u1D6A\u2079\']*/;
+
+  var DASH_COMMENT = hljs.COMMENT('--', '$');
+  var MULTI_LINE_COMMENT = hljs.COMMENT('/-[^-]', '-/');
+  var DOC_COMMENT = {
+    className: 'doctag',
+    begin: '/-[-!]',
+    end: '-/'
+  };
+
+  var ATTRIBUTE_DECORATOR = {
+    className: 'meta',
+    begin: '@\\[',
+    end: '\\]'
+  };
+
+  var ATTRIBUTE_LINE = {
+    className: 'meta',
+    begin: '^attribute',
+    end: '$'
+  };
+
+  var LEAN_DEFINITION =	{
+    className: 'theorem',
+    beginKeywords: 'def theorem lemma class instance structure',
+    end: ':=',
+    excludeEnd: true,
+    contains: [
+      {
+        className: 'keyword',
+        begin: /extends/
+      },
+      hljs.inherit(hljs.TITLE_MODE, {
+        begin: LEAN_IDENT_RE
+      }),
+      {
+        className: 'params',
+        begin: /[([{]/, end: /[)\]}]/, endsParent: false,
+        keywords: LEAN_KEYWORDS,
+      },
+      {
+        className: 'symbol',
+        begin: /:/,
+        endsParent: true
+      },
+    ],
+    keywords: LEAN_KEYWORDS
+  };
+  return {
+    name: "lean",
+    keywords: LEAN_KEYWORDS,
+    contains: [
+      hljs.QUOTE_STRING_MODE,
+      hljs.NUMBER_MODE,
+      DASH_COMMENT,
+      MULTI_LINE_COMMENT,
+      DOC_COMMENT,
+      LEAN_DEFINITION,
+      ATTRIBUTE_DECORATOR,
+      ATTRIBUTE_LINE,
+      { begin: /⟨/ } // relevance booster
+    ]
+  };
+
+            }}());
+                //hljs.registerLanguage("lean",function(e){var r="([a-zA-Z]|\\.[a-zA-Z.])[a-zA-Z0-9._]*";return {c: [ e.HCM,e.CBCM,{b:r,l:r,k:{keyword:"maximize subject to var ",literal:""},r:90},{cN:"number",b:"\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",r:0}]} });
+
+                // console.log(hljs.listLanguages());
+                document.querySelectorAll('pre code').forEach((block) => { hljs.highlightElement(block); });
+                //hljs.highlightAll();
+            });
+
+
+		</script>
+
+    </body>
+</html>
