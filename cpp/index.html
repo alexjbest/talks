@@ -9,7 +9,8 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/reveal.min.css">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
 		<link rel="stylesheet" href="plugin/chalkboard.css">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/theme/white.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/theme/solarized.min.css">
+		<link rel="stylesheet" href="https://rs-math.net/beamerkiller/beamerkiller.css">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Lato&family=Roboto&family=Roboto+Mono&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
@@ -19,9 +20,19 @@
             h2, h3 { font-family: 'Lato', sans-serif !important; text-transform: none !important; }
             p { font-family: 'Roboto', sans-serif !important; }
             p { text-align: left;}
-            section {font-size: 0.90em !important;}
-            code {font-family: 'Share Tech Mono', monospace !important; max-height: 500px !important;}
+            section {font-size: 1em !important;}
+            code {font-family: 'Share Tech Mono', monospace !important; max-height: 500px !important;
+                display: block; overflow-x: auto; padding: 0.5em; color: #333 !important; background: #f8f8f8 !important; }
             pre {font-size: 0.7em !important;}
+            section.two-floating-elements > ul {
+                max-width: 60%;
+                float:left;
+                margin-right:30px;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
         </style>
 	</head>
 
@@ -31,90 +42,301 @@
 
 			<div class="slides">
 
-                <!-- Use external markdown resource, separate slides by three newlines; vertical slides by two newlines 
-                <section data-markdown="markdown.md" data-separator="^\n\n\n" data-separator-vertical="^\n\n"></section> -->
-
                 <!-- Slides are separated by three dashes (quick 'n dirty regular expression) -->
                 <section data-markdown data-separator="^---">
                     <script type="text/template">
-                        ## Formalized Class Group Computations and Integral Points on Mordell Elliptic Curves
-                        ### Anne Baanen, <ins>Alex J. Best</ins>, Sander Dahmen, Nirvana Coppola
-                        #### CPP 2022
+## Formalized Class Group Computations and Integral Points on Mordell Elliptic Curves
+### Anne Baanen, <ins>Alex J. Best</ins>, Sander Dahmen, Nirvana Coppola
+#### CPP 2023
 
-                        ![vu logo](VUlogo.png) <!-- .element style="display: block; width: 50%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+![vu logo](VUlogo_Wit_RGB_mettekst_tcm289-835563.svg) <!-- .element style="display: inline-block; width: 65%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+![KCL logo](Kcl-logo.svg) <!-- .element style="display: inline-block; width: 25%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
 
+These slides are online at:
 
-                        These slides are online at:
+### <http://alexjbest.github.io/talks/cpp/>
+---
+## This project
 
-                        > <http://alexjbest.github.io/talks/cpp2023/>
-
-                        ---
-                        ## This project
-                        Interested in formalizing results in the field of Number Theory and arithmetic geometry: e.g.
-
-                        What are the integer solutions $x,y \in \mathbf Z$ of 
-                        $$y^2 = x^3 - 13\\,?$$
-
-                        ```lean
-                        theorem Mordell_minus13 (x y : ℤ) (h : y^2 = x^3 - 13) : (x, y) = (17, 70) ∨ (x, y) = (17, -70) := ...
-                        ```
-
-                        These types of problems are known as *Diophantine equations*.
+![23](23.gif)<!-- .element style="display: inline-block; width: 45%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+![23](1770.gif)<!-- .element class="fragment" style="display: inline-block; width: 45%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
 
 
-                        ## This talk
-                        1. <!-- .element: class="fragment" -->Will try and focus on the general, rather than the specific mathematics
+---
+<!-- .slide: class="two-floating-elements" -->
+## This project
+**Goal:** Formalize more modern (20th century) work in number theory and arithmetic geometry, such as solving:
 
-                        2. <!-- .element: class="fragment" -->Explain what makes these equations hard to formally resolve, compared to other Diophantine equations whose done before
-                        3. <!-- .element: class="fragment" -->Explain what makes this style of proof different to others in pure mathematics, and the challenges this presents to formalization
-                        ---
-                        ### Number theoretic tools
-                        #### Congruences
-                        $$2y^2 = 4x^3 - 13$$
-                        has no integer solutions, as the LHS is even and the RHS is odd.
+What are the integer solutions $x,y \in \mathbf Z$ of 
+$$y^2 = x^3 - 13\\,?$$
 
-                        #### Descent
-                        $$2y^2 = 4x^3 - 13$$
-                        has no integer solutions, as the LHS is even and the RHS is odd.
+```lean
+theorem Mordell_minus13 (x y : ℤ) (h : y^2 = x^3 - 13) : (x, y) = (17, 70) ∨ (x, y) = (17, -70) := ...
+```
+<!-- .element class="fragment" -->
 
-                        #### Quadratic Reciprocity
-                        $$y^2 - 2x^2 = 3$$
+These types of problems are known as *Diophantine equations*.
+<!-- .element class="fragment" -->
+* This class of problem is still an active area of research, e.g.
+  $$x^2 + y^3 = z^5$$
+  has not been resolved
+<!-- .element class="fragment" -->
+* In general the problem is known to be undecidable.
+<!-- .element class="fragment" -->
+* There is a zoo of equations out there, and many techniques known, the field often makes progress case by case
+<!-- .element class="fragment" -->
+* We formalize a technique for solving some such equations, using number fields and the class group in ~6000 LoL
+<!-- .element class="fragment" -->
 
-                        $$y^2 + 3x^2 = 13\\,?$$
-                        But the proof that
-                        $$y^2 + 3x^2 = p\\,?$$
-                        has solutions only for ?????? was formalized already in 2007 in Isabelle (gron thesis)
+![collatz](collatz_conjecture.png)<!-- .element class="fragment" style="display: inline-block; width: 23%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
 
-                        Why is
-                        $$y^2 = x^3 - 13$$
-                        suddenly harder?
 
-                        One reason, the solutions are bigger than the coefficients so any congruences are unlikely to pick them out
-                        ---
-                        
+Note:
+Why, do this to see whats possible? what automation is needed
+---
 
-                        <!-- .element: class="fragment" data-fragment-index="2" -->
-                        ```lean
-                        lemma ring_hom.char_p_iff_char_p {K L : Type*} [field K] [field L]
-                        (f : K →+* L) (p : ℕ) : char_p K p ↔ char_p L p :=
-                        begin
-                          split;
-                          { introI _c, constructor, intro n,
-                            rw [← @char_p.cast_eq_zero_iff _ _ p _c n, ← f.injective.eq_iff, f.map_nat_cast, f.map_zero] }
-                        end
-                        ```
-                        ## Future work
+## This talk
+1. <!-- .element: class="fragment" -->Will try and focus on the general, rather than the specific details of the mathematics
+1. <!-- .element: class="fragment" -->Explain what makes these equations hard to formally resolve, compared to other Diophantine equations that have been done before
+1. <!-- .element: class="fragment" -->Explain what makes this style of proof different to others in mathematics, and the challenges this presents to formalization
+1. <!-- .element: class="fragment" -->Explain two attempts at making this sort of proof more convenient in Lean
 
-                        - <!-- .element: class="fragment" data-fragment-index="2" --> Finish/cleanup the implementation.
+---
+### Classical number theory tools
 
-                        - <!-- .element: class="fragment" data-fragment-index="2" --> PR linter changes to the mathlib library!
+**Congruences (Ancient, modern form due to Euler/Gauss 1750-1850)**
+$$2y^2 = 4x^3 - 13$$
+has no integer solutions, as the LHS is even and the RHS is odd.
+<!-- .element: class="colorbox" -->
 
-                        ---
-                        ## Thanks!
+**Descent (Ancient, used heavily by Fermat, 1600s)**
+$$y^2 = 2x^2$$
+has no (nonzero) integer solutions, as given a solution $(x,y)$ we can show that $(x/2, y/2)$ is also an integer solution, so the cannot be a smallest one (except $(0,0)$).
+<!-- .element: class="colorbox fragment" -->
 
-                        To the organisers, Lean development team, everyone whose tactics I've repurposed for this, the community, and you for listening!
-                        ![tc graph](svg.svg) <!-- .element style="display: block; width: 60%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
-                        > https://github.com/alexjbest/lean-generalisation
+**Quadratic Reciprocity (Gauss, ~1800)**
+$$2y^2 =x ^ 4- 41z^4$$
+has 1 solution with $x=y=z=0$, otherwise:
+if $q \mid y$ then 41 is a square modulo $q$, this implies that $y$ is a square modulo 41
+so that 2 is a 4th power mod 41 (QR), but this is false!
+<!-- .element: class="colorbox fragment" -->
+
+Note:
+such things are taught in a first course in number theory
+
+---
+### Using these sort of techniques
+
+Laurent Thery, [2004](https://github.com/coq-contribs/sum-of-two-square) in Coq:
+$$x^2 + y^2 = p$$
+has a solution for all primes $p$ that are 1 mod 4.
+<!-- .element: class="colorbox" -->
+
+Delahaye, Mayero, [2005](https://hal.science/hal-00009425), in Coq:
+$$x^4 + y^4 = z^4$$
+have no solutions in the non-zero integers.
+Also  solve $$x^2 + y^ 2 = z^ 2\text{ and }xy = 2t^2.$$
+<!-- .element: class="colorbox fragment" -->
+
+Oosterhuis, [2007](https://fse.studenttheses.ub.rug.nl/8392/), in Isabelle:
+$$x^2 + 3y^2 = p$$
+has a solution for all primes $p$ that are 1 mod 3 (also 1 mod 4 result),
+Also
+$$x^3 + y^3 = z^3 \text{ and } x^4 + y^4 = z^4$$
+have no solutions in the non-zero integers.
+<!-- .element: class="colorbox fragment" -->
+
+Note:
+Also stuff in leans mathlib
+Might ask what are all these mathematicians who suddenly started learning lean doing? Just repeating 15-20 year old work from other provers?
+harrison
+chris hughes
+Lots of other NT out there of many flavours, this is only diophantine equations
+One reason, the solutions are bigger than the coefficients so any congruences are unlikely to pick them out
+
+---
+## Why is $y^2 = x^3 - 13$ harder?
+
+- Diophantine equations of two variables define curves geometrically
+- The genus ($\ge0$) of a curve determines the difficulty, generally the genus increases with the degree of the polynomial
+- As soon as the genus $\ge 1$ we have a finite set of integral points
+- The curves we look at have genus = 1, some of these have finitely many rational solutions, some infinitely many
+- The curve $y^2 = x^3 - 13$ has infinitely many rational points
+
+![collatz](curve.gif)<!-- .element style="display: inline-block; width: 50%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+
+---
+# The argument
+If $x,y$ satisfy $y^2 = x^3 - 13$ then $(y + \sqrt{-13})(y - \sqrt{-13}) = x^3$, we can check that
+
+$$y + \sqrt{-13} \text{ and }y - \sqrt{-13} \text{ are coprime.}$$
+
+*If* this implies that
+$$y + \sqrt{-13} \text{ and }y - \sqrt{-13} \text{ are both cubes}$$
+then we can conclude that
+$$y + \sqrt{-13} = (a + b \sqrt{-13})^3$$
+$$ = (a^3 - 39 ab^2) + (3a^2b - 13b^3)\sqrt{-13} $$
+$$ \implies b = \pm 1 \implies 1 = \pm(3a^2 - 13) \implies a = \pm 2, b=-1 \implies y = \pm70, x=17 $$
+
+## When do cubes only factor into cubes?
+Observe that
+$$(6 + \sqrt{-13}) (2 - 3 \sqrt{-13}) = 51 - 16\sqrt{-13} = (8 - \sqrt{-13})^2$$
+but  $6 + \sqrt{-13}$ and $2 - 3 \sqrt{-13}$ are coprime but both are not squares!
+
+---
+
+## When do cubes only factor into cubes?
+
+When does $$r \cdot s = t ^ 3 \implies r = t_1^3 \text{ and } s = t_2^3?$$
+<!-- .element: class="colorbox" -->
+
+The theory of class groups of number fields is a key concept in number theory, it controls this sort of factorization.
+We denote this $\operatorname{Cl}(K)$, e.g. $\operatorname{Cl}(\mathbf{Q}(\sqrt{-13}))$.
+
+$$\gcd (n , \\#\operatorname{Cl}(K))=1  \implies   r \cdot s = t ^ n \implies r = t_1^n \text{ and } s = t_2^n$$ 
+
+The definition of, and finite abelian group structure of the class group was formalized in Lean by Baanen, Dahmen, Ashvni (Narayanan), Nuccio 2021. 
+
+Often proofs require explicit *calculation*
+one can also state general results, but number theorists are interested in classifying single cases,
+does it ever happen that the area of an integer sided square and an integer sided cube equals 13?
+<!-- .element class="fragment" -->
+
+| General / conceptual | Specific / calculational |
+|---------|---|
+| All equations $y^2 = x^3 + d$ have finitely many solutions | The solutions of $y^2 = x^3 - 13$ have $x=17$|
+| There is a bound on the norm of a generator of an element of a class group | Every element of the class group of $\mathbf Q(\sqrt{-13})$ contains the integer 12 |
+| All class groups of number fields are finite | The class group of $\mathbf Q(\sqrt{-13})$ is $\mathbf Z / 2$ |
+<!-- .element class="fragment" -->
+
+Note:
+Also need to worry about units
+on LHS bound doesn't matter, can be huge but finite
+for rhs need good bounds, when proving need even better than  for a CAS
+---
+# Bounding class groups
+
+Need to calculate the size of the class group, to check that it is not divisible by 3
+
+Do this in two steps, bounding/listing the possible generators, and checking their order/relations.
+<!-- .element class="fragment" -->
+
+We actually compute these groups fully, which is of independent interest.
+<!-- .element class="fragment" -->
+
+We use the following theorem
+<!-- .element class="fragment" -->
+```
+lemma exists_lt_norm_iff_exists_le_one [is_integral_closure S R L] (M : finset R) :
+(∀ (a : S) (b ≠ 0), ∃ (q : S) (r ∈ M), abv (norm R (r · a − q ∗ b)) < abv (norm R b)) ↔
+(∀ (γ : L), ∃ (q : S) (r ∈ M), abv (norm K (r · γ − q · 1)) < 1)
+```
+<!-- .element class="fragment" -->
+
+![collatz](1.gif)<!-- .element class="fragment" style="display: inline-block; width: 32%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+![collatz](2.gif)<!-- .element class="fragment" style="display: inline-block; width: 32%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+![collatz](3.gif)<!-- .element class="fragment" style="display: inline-block; width: 32%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+
+
+Note:
+not aware of a specific statement of this in the literature but is quite related to several existing notions
+main benefit is ease of formalization, a sometimes orthogonal axis
+would be interesting to compare this with existing bounds
+
+---
+# Calculational tactics
+
+We need to do lots of calculations in rings like $\mathbf Z [\sqrt{-13}]$ (but also aim at more general examples like $\mathbf Z [\sqrt[3]{2}]$)
+
+Want to explicitly evaluate expressions like $(1 + \sqrt{-13}) (2 - 2 \sqrt{-13})$ at many points in the proof and calculation of class (and unit) groups.
+
+- One way: expand and use the simplifier to reduce high powers that can be expressed with expressions with smaller exponents
+
+- Our initial approach: use a custom type for quadratic rings $R[\alpha]$ ($\alpha^2 + m \alpha + n = 0$), represented as (named) pairs $(a,b) = a + b \alpha$.
+  Then extensionality and simplification reduces to goals over the integers
+
+- Something more versatile: Rings like $\mathbf Z [\sqrt{-13}]$ are additively isomorphic to $\mathbf Z^2$, but with a multiplication that sends
+$$(0,1)^2 = (-13,0)$$
+
+    As the multiplication is linear we can define it via a matrix on the standard basis (the times table of the ring)
+    We introduce a tactic that uses this to do calculations
+
+```lean
+example (a b c d : ℤ) : (a + b * sqrt_2 + c * sqrt_3 + d * sqrt_2 * sqrt_3 : sqrt_2_sqrt_3) *
+                        (a - b * sqrt_2 + c * sqrt_3 - d * sqrt_2 * sqrt_3 : sqrt_2_sqrt_3) *
+                        (a + b * sqrt_2 - c * sqrt_3 - d * sqrt_2 * sqrt_3 : sqrt_2_sqrt_3) *
+                        (a - b * sqrt_2 - c * sqrt_3 + d * sqrt_2 * sqrt_3 : sqrt_2_sqrt_3) =
+  a^4 - 4*a^2*b^2 + 4*b^4 - 6*a^2*c^2 - 12*b^2*c^2 + 9*c^4 + 48 * a * b * c  *d - 12*a^2*d^2 -
+    24*b^2*d^2 - 36*c^2*d^2 + 36*d^4 :=
+begin
+  apply sqrt_2_sqrt_3.times_table.ext (λ k, _),
+  fin_cases k; times_table,
+end
+```
+
+
+How 
+
+---
+# Connection to computer algebra systems
+ 
+Have been considered (often) before
+- Harrison-Théry 1997, HOL + Maple
+
+- Lewis-Wu 2021, Lean + Mathematica
+
+We propose a prototypical link from Lean to SageMath (free OSS)
+
+This is designed to be robust, connecting to Sage on the user's computer or via the web (c.f. polyrith)
+
+Rather than ad hoc we want a system that can be extended in future with less effort.
+
+```
+meta def replace_certified_sage_equality
+(matcher : expr → tactic bool)
+(reify_type : Type∗ )
+(reify : expr → tactic reify_type)
+(sage_input : reify_type → tactic string)
+(output_type : Type∗ )
+[has_from_sage output_type]
+(convert_output : output_type → tactic expr)
+(validator : expr → expr → tactic (expr))
+(name : string)
+(wi : parse (tk "with" ∗ > pexpr)?) :
+tactic unit
+```
+
+
+Note:
+3 different networking methods
+
+---
+## Thanks!
+
+To the organisers, and you for listening!
+
+## Questions?
+
+## <https://github.com/lean-forward/class-group-and-mordell-equation>
+
+
+Note:
+thank pc session chairs organisers volunteers
+
+
+---
+```
+from sage.plot.plot3d.shapes import *
+S = 0
+N = 6
+for x in range(N):
+	for y in range(N):
+		for z in range(N):
+			if y == 0 and z <= N - 2 and x <= N - 2:
+				continue
+			S += Box([.49,.49,.49], color='lightgray', alpha=1).translate(x,y,z)
+S.scale(.1,.1,.1).show()
+```
 
                     </script>
                 </section>
@@ -144,9 +366,9 @@
                 transition: 'none',
                 chalkboard: {
                     toggleChalkboardButton: false,
-                    toggleNotesButton: false,},
+                    toggleNotesButton: false, },
 
-				plugins: [ RevealMarkdown, RevealNotes, RevealChalkboard, RevealMath.KaTeX ]
+				plugins: [ RevealNotes, RevealMarkdown, RevealNotes, RevealChalkboard, RevealMath.KaTeX ]
 			});
             Reveal.addEventListener('ready', (event) => {
                 hljs.registerLanguage("lean",function(){"use strict";return function(hljs){
