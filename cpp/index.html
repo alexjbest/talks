@@ -265,7 +265,7 @@ example (a b c d : ℤ) : (a + b * sqrt_2 + c * sqrt_3 + d * sqrt_2 * sqrt_3 : s
                         (a - b * sqrt_2 + c * sqrt_3 - d * sqrt_2 * sqrt_3 : sqrt_2_sqrt_3) *
                         (a + b * sqrt_2 - c * sqrt_3 - d * sqrt_2 * sqrt_3 : sqrt_2_sqrt_3) *
                         (a - b * sqrt_2 - c * sqrt_3 + d * sqrt_2 * sqrt_3 : sqrt_2_sqrt_3) =
-  a^4 - 4*a^2*b^2 + 4*b^4 - 6*a^2*c^2 - 12*b^2*c^2 + 9*c^4 + 48 * a * b * c  *d - 12*a^2*d^2 -
+  a^4 - 4*a^2*b^2 + 4*b^4 - 6*a^2*c^2 - 12*b^2*c^2 + 9*c^4 + 48*a*b*c*d - 12*a^2*d^2 -
     24*b^2*d^2 - 36*c^2*d^2 + 36*d^4 :=
 begin
     apply sqrt_2_sqrt_3.times_table.ext (λ k, _),
