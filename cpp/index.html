@@ -274,7 +274,6 @@ end
 ```
 
 
-How 
 
 ---
 # Connection to computer algebra systems
@@ -330,6 +329,7 @@ thank pc session chairs organisers volunteers
 
 
 ---
+# code for plots
 ```
 from sage.plot.plot3d.shapes import *
 S = 0
@@ -341,6 +341,54 @@ for x in range(N):
 				continue
 			S += Box([.49,.49,.49], color='lightgray', alpha=1).translate(x,y,z)
 S.scale(.1,.1,.1).show()
+```
+---
+```
+sage: S=points([])
+....: for a in srange(-5,5):
+....:     for b in srange(-5,5):
+....:          S += implicit_plot(equify((x-a)^2 +13 * (y-b)^2 < 1), (-5,5), (-5,5))
+....:
+sage:
+....: for a in srange(-10,10):
+....:     for b in srange(-10,10):
+....:          S += implicit_plot(equify((2*x-a)^2 +13 * (2*y-b)^2 < 1), (-5,5), (-5,5),color="red")
+....:
+sage:
+....: for a in srange(-15,15):
+....:     for b in srange(-15,15):
+....:          S += implicit_plot(equify((3*x-a)^2 +13 * (3*y-b)^2 < 1), (-5,5), (-5,5),color="green")
+S
+sage: S
+Launched png viewer for Graphics object consisting of 1400 graphics primitives
+sage: S=points([])
+....: for a in srange(-5,5):
+....:     for b in srange(-5,5):
+....:          S += implicit_plot(equify((x-a)^2 +13 * (y-b)^2 < 1), (-5,5), (-5,5))
+....:
+sage: S
+Launched png viewer for Graphics object consisting of 100 graphics primitives
+sage:
+....: for a in srange(-10,10):
+....:     for b in srange(-10,10):
+....:          S += implicit_plot(equify((2*x-a)^2 +13 * (2*y-b)^2 < 1), (-5,5), (-5,5),color="red")
+....:
+S
+sage: S
+```
+---
+```
+sage: from sage.plot.plot3d.shapes import *
+....: def t(s,N=17, M=70):
+....:     S = 0
+....:     for x in range(N):
+....:         for y in range(N):
+....:             for z in range(N):
+....:                 boxpos = (1-s)*vector([x,y,z]) + s*vector([(x + N*y + N^2*z) % M,(x+  N*y + N^2*z)//M,0])
+....:                 S += Box([.45,.45,.45], color='lightgray',axis=False).translate(boxpos)
+....:     return S
+....: animate([t(i) for i in srange(0,1.05, 0.1)])
+Launched gif viewer for Animation with 11 frames
 ```
 
                     </script>
