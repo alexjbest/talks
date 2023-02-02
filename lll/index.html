@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Solving Diophantine equations via the class group</title>
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/reveal.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+		<link rel="stylesheet" href="plugin/chalkboard.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/theme/solarized.min.css">
+		<link rel="stylesheet" href="https://rs-math.net/beamerkiller/beamerkiller.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Lato&family=Roboto&family=Roboto+Mono&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs@latest/styles/github.css">
+        <style type="text/css">
+            h2, h3 { font-family: 'Lato', sans-serif !important; text-transform: none !important; }
+            p { font-family: 'Roboto', sans-serif !important; }
+            p { text-align: left;}
+            section {font-size: 1em !important;}
+            code {font-family: 'Share Tech Mono', monospace !important; max-height: 500px !important;
+                display: block; overflow-x: auto; padding: 0.5em; color: #333 !important; background: #f8f8f8 !important; }
+            pre {font-size: 0.7em !important;}
+            section.two-floating-elements > ul {
+                max-width: 60%;
+                float:left;
+                margin-right:30px;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+        </style>
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+
+                <!-- Slides are separated by three dashes (quick 'n dirty regular expression) -->
+                <section data-markdown data-separator="^---">
+                    <script type="text/template">
+## Solving Diophantine equations via the class group
+### Based on joint work: Anne Baanen, <ins>Alex J. Best</ins>, Sander Dahmen, Nirvana Coppola
+
+![vu logo](VUlogo_Wit_RGB_mettekst_tcm289-835563.svg) <!-- .element style="display: inline-block; width: 65%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+![KCL logo](Kcl-logo.svg) <!-- .element style="display: inline-block; width: 25%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+
+These slides are online at:
+
+### <http://alexjbest.github.io/talks/lll/>
+---
+## This project
+
+![23](23.gif)<!-- .element style="display: inline-block; width: 45%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+![23](1770.gif)<!-- .element class="fragment" style="display: inline-block; width: 45%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+
+
+---
+<!-- .slide: class="two-floating-elements" -->
+## This project
+**Goal:** Formalize more modern (20th century) work in number theory and arithmetic geometry, such as solving:
+
+What are the integer solutions $x,y \in \mathbf Z$ of 
+$$y^2 = x^3 - 13\\,?$$
+
+```lean
+theorem Mordell_minus13 (x y : ℤ) (h : y^2 = x^3 - 13) : (x, y) = (17, 70) ∨ (x, y) = (17, -70) := ...
+```
+<!-- .element class="fragment" -->
+
+These types of problems are known as *Diophantine equations*.
+<!-- .element class="fragment" -->
+* This class of problem is still an active area of research, e.g.
+  $$x^2 + y^3 = z^5$$
+  has not been resolved
+<!-- .element class="fragment" -->
+* In general the problem is known to be undecidable.
+<!-- .element class="fragment" -->
+* There is a zoo of equations out there, and many techniques known, the field often makes progress case by case
+<!-- .element class="fragment" -->
+* We formalize a technique for solving some such equations, using number fields and the class group in ~6000 LoL
+<!-- .element class="fragment" -->
+
+![collatz](collatz_conjecture.png)<!-- .element class="fragment" style="display: inline-block; width: 23%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+
+
+Note:
+Why, do this to see whats possible? what automation is needed
+
+---
+### Classical number theory tools
+
+**Congruences (Ancient, modern form due to Euler/Gauss 1750-1850)**
+$$2y^2 = 4x^3 - 13$$
+has no integer solutions, as the LHS is even and the RHS is odd.
+<!-- .element: class="colorbox" -->
+
+**Descent (Ancient, used heavily by Fermat, 1600s)**
+$$y^2 = 2x^2$$
+has no (nonzero) integer solutions, as given a solution $(x,y)$ we can show that $(x/2, y/2)$ is also an integer solution, so the cannot be a smallest one (except $(0,0)$).
+<!-- .element: class="colorbox fragment" -->
+
+**Quadratic Reciprocity (Gauss, ~1800)**
+$$2y^2 =x ^ 4- 41z^4$$
+has 1 solution with $x=y=z=0$, otherwise:
+if $q \mid y$ then 41 is a square modulo $q$, this implies that $y$ is a square modulo 41
+so that 2 is a 4th power mod 41 (QR), but this is false!
+<!-- .element: class="colorbox fragment" -->
+
+Note:
+such things are taught in a first course in number theory
+
+---
+### Using these sort of techniques
+
+Laurent Thery, [2004](https://github.com/coq-contribs/sum-of-two-square) in Coq:
+$$x^2 + y^2 = p$$
+has a solution for all primes $p$ that are 1 mod 4.
+<!-- .element: class="colorbox" -->
+
+Delahaye, Mayero, [2005](https://hal.science/hal-00009425), in Coq:
+$$x^4 + y^4 = z^4$$
+have no solutions in the non-zero integers.
+Also  solve $$x^2 + y^ 2 = z^ 2\text{ and }xy = 2t^2.$$
+<!-- .element: class="colorbox fragment" -->
+
+Oosterhuis, [2007](https://fse.studenttheses.ub.rug.nl/8392/), in Isabelle:
+$$x^2 + 3y^2 = p$$
+has a solution for all primes $p$ that are 1 mod 3 (also 1 mod 4 result),
+Also
+$$x^3 + y^3 = z^3 \text{ and } x^4 + y^4 = z^4$$
+have no solutions in the non-zero integers.
+<!-- .element: class="colorbox fragment" -->
+
+Note:
+Also stuff in leans mathlib
+Might ask what are all these mathematicians who suddenly started learning lean doing? Just repeating 15-20 year old work from other provers?
+harrison
+chris hughes
+Lots of other NT out there of many flavours, this is only diophantine equations
+One reason, the solutions are bigger than the coefficients so any congruences are unlikely to pick them out
+
+---
+## Why is $y^2 = x^3 - 13$ harder?
+
+- Diophantine equations of two variables define curves geometrically
+- The genus ($\ge0$) of a curve determines the difficulty, generally the genus increases with the degree of the polynomial
+- As soon as the genus $\ge 1$ we have a finite set of integral points
+- The curves we look at have genus = 1, some of these have finitely many rational solutions, some infinitely many
+- The curve $y^2 = x^3 - 13$ has infinitely many rational points
+
+![collatz](curve.gif)<!-- .element style="display: inline-block; width: 50%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+---
+This type of equation is known as a *Mordell equation*, studied by mordell in early 1900s,
+![mordell](mordell.png) <!-- .element style="display: inline-block; width: 65%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+
+---
+# The argument
+If $x,y$ satisfy $y^2 = x^3 - 13$ then $(y + \sqrt{-13})(y - \sqrt{-13}) = x^3$, we can check that
+
+$$y + \sqrt{-13} \text{ and }y - \sqrt{-13} \text{ are coprime.}$$
+
+*If* this implies that
+$$y + \sqrt{-13} \text{ and }y - \sqrt{-13} \text{ are both cubes}$$
+then we can conclude that
+$$y + \sqrt{-13} = (a + b \sqrt{-13})^3$$
+$$ = (a^3 - 39 ab^2) + (3a^2b - 13b^3)\sqrt{-13} $$
+$$ = a(a^2 - 39 b^2) + b(3a^2 - 13b^2)\sqrt{-13} $$
+$$ \implies b = \pm 1$$
+$$\implies 1 = \pm(3a^2 - 13)$$ $$ \implies a = \pm 2, b=-1$$ $$ \implies y = \pm70, x=17 $$
+---
+
+## When do cubes only factor into cubes?
+
+In the integers it is almost true that if
+$$x,y \text{ are coprime  and }xy = z^n$$
+then there are some $x',y'$ such that
+$$x = x'^n,\\,y = y'^n$$
+the only issue is $\pm1$.
+
+$$(-4)(-9) = 36 = 6^2$$
+but neither $-4$, $-9$, is literally a square.
+<!-- .element class="fragment" -->
+
+In number rings we also have issues: Observe that
+$$(6 + \sqrt{-13}) (2 - 3 \sqrt{-13}) = 51 - 16\sqrt{-13} = (8 - \sqrt{-13})^2$$
+but  $6 + \sqrt{-13}$ and $2 - 3 \sqrt{-13}$ are coprime but both are not squares in $\mathbf{Z}[\sqrt{-13}]$!
+<!-- .element class="fragment" -->
+
+---
+
+## When do cubes only factor into cubes?
+
+Problem: When does $$r \cdot s = t ^ 3 \implies r = t_1^3 \text{ and } s = t_2^3?$$ in a number ring
+<!-- .element: class="colorbox" -->
+
+The theory of class groups of number fields is a key concept in number theory, it controls this sort of factorization.
+For a number field $K$ the definition of the **ideal class group** is
+$$\operatorname{Cl}(K) := \\{I \text{ nonzero ideal of }\mathcal O_K\\}/ xI \sim yJ \text{ for some } x,y \in \mathcal O_K$$
+
+this forms a group under multiplication of ideals, elements are called **ideal classes**.
+
+Here every principal ideal is equivalent to the ideal $(1)$ (and this is an iff).
+
+The advantage of using ideals instead of elements is that we have an analogue of unique factorization into primes for ideals of a Dedekind domain.
+
+In the previous example:
+$$(6 + \sqrt{-13}) (2 - 3 \sqrt{-13}) = (8 - \sqrt{-13})^2$$
+this factors on the level of ideals as 
+$$(7, 6 + \sqrt{-13})^2 (11, 2 - 3 \sqrt{-13})^2 = (8 - \sqrt{-13})^2 = (7, 6 + \sqrt{-13})^2 (11, 2 - 3 \sqrt{-13})^2$$
+
+But the ideals $(7, 6 + \sqrt{-13}), (11, 2 - 3 \sqrt{-13})$ are non-principal, non-trivial in the class group.
+---
+## Using the class group
+
+The upshot of this is that we have a finite abelian group $\operatorname{Cl}(K)$ such that
+
+$$\gcd (n , \\#\operatorname{Cl}(K))=1  \implies \exists u,v\in \mathcal O_K^\times, r \cdot s = t ^ n \implies r = u t_1^n \text{ and } s = v t_2^n$$ 
+
+If we can compute the class group and the unit group (modulo $n$th powers) explicitly we can push the previous proof through.
+
+The definition of, and finite abelian group structure of the class group was formalized in Lean by Baanen, Dahmen, Ashvni (Narayanan), Nuccio [2021](https://drops.dagstuhl.de/opus/volltexte/2021/13900/). 
+
+
+The unit group in the case of $\mathbf Q(\sqrt{-d})$ is fairly easy to calculate, using the norm, in all cases it has order a power of 2, so doesn't impact whether things are cubes or not.
+
+---
+## Proof versus calculation
+
+Often proofs require explicit *calculation*
+one can also state general results, but number theorists are interested in classifying single cases,
+does it ever happen that the difference between the area of an integer sided square and the volume of an integer sided cube equals 13?
+
+| General / conceptual | Specific / calculational |
+|---------|---|
+| All equations $y^2 = x^3 + d$ have finitely many solutions | The solutions of $y^2 = x^3 - 13$ have $x=17$|
+| There is a bound on the norm of a generator of an element of a class group | Every element of the class group of $\mathbf Q(\sqrt{-13})$ contains the integer 12 |
+| All class groups of number fields are finite | The class group of $\mathbf Q(\sqrt{-13})$ is $\mathbf Z / 2$ |
+<!-- .element class="fragment" -->
+
+Note:
+Also need to worry about units
+on LHS bound doesn't matter, can be huge but finite
+for rhs need good bounds, when proving need even better than  for a CAS
+---
+# Bounding class groups
+
+Need to calculate the size of the class group, to check that it is not divisible by 3
+
+Do this in two steps, bounding/listing the possible generators, and checking their order/relations.
+
+Given a list of possible generators we can calculate the full group by checking whether various combinations of the generators are trivial or not.
+
+Verifying that a particular ideal is trivial in the class group is easy, just exhibit a single generator.
+
+To show that an ideal is not principal we make use of the norm, if an ideal $I = (x)$ then $\operatorname{Nm}(I) = \operatorname{Nm}(x)$, so if there are no solutions $x$ to this equation the ideal is not principal.
+In our case this comes down to solving things like:
+
+$$x^2 + 13 y^2 = 2$$
+which can be resolved via elementary methods.
+
+---
+## The normal method
+*Theorem (Minkowski)*: Every class in the ideal class group of $K$ contains an integral ideal of norm not exceeding Minkowski's bound
+
+$$M_{K}={\sqrt  {|D|}}\left({\frac  {4}{\pi }}\right)^{{r_{2}}}{\frac  {n!}{n^{n}}}$$
+
+the key ingredient of this theorem is Minkowski's (fundamental) theorem, on lattice vectors inside convex symmetric bodies:
+
+![minko](minko.gif) <!-- .element style="display: inline-block; width: 45%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+
+This ingredient has been formalized in Isabelle + other HOL style proof assistants, and also in Lean!
+
+But the proof still involves a bit of work.
+
+---
+## The actual method
+
+We actually compute these groups for a handful of quadratic fields fully, which is of independent interest.
+
+Instead of using the standard bound/method we use the following theorem
+<!-- .element class="fragment" -->
+```
+theorem exists_mk0_eq_mk0' [is_dedekind_domain S] (I : (ideal S)⁰) (M : finset R) (hM : ∀ m ∈ M, algebra_map R S m ≠ 0)
+  (hex : ∀ (a : S) {b : S}, b ≠ 0 → (∃ (q : S) (r : R) (H : r ∈ M),
+              abv (algebra.norm R (r • a - q * b)) < abv (algebra.norm R b))) :
+  ∃ (J : (ideal S)⁰), class_group.mk0 I = class_group.mk0 J ∧ algebra_map _ _ (∏ m in M, m) ∈ (J : ideal S) := ...
+```
+<!-- .element class="fragment" -->
+
+If you can find a set of denominators $\\{d_i\\}$ such that every element of the number field differs from an element with denominator in $\\{d_i\\}$ by something of norm less than $1$ then every element of the class group contains $\prod_{i} d_i$.
+
+![collatz](1.gif)<!-- .element class="fragment" style="display: inline-block; width: 32%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+![collatz](2.gif)<!-- .element class="fragment" style="display: inline-block; width: 32%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+![collatz](3.gif)<!-- .element class="fragment" style="display: inline-block; width: 32%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+
+
+Note:
+not aware of a specific statement of this in the literature but is quite related to several existing notions
+main benefit is ease of formalization, a sometimes orthogonal axis
+would be interesting to compare this with existing bounds
+
+---
+# Calculational tactics
+
+We need to do lots of calculations in rings like $\mathbf Z [\sqrt{-13}]$ (but also aim at more general examples like $\mathbf Z [\sqrt[3]{2}]$)
+
+Want to explicitly evaluate expressions like $(1 + \sqrt{-13}) (2 - 2 \sqrt{-13})$ at many points in the proof and calculation of class (and unit) groups.
+
+- <!-- .element class="fragment" --> One way: expand and use the simplifier to reduce high powers that can be expressed with expressions with smaller exponents
+
+- <!-- .element class="fragment" --> Our initial approach: use a custom type for quadratic rings $R[\alpha]$ ($\alpha^2 + m \alpha + n = 0$), represented as (named) pairs $(a,b) = a + b \alpha$.
+  Then extensionality and simplification reduces to goals over the integers
+
+- <!-- .element class="fragment" --> Something more versatile: Rings like $\mathbf Z [\sqrt{-13}]$ are additively isomorphic to $\mathbf Z^2$, but with a multiplication that sends
+  $$(0,1)^2 = (-13,0)$$
+  As the multiplication is linear we can define it via a matrix on the standard basis (the times table of the ring).
+  We introduce a tactic that uses the times table to do explicit calculations quickly
+```lean
+example (a b c d : ℤ) : (a + b * sqrt_2 + c * sqrt_3 + d * sqrt_2 * sqrt_3 : sqrt_2_sqrt_3) *
+                        (a - b * sqrt_2 + c * sqrt_3 - d * sqrt_2 * sqrt_3 : sqrt_2_sqrt_3) *
+                        (a + b * sqrt_2 - c * sqrt_3 - d * sqrt_2 * sqrt_3 : sqrt_2_sqrt_3) *
+                        (a - b * sqrt_2 - c * sqrt_3 + d * sqrt_2 * sqrt_3 : sqrt_2_sqrt_3) =
+  a^4 - 4*a^2*b^2 + 4*b^4 - 6*a^2*c^2 - 12*b^2*c^2 + 9*c^4 + 48*a*b*c*d - 12*a^2*d^2 -
+    24*b^2*d^2 - 36*c^2*d^2 + 36*d^4 :=
+begin
+    apply sqrt_2_sqrt_3.times_table.ext (λ k, _),
+    fin_cases k; times_table,
+end
+```
+
+
+
+---
+# Connection to computer algebra systems
+ 
+Have been considered (often) before
+- Harrison-Théry 1997, HOL + Maple
+
+- Lewis-Wu 2021, Lean + Mathematica
+
+We propose a prototypical link from Lean to SageMath (free OSS)
+
+This is designed to be robust, connecting to Sage on the user's computer or via the web (c.f. polyrith)
+
+Rather than ad hoc we want a system that can be extended in future with less effort.
+
+```
+meta def replace_certified_sage_equality
+    (matcher : expr → tactic bool)
+    (reify_type : Type∗ )
+    (reify : expr → tactic reify_type)
+    (sage_input : reify_type → tactic string)
+    (output_type : Type∗ )
+    [has_from_sage output_type]
+    (convert_output : output_type → tactic expr)
+    (validator : expr → expr → tactic expr)
+    (name : string)
+    (wit : parse (tk "with" ∗ > pexpr)?) :
+    tactic unit
+```
+
+
+
+Note:
+3 different networking methods
+
+self replacing
+
+---
+## Thanks!
+
+To the organisers, and you for listening!
+
+## Questions?
+
+## <https://github.com/lean-forward/class-group-and-mordell-equation>
+
+![23](23.gif)<!-- .element style="display: inline-block; width: 32%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+![23](curve.gif)<!-- .element style="display: inline-block; width: 32%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+![23](3.gif)<!-- .element style="display: inline-block; width: 32%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+
+Note:
+thank pc session chairs organisers volunteers
+
+
+---
+## Chalkboard
+
+---
+# code for plots
+```
+from sage.plot.plot3d.shapes import *
+S = 0
+N = 6
+for x in range(N):
+	for y in range(N):
+		for z in range(N):
+			if y == 0 and z <= N - 2 and x <= N - 2:
+				continue
+			S += Box([.49,.49,.49], color='lightgray', alpha=1).translate(x,y,z)
+S.scale(.1,.1,.1).show()
+```
+---
+```
+sage: S=points([])
+....: for a in srange(-5,5):
+....:     for b in srange(-5,5):
+....:          S += implicit_plot(equify((x-a)^2 +13 * (y-b)^2 < 1), (-5,5), (-5,5))
+....:
+sage:
+....: for a in srange(-10,10):
+....:     for b in srange(-10,10):
+....:          S += implicit_plot(equify((2*x-a)^2 +13 * (2*y-b)^2 < 1), (-5,5), (-5,5),color="red")
+....:
+sage:
+....: for a in srange(-15,15):
+....:     for b in srange(-15,15):
+....:          S += implicit_plot(equify((3*x-a)^2 +13 * (3*y-b)^2 < 1), (-5,5), (-5,5),color="green")
+S
+sage: S
+Launched png viewer for Graphics object consisting of 1400 graphics primitives
+sage: S=points([])
+....: for a in srange(-5,5):
+....:     for b in srange(-5,5):
+....:          S += implicit_plot(equify((x-a)^2 +13 * (y-b)^2 < 1), (-5,5), (-5,5))
+....:
+sage: S
+Launched png viewer for Graphics object consisting of 100 graphics primitives
+sage:
+....: for a in srange(-10,10):
+....:     for b in srange(-10,10):
+....:          S += implicit_plot(equify((2*x-a)^2 +13 * (2*y-b)^2 < 1), (-5,5), (-5,5),color="red")
+....:
+S
+sage: S
+```
+---
+```
+sage: from sage.plot.plot3d.shapes import *
+....: def t(s,N=17, M=70):
+....:     S = 0
+....:     for x in range(N):
+....:         for y in range(N):
+....:             for z in range(N):
+....:                 boxpos = (1-s)*vector([x,y,z]) + s*vector([(x + N*y + N^2*z) % M,(x+  N*y + N^2*z)//M,0])
+....:                 S += Box([.45,.45,.45], color='lightgray',axis=False).translate(boxpos)
+....:     return S
+....: animate([t(i) for i in srange(0,1.05, 0.1)])
+Launched gif viewer for Animation with 11 frames
+```
+
+                    </script>
+                </section>
+
+            </div>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/reveal.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/markdown/markdown.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/math/math.min.js"></script>
+        <script src="plugin/chalkboard.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/notes/notes.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
+
+
+		<script>
+			Reveal.initialize({
+                width: 1600,
+                height: 900,
+				controls: false,
+				progress: false,
+				history: true,
+				center: false,
+				previewLinks: false,
+                transition: 'none',
+                chalkboard: {
+                    toggleChalkboardButton: false,
+                    toggleNotesButton: false, },
+
+				plugins: [ RevealNotes, RevealMarkdown, RevealNotes, RevealChalkboard, RevealMath.KaTeX ]
+			});
+            Reveal.addEventListener('ready', (event) => {
+                hljs.registerLanguage("lean",function(){"use strict";return function(hljs){
+  var LEAN_KEYWORDS = {
+    keyword:
+      'theorem|10 lemma|10 definition def class structure instance ' +
+      'example inductive coinductive ' +
+      'axiom axioms hypothesis constant constants ' +
+      'universe universes variable variables parameter parameters ' +
+      'begin end ' +
+      'import open theory prelude renaming hiding exposing ' +
+      'calc  match do  by let in extends ' +
+      'fun assume ' +
+      '#check #eval #reduce #print',
+    built_in:
+      'Type Prop|10 Sort rw|10 rewrite rwa erw subst substs ' +
+      'simp dsimp simpa simp_intros finish ' +
+      'unfold unfold1 dunfold unfold_projs unfold_coes ' +
+      'delta cc ac_reflexivity ac_refl ' +
+      'existsi|10 cases rcases with intro intros introv by_cases ' +
+      'refl rfl funext propext exact exacts ' +
+      'refine apply eapply fapply apply_with apply_instance ' +
+      'induction rename assumption revert generalize specialize clear ' +
+      'contradiction by_contradiction by_contra trivial exfalso ' +
+      'symmetry transitivity destruct constructor econstructor ' +
+      'left right split injection injections ' +
+      'repeat try continue skip swap solve1 abstract all_goals any_goals done ' +
+      'fail_if_success success_if_fail guard_target guard_hyp ' +
+      'have replace at suffices show from ' +
+      'congr congr_n congr_arg norm_num ring ',
+    literal:
+      'tt ff',
+    meta:
+      'noncomputable|10 private protected meta mutual',
+    section:
+      'section namespace',
+    strong:
+      'sorry admit',
+  };
+
+  var LEAN_IDENT_RE = /[A-Za-z_][\\w\u207F-\u209C\u1D62-\u1D6A\u2079\']*/;
+
+  var DASH_COMMENT = hljs.COMMENT('--', '$');
+  var MULTI_LINE_COMMENT = hljs.COMMENT('/-[^-]', '-/');
+  var DOC_COMMENT = {
+    className: 'doctag',
+    begin: '/-[-!]',
+    end: '-/'
+  };
+
+  var ATTRIBUTE_DECORATOR = {
+    className: 'meta',
+    begin: '@\\[',
+    end: '\\]'
+  };
+
+  var ATTRIBUTE_LINE = {
+    className: 'meta',
+    begin: '^attribute',
+    end: '$'
+  };
+
+  var LEAN_DEFINITION =	{
+    className: 'theorem',
+    beginKeywords: 'def theorem lemma class instance structure',
+    end: ':=',
+    excludeEnd: true,
+    contains: [
+      {
+        className: 'keyword',
+        begin: /extends/
+      },
+      hljs.inherit(hljs.TITLE_MODE, {
+        begin: LEAN_IDENT_RE
+      }),
+      {
+        className: 'params',
+        begin: /[([{]/, end: /[)\]}]/, endsParent: false,
+        keywords: LEAN_KEYWORDS,
+      },
+      {
+        className: 'symbol',
+        begin: /:/,
+        endsParent: true
+      },
+    ],
+    keywords: LEAN_KEYWORDS
+  };
+  return {
+    name: "lean",
+    keywords: LEAN_KEYWORDS,
+    contains: [
+      hljs.QUOTE_STRING_MODE,
+      hljs.NUMBER_MODE,
+      DASH_COMMENT,
+      MULTI_LINE_COMMENT,
+      DOC_COMMENT,
+      LEAN_DEFINITION,
+      ATTRIBUTE_DECORATOR,
+      ATTRIBUTE_LINE,
+      { begin: /⟨/ } // relevance booster
+    ]
+  };
+
+            }}());
+                //hljs.registerLanguage("lean",function(e){var r="([a-zA-Z]|\\.[a-zA-Z.])[a-zA-Z0-9._]*";return {c: [ e.HCM,e.CBCM,{b:r,l:r,k:{keyword:"maximize subject to var ",literal:""},r:90},{cN:"number",b:"\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",r:0}]} });
+
+                // console.log(hljs.listLanguages());
+                document.querySelectorAll('pre code').forEach((block) => { hljs.highlightElement(block); });
+                //hljs.highlightAll();
+            });
+
+
+		</script>
+
+    </body>
+</html>
