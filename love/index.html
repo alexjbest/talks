@@ -118,7 +118,7 @@ When implementing the mathematical parts of these cryptographic algorithms we wa
 ### Example 4: the Sensitivity conjecture
 
 From [Scott Aaronson's blog](https://www.scottaaronson.com/blog/?p=4229):
-> The Sensitivity Conjecture, says that, for every Boolean function $f:\{0,1\}^n\to \{0,1\}$, the sensitivity of $f$—that is, the maximum, over all $2^n$ input strings $x\in \{0,1\}^n$, of the number of input bits such that flipping them changes the value of $f$—is at most polynomially smaller than a bunch of other complexity measures of $f$, including $f$’s block sensitivity, degree as a real polynomial, and classical and quantum query complexities.
+> The Sensitivity Conjecture, says that, for every Boolean function $f:\\{0,1\\}^n\to \\{0,1\\}$, the sensitivity of $f$—that is, the maximum, over all $2^n$ input strings $x\in \\{0,1\\}^n$, of the number of input bits such that flipping them changes the value of $f$—is at most polynomially smaller than a bunch of other complexity measures of $f$, including $f$’s block sensitivity, degree as a real polynomial, and classical and quantum query complexities.
 
 This was proved in a [stunningly short 6 page paper](https://arxiv.org/abs/1907.00847) by Hao Huang in 2019, and the proof was formalized in Lean within a couple of months by Reid Barton, Johan Commelin, Jesse Han, Chris Hughes, Robert Y. Lewis, Patrick Massot.
 [github link](https://github.com/leanprover-community/mathlib/blob/master/archive/sensitivity.lean)
@@ -195,7 +195,7 @@ You have (possibly) already seen:
 - `library_search`
 - `abel`
 - `norm_cast`
-- `ring` - [algebra.group_power.identities](vscode://file/Users/alex/talks/love/_target/deps/mathlib/src/algebra/geometry/identities.lean:62:3)
+- `ring` - [algebra.group_power.identities](vscode://file/Users/alex/talks/love/_target/deps/mathlib/src/algebra/group_power/identities.lean:62:3)
 
 Some others:
 - `suggest using` - [demo](vscode://file/Users/alex/talks/love/src/demo_suggest_using.lean:9:3)
@@ -239,6 +239,8 @@ If we can think less about the small stuff we can spend more time on the big iss
 Let's talk about several ways we can do this, in some examples.
 
 I'll mention about a few ways we can use meta-programming in Lean to inspect the entirety of a large library and suggest improvements and help fix oversights.
+
+We can either run these on whole of mathlib, or in an individual file we are interested in by typing `#lint`.
 ---
 ### Unused arguments
 What's wrong with the following?
