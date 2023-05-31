@@ -1,0 +1,285 @@
+\documentclass[oneside,12pt,]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage{geometry}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage[skip=\baselineskip,indent=0pt]{parskip}
+
+\usepackage[bookmarksopen=true,bookmarks=true]{hyperref}
+\geometry{paperwidth=170mm, paperheight=4383pt, left=10pt, top=20pt, textwidth=340pt, marginparsep=20pt, marginparwidth=100pt, textheight=4263pt, footskip=40pt}
+
+\usepackage[explicit, newparttoc, pagestyles]{titlesec}
+\usepackage{titletoc}
+\usepackage{graphicx}
+\input{insbox}%%%%%%%%%%%%%% TeX macro,
+
+\graphicspath{{img/}}
+
+
+\usepackage{float}
+
+\usepackage{mathrsfs}
+\usepackage{tikz}
+%\usepackage{tikz-3dplot}
+%%\tdplotsetmaincoords{60}{110}
+\usepackage{wrapfig}
+
+\usepackage{amsmath,mathtools}
+\usepackage{amscd}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+
+\usepackage{newpxtext,newpxmath}
+\setcounter{secnumdepth}{0} % sections are level 1
+
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\Proj}{Proj}
+\DeclareMathOperator{\Spf}{Spf}
+\DeclareMathOperator{\Spv}{Spv}
+\DeclareMathOperator{\Spa}{Spa}
+\DeclareMathOperator{\Spm}{Spm}
+\DeclareMathOperator{\specialisation}{sp}
+\DeclareMathOperator{\Max}{Max}
+\newcommand{\Gal}[2]{\operatorname{Gal}(#1/#2)}
+\newcommand{\absgal}[1]{\operatorname{Gal}(\overline{#1}/#1)}
+\newcommand{\sepgal}[1]{\operatorname{Gal}(#1^\sep/#1)}
+\DeclareMathOperator{\Ind}{Ind}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\res}{res}
+
+\newcommand{\diff}{\mathop{}\!\mathrm{d}}
+\newcommand{\cinf}{C^\infty}
+\newcommand{\inv}{^{-1}}
+\newcommand{\units}{^{\times}}
+
+\newcommand{\legendre}[2]{\left(\frac{#1}{#2}\right)}
+\newcommand{\pair}[2]{\left\langle #1, #2 \right\rangle}
+\newcommand{\lb}{[}
+\newcommand{\rb}{]}
+\newcommand{\powerseries}[2]{#1[[#2]]}
+
+\DeclareMathOperator{\power}{\mathcal{P}}
+\DeclareMathOperator{\aff}{\mathbf{A}}
+\DeclareMathOperator{\PP}{\mathbf{P}}
+\DeclareMathOperator{\norm}{Norm}
+\DeclareMathOperator{\trace}{Tr}
+\DeclareMathOperator{\Fr}{Fr}
+\DeclareMathOperator{\Frob}{Frob}
+\DeclareMathOperator{\NS}{NS}
+\DeclareMathOperator{\Der}{Der}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Out}{Out}
+\DeclareMathOperator{\Inn}{Inn}
+\DeclareMathOperator{\vf}{\mathcal{V}}
+\DeclareMathOperator{\krulldim}{krulldim}
+\DeclareMathOperator{\trdeg}{trdeg}
+\DeclareMathOperator{\Frac}{Frac}
+\DeclareMathOperator{\Prob}{Prob}
+
+\DeclareMathOperator{\ch}{ch}
+\newcommand{\lt}{<}
+\newcommand{\gt}{>}
+\newcommand{\amp}{&}
+
+\newcommand{\NN}{\mathbf{N}}
+\newcommand{\ZZ}{\mathbf{Z}}
+\newcommand{\QQ}{\mathbf{Q}}
+\newcommand{\RR}{\mathbf{R}}
+\newcommand{\CC}{\mathbf{C}}
+\newcommand{\HH}{\mathbf{H}}
+\newcommand{\FF}{\mathbf{F}}
+\newcommand{\GG}{\mathbf{G}}
+\newcommand{\ints}{\mathcal{O}}
+\newcommand{\adeles}{\mathbf{A}}
+
+\title{Szemerédi's regularity lemma}
+\author{Alex J. Best}
+\date{31/6/23}
+\begin{document}
+\maketitle
+\emph{Recap:} Studying Manin's conjecture and (equi)-distribution of rational points on a Fano variety. Another instance of pseudo-randomness emerging with scale is in extremal combinatorics / graph theory.
+
+\emph{Tao (paraphrased):} ``The various proofs of Szemerédi's theorem and related theorems and proofs using measure theory, ergodic theory, graph theory, hypergraph theory, probability theory, information theory, and Fourier analysis share a number of common features and serve as a ``Rosetta stone'' for connecting these fields, notably they often use dichotomy between randomness and structure''.
+
+\emph{This time:} Give more detail on Szemerédi's regularity lemma (SRL) and its proof, and the reduction to Roth's theorem / Szemerédi's theorem.
+
+
+\section{The statement}
+
+\emph{Slogan:} 
+The vertices of a sufficiently large graph can be partitioned into a fixed number of subsets in a way that the interactions between each behave pseudorandomly.
+
+There are several variants of SRL, some place more restrictions on the partition (and so appear at first sight stronger).
+
+\begin{definition}
+
+    Let $G= (V, E)$ be a graph and $A, B \subseteq V$ two disjoint sets.
+    The density of edges between $A$ and $B$ is
+    \InsertBoxR{0}{\begin{minipage}{0.35\linewidth}\centering
+            \hspace{1000mm}
+    \end{minipage}%
+}[0]
+    $$
+    d(A, B)=\frac{e(A, B)}{|A||B|}
+    $$ %Note that the density is always a positive value between 0 and 1 .
+    We call a pair $(A, B)$ $\epsilon$-regular (or uniform) for a given $\epsilon>0$, if for all $X \subseteq A, Y \subseteq B$ where $|X| \geq \epsilon|A|$ and $|Y| \geq \epsilon|B|$, we have:
+    $$
+    |d(X, Y)-d(A, B)| \leq \epsilon
+    $$
+\end{definition}
+
+\begin{definition}
+    A partition $V_1, \ldots, V_k$ of the vertices of a graph is said to be an equipartition if it is as balanced as possible, i.e.
+$$\max\{||V_k| - |V_j||\}\le 1\text{ or }\floor*{\frac{|V|}k} \le |V_j|\le\ceil*{\frac{|V|}k}$$
+\end{definition}
+
+\begin{definition}
+    A partition $V_1, \ldots, V_k$ of the vertices of a graph is said to be $\epsilon$-regular if most pairs $(V_i,V_j)$ are $\epsilon$-regular, in the sense that at most
+    $$\epsilon \binom k 2\text{ are not }\epsilon\text{-regular}$$
+\end{definition}
+
+
+\begin{theorem}[Szemerédi] Let $\varepsilon>0$, and let $l$ be a natural number. Then there exists an integer $L$ such that every graph $G$ with $|G| \geq l$ has an $\varepsilon$-uniform equipartition into $m$ parts for some $m$ such that $l \leq m \leq L$.
+\end{theorem}
+
+Note that $L$ does not depend on $G$ or even the size of $G$, so that for large enough graphs we can consider this a partition into a small number of pieces relative to the size of the graph.
+
+
+\section{Applications}
+
+\begin{theorem}[Roth]
+    A subset of the natural numbers with positive upper density contains a 3-term arithmetic progression.
+\end{theorem}
+
+
+Szemerédi was motivated by generalizing this result and proved:
+
+\begin{theorem}[Szemerédi]
+    A subset of the natural numbers with positive upper density contains a 
+     $k$-term arithmetic progression for any $k$.
+\end{theorem}
+
+\section{Method}
+
+\begin{theorem}[Roth']
+    For every $\delta>0$, there exists an $n_0$ such that for any $n \geq n_0$ and any subset $A \subseteq\{1, \ldots, n\}$ satisfying $|A| \geq \delta n$, there are distinct elements $a, b, c \in A$ such that $a+c=2 b$.
+\end{theorem}
+
+
+To prove this we instead let
+$$B = \{(x,y) : x - y \in A\} \subseteq \{1, \ldots, 2n\}^2$$
+
+\begin{definition}[Corners] A \emph{corner} in a set $B \subseteq \{1, \ldots, n\}^2$ is a triple of the form $(x,y), (x+h, y), (x, y+h) \in B$, $0 < h$ (anticorner if $h < 0$).
+\end{definition}
+So, given a corner in $B$ we get a 3 term AP $(a,b,c)$ in $A$ from $(x-y, x+h-y, x - y - h)$.
+
+\begin{theorem}[Corners theorem] For every $\delta>0$, there exists an $n_0$ such that for any $n \geq n_0$ and any subset $B \subseteq\{1, \ldots, n\}^2$ satisfying $|B| \geq \delta n^2$, there is a corner in $B$.
+\end{theorem}
+
+Reduce to the weak corners theorem (as above but allowing anticorners).
+
+Then construct a tripartite graph where the triangles correspond to (anti or trivial)-corners of $B$ and so that all triangles are edge disjoint.
+
+The construction is to have vertices for horizontal, vertical and diagonal lines in $\{1, \ldots, 2n\}$ and put an edge when two such lines meet at a point of $B$.
+
+There are at least $\delta n^2$ triangles in this graph from trivials alone so to remove all of them we must remove at least $\delta n^2$ edges.
+
+
+\begin{theorem}[Triangle Removal Lemma] For all $1\ge \delta >0$, there exists $\epsilon >0$ such that any graph on $n$ vertices with less than or equal to $\epsilon  n^3$ triangles can be made triangle-free by removing at most $\delta  n^2$ edges.
+
+    (If there are not too many triangles you can remove a small number of edges to remove all triangles.)
+\end{theorem}
+
+(this is a special case of the more general \emph{Graph removal lemma} and the \emph{hypergraph removal lemma} (used for the full Szemerédi lemma on $k$-term APs).)
+
+Now the above graph must have at least $\epsilon n^3$ triangles as the triangle removal lemma does not apply.
+
+So we have at least
+$$\epsilon   n^3 - \delta n^2$$
+nontrivial triangles, so pick $n$ such that $\epsilon n > \delta $ and we are done.
+
+
+Roth's theorem can be proved directly from the TRL, but the \emph{Corners theorem} is in some sense a stronger version of Roth.
+
+%\section{Proof of Triangle removal lemma from SRL}
+
+We can prove the TRL from the so called triangle counting lemma, from SRL (though other proofs are available).
+
+\section{Proof of SRL}
+The proof idea is fairly straightforward in the outline:
+
+\begin{itemize}
+    \item We define a (bounded above) quantity called \emph{energy} of an equipartition, that unless the equipartition is $\epsilon $-regular can be increased by at least a fixed positive amount (via some modification of the equipartition), without adding too many sets to the equipartition.
+
+    \item We start with a trivial equipartition and may inductively apply this process which must eventually stop (after a number of steps bounded independently of the input graph) at which point we have proved the lemma.
+\end{itemize}
+
+
+The details of this are quite involved however!
+
+\begin{definition}
+    The \emph{energy} of a partition $P= \{V_1, \ldots, V_k\}$ is
+    $$0 \le q_G(P)=\frac{1}{k^2} \sum_{1 \leq i<j \leq k} d_G\left(V_i, V_j\right)^2 \le  1$$
+\end{definition}
+
+\begin{lemma}
+    Let $G$ be a graph of order $n$ with an equipartition $V=\bigcup_{i=0}^k C_i$
+    $$
+    \left|C_1\right|=\left|C_2\right|=\cdots=\left|C_k\right|=c \geq 2^{3 k+1} .
+    $$
+    Suppose that the partition $\mathcal{P}=\left(C_i\right)_{i=0}^k$ is not $\varepsilon$-uniform, where $0<\varepsilon<\frac{1}{2}$ and $2^{-k} \leq \varepsilon^5 / 8$. Then there is an equitable partition $\mathcal{P}^{\prime}=\left(C_i^{\prime}\right)_{i=0}^{\ell}$ with $\ell = k (4^k - 2^{k-1})$ such that
+    $$
+    q\left(\mathcal{P}^{\prime}\right) \geq q(\mathcal{P})+\frac{\varepsilon^5}{2}
+    $$
+\end{lemma}
+
+To prove this we take, for each $(C_i,C_j)$ non-uniform, some sets $C_{ij} \subset C_i$, $C_{ji} \subset C_j$ witnessing this so that
+$$\left|C_{i j}\right| \geq \varepsilon\left|C_i\right|=\varepsilon c, \left|C_{j i}\right| \geq \varepsilon\left|C_j\right|=\varepsilon c$$
+$$\left|d\left(C_{i j}, C_{j i}\right)-d\left(C_i, C_j\right)\right| \geq \varepsilon$$.
+
+We would like to partition simultaneously all possible $C_{ij}$ into new sets $C_h$ so that each $C_{ij}$ is a union of a bunch of $C_h$'s, which would have larger energy, this isn't quite possible, but we can "atomise" each $C_i$ by making equivalent points not distinguishable by being in different $C_{ij}$s.
+We then pick $H = 4^k - 2^{k-1}$ different $\floor{c/4^k}$-subsets, all contained in some atom of $C_i$.
+
+This new partition can be shown to have an energy of at least $\epsilon ^5 /4 $ more.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
