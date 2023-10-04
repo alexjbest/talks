@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Formalizing algebraic number theory, recent progress and future challenges</title>
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/reveal.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+		<link rel="stylesheet" href="plugin/chalkboard.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/theme/solarized.min.css">
+		<link rel="stylesheet" href="https://rs-math.net/beamerkiller/beamerkiller.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Lato&family=Roboto&family=Roboto+Mono&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs@latest/styles/github.css">
+        <style type="text/css">
+            h2, h3 { font-family: 'Lato', sans-serif !important; text-transform: none !important; }
+            p { font-family: 'Roboto', sans-serif !important; }
+            p { text-align: left;}
+            section {font-size: 1em !important;}
+            code {font-family: 'Share Tech Mono', monospace !important; max-height: 500px !important;
+                display: block; overflow-x: auto; padding: 0.5em; color: #333 !important; background: #f8f8f8 !important; }
+            pre {font-size: 0.7em !important;}
+            section.two-floating-elements > ul {
+                max-width: 60%;
+                float:left;
+                margin-right:30px;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+        </style>
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<div class="slides">
+
+                <!-- Slides are separated by three dashes (quick 'n dirty regular expression) -->
+                <section data-markdown data-separator="^---">
+                    <script type="text/template">
+## Formalizing algebraic number theory, recent progress and future challenges
+### Alex Best
+### Based on joint work: Sander Dahmen, Sacha Huriot-Tattegrain
+
+![vu logo](VUlogo_Wit_RGB_mettekst_tcm289-835563.svg) <!-- .element style="display: inline-block; width: 65%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+![KCL logo](Kcl-logo.svg) <!-- .element style="display: inline-block; width: 25%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+
+These slides are online at:
+
+### <http://alexjbest.github.io/talks/dagstuhl/>
+---
+*Tate's algorithm* concerns elliptic curves:
+$$y^2 + a_1 xy + a_3 y = x^3 + a_2 x^2 + a_4 x + a_6$$
+with coefficients in a discrete valuation ring ($v(ab) = v(a) + v(b), v(a+b) \ge \max(v(a), v(b))$)
+
+It essentially computes invariants of a nice scheme theoretic model of the curve.
+![voe](voapB.png)
+![tate](tate.png)
+---
+
+## Tate's algorithm:
+Practically it involces making changes of variables $(x,y)\mapsto(ux + r, uy + sx + t)$ to ensure that the certain invariants in the coefficients $a_i$ have higher and higher valuations $v$.
+
+$$y^2 + a_1 xy + a_3 y = x^3 + a_2 x^2 + a_4 x + a_6$$
+with coefficients in a discrete valuation ring ($v(ab) = v(a) + v(b), v(a+b) \ge \max(v(a), v(b))$)
+
+- is recursive
+- <!-- .element class="fragment" -->10 main "steps"
+- <!-- .element class="fragment" -->one recursive subprocedure
+- <!-- .element class="fragment" -->explained over 5 pages originally by Tate, in a nice style (but with some details skipped!) <https://wstein.org/Tables/antwerp/tate/tate.pdf#page=14>
+- <!-- .element class="fragment" -->mostly solved the original problem, but variants are still proposed and explored in modern research, 
+<!-- .element class="fragment" -->
+
+Note:
+  including generalizations to higher genus curves ($y^2 = f(x)$) which are an order of magnitude more complex again
+---
+## Motivation
+
+Bridging the gap between ITPs and computer algebra:
+
+- <!-- .element class="fragment" -->Evaluating how fast code generated from a proof assistant can be on a complex mathematical algorithm
+- <!-- .element class="fragment" -->Implementing a very generic version of the algorithm, with assumptions clearly stated. Proof enables abstraction to represent exactly the assumptions needed for the implementation
+- <!-- .element class="fragment" -->Validating properties of the algorithm / quantities computed, e.g.
+Papadopoulos I.  Sur la classification de Néron des courbes elliptiques en caractéristique résiduelle 2 et 3
+![pap](pap1.png) <!-- .element style="display: inline-block; width: 65%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+
+---
+Papadopolous work:
+![pap](pap2.png)<!-- .element  style="display: inline-block; width: 45%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;float:right;" -->
+
+ •  The tables of results go on for several pages, and the proofs many more (34 pages in the published version)
+
+ • The contents of these tables is used in current research and proofs surrounding the generalized Fermat equation.
+
+ • This is the sort of mathematics that formalization may actually make clearer, detailed analysis of the behaviour of a complicated procedure under different assumptions on the input.
+
+
+But we still have a problem, the actual definitions are out of reach, would require hundreds of pages of material on group schemes, blow ups, ...
+
+
+---
+## What does it mean to formalize an algorithm?
+
+- The gold standard is to implement an algorithm in a proof assistant and prove it computes the same function as a natural "mathematical" definition in the system (we do not do this)
+
+- Another possibility is simply to implement the algorithm as described in a paper, and verify that its properties agree with what is claimed in theory as much as possible. Here we use the algorithm itself as the definition of the function that it computes.
+
+- <!-- .element class="fragment" -->By implementing the algorithm in a descriptive way in type theory, we still gain some confidence in correctness, can reason about the execution of the algorithm symbolically with  increased conference.
+We can prove certain key substeps and transformation rules are correct.
+
+- <!-- .element class="fragment" -->By verifying enough properties the algorithm can sometimes be seen, on paper, to actually implement the desired function, even before the actual definition can be formalized.
+
+
+- <!-- .element class="fragment" -->For instance if we prove that the implementation is invariant under changing to equivalent input, and that the output is as expected in theory on a class of examples that we know in theory to cover all possible curves we can conclude that the implementation does indeed compute the function we wanted.
+<!-- .element class="fragment" -->
+```
+lemma kodaira_In (n : ℕ) (hn : 1 ≤ n) (hcona : (primeEVR hp).valtn a = 0)
+    (hconb : ((n + 1)/2 : ℕ)) ≤ (primeEVR hp).valtn b (hconc : (primeEVR hp).valtn c = n) :
+    (tate_algorithm p hp ⟨⟨0, a, 0, b, c⟩, habc⟩).1 = .I n :=
+by
+    rw [tate_algorithm, if_neg hn23.1, if_neg hn23.2, tate_big_prime]
+    generalize h : (⟨⟨0,a,0,b,c⟩, _⟩ : ValidModel ℤ) = e
+    have valc4 : 3 * (primeEVR hp).valtn e.c4 = ⊤; simp [← h, c4_abc]
+    have valdisc' : val_discr_to_nat (primeEVR hp).valtn e % 12 = 8
+    . simp [← h, val_discr_abc hp a b c habc, nat_of_val, c4_abc]
+    simp [valc4, valdisc']
+```
+
+---
+## Verification of some data in the LMFDB
+
+- The LMFDB is a large online database and website hosting data relevant to number theorists, such as number fields, elliptic and genus 2 curves, L-functions, modular forms, groups, abelian varieties, Artin representations, local fields, ...
+
+<http://lmfdb.xyz/EllipticCurve/Q/14/a/1>
+
+- <!-- .element class="fragment" -->Data is often ordered by some natural invariants, and complete up to a certain bound.
+
+- <!-- .element class="fragment" -->Correctness and completeness is paramount, and strived for at all times, data added is often computed by independent implementations for cross checking
+
+- <!-- .element class="fragment" -->We "confirm" all 13,178,234 entries of the "local data" section for 3,824,372 elliptic curves over $\mathbf Q$ currently in the LMFDB, in ~10 minutes on a laptop (Using code generation). <https://www.lmfdb.org/EllipticCurve/Q/456885/f/2>
+
+- <!-- .element class="fragment" -->This is very tail heavy (a small number of examples dominate) so this should be improved
+
+- <!-- .element class="fragment" -->Next, elliptic curves over number fields! Many more examples, where the implementations existing are fewer and less well tested.
+
+
+---
+## Thanks!
+
+## Questions?
+
+## <https://github.com/KisaraBlue/ec-tate-lean>
+
+![23](curve.gif)<!-- .element style="display: inline-block; width: 32%;margin-left: auto; margin-right: auto; margin-top:0;margin-bot:0;" -->
+
+
+---
+## Results of the formalization project
+
+
+We have formalized two versions of the algorithm:
+- an initial version over the integers, covering the most common application
+- a general version over an arbitrary ring with discrete valuation and some chosen functions to reduce valuations and pick small representatives for the residue ring
+
+Both are fast enough to run in practice (even without lots of optimization)
+<!-- .element class="fragment" -->
+The project began with Sacha's internship at the VU ~1.5 years ago, so we were early users of Lean 4.
+Several bugs in Lean4/Mathlib4 tactics and interfaces found and many fixed, and even a very subtle one in the compiler core were discovered (hit in 0.0000001% of examples). 
+<!-- .element class="fragment" -->
+
+Current goals:
+<!-- .element class="fragment" -->
+- <!-- .element class="fragment" -->Working on finishing some small subproofs along the way (porting from mathlib 3->4) 
+
+- <!-- .element class="fragment" -->Working on implementing other rings where we can run the algorithm (e.g. number fields, function fields).
+  This may be the first ever implementation of the algorithm that runs on such rings
+
+- <!-- .element class="fragment" -->Verifying more properties of the algorithm such as invariance under isomorphic input models
+
+- <!-- .element class="fragment" -->Verifying some versions of the above tables
+
+---
+## Challenges faced
+
+The algorithm itself is long and complicated in the geneneral case, proof of termination is via an a priori bounded quantity that increases every time the subprocedure runs twice.
+
+Many goals combining known inequalities on valuations of our invaraints to obtain new ones
+```
+R: Type u
+inst✝: CommRing R
+inst: IsDomain R
+p: R
+evr: EnatValRing p
+e: Model R
+h1: v evr.valtn e.a1 ≥ 1
+h2: v evr.valtn e.a2 ≥ 2
+⊢ v evr.valtn (e.a1 * e.a1 + 4 * e.a2) ≥ 2
+```
+
+In order to formalize this cleanly we need specific api around, as well as decision procedures for the ordered semiring $ℕ∪∞$
+
+We simply do cases on each variable, simplifying inequalities that contain infinity to simpler statements and recursing, eventually reching a state where existing automation applies.<br />
+This still requires a non-trivial implementation to get this right.
+<!-- .element class="fragment" -->
+Alternative approach using metavariables and Aesop was also promising.
+<!-- .element class="fragment" -->
+---
+## Elinarith
+```lean
+lemma v_discr_of_v_ai {p : R} {q : ℕ} (valp : SurjVal p) (e : ValidModel R) (hq : q > 1)
+  (h1 : valp e.a1 ≥ 1) (h2 : valp e.a2 = 1) (h3 : valp e.a3 ≥ q)
+  (h4 : valp e.a4 ≥ q + 1) (h6 : valp e.a6 ≥ 2 * q) :
+  valp e.discr ≥ 2 * q + 3 := by
+  have h2' : valp e.b2 ≥ 1 := v_b2_of_v_a1_a2 valp e h1 h2
+  have h4' : valp e.b4 ≥ q + 1 := v_b4_of_v_a1_a3_a4 valp e h1 h3 h4
+  have h6' : valp e.b6 ≥ 2 * q := v_b6_of_v_a3_a6 valp e h3 h6
+  have h8' : valp e.b8 ≥ 2 * q + 1 := v_b8_of_v_ai valp e h1 h2 h3 h4 h6
+  apply_rules [val_add_ge_of_ge, val_sub_ge_of_ge] <;>
+  . simp
+    elinarith
+```
+if done by hand we end up with a 50 line argument here!
+
+More generally there is in fact: Effective Quantifier Elimination for Presburger Arithmetic with Infinity, Aless Lasaruk and Thomas Sturm 
+<!-- .element class="fragment" -->
+Similarly we would benefit from a tactic for working with ring expressions modulo $p$ or modulo given relations.
+<!-- .element class="fragment" -->
+We still did a lot of experimentation and copy-pasting with computer algebra systems to write down the necessary transformations in general.
+<!-- .element class="fragment" -->
+Thesis: more meta-meta-programming needed to make it easier for the formalizer to implement such tactics.
+<!-- .element class="fragment" -->
+
+
+---
+## Chalkboard
+
+---
+# code for plots
+```
+from sage.plot.plot3d.shapes import *
+S = 0
+N = 6
+for x in range(N):
+	for y in range(N):
+		for z in range(N):
+			if y == 0 and z <= N - 2 and x <= N - 2:
+				continue
+			S += Box([.49,.49,.49], color='lightgray', alpha=1).translate(x,y,z)
+S.scale(.1,.1,.1).show()
+```
+---
+```
+sage: S=points([])
+....: for a in srange(-5,5):
+....:     for b in srange(-5,5):
+....:          S += implicit_plot(equify((x-a)^2 +13 * (y-b)^2 < 1), (-5,5), (-5,5))
+....:
+sage:
+....: for a in srange(-10,10):
+....:     for b in srange(-10,10):
+....:          S += implicit_plot(equify((2*x-a)^2 +13 * (2*y-b)^2 < 1), (-5,5), (-5,5),color="red")
+....:
+sage:
+....: for a in srange(-15,15):
+....:     for b in srange(-15,15):
+....:          S += implicit_plot(equify((3*x-a)^2 +13 * (3*y-b)^2 < 1), (-5,5), (-5,5),color="green")
+S
+sage: S
+Launched png viewer for Graphics object consisting of 1400 graphics primitives
+sage: S=points([])
+....: for a in srange(-5,5):
+....:     for b in srange(-5,5):
+....:          S += implicit_plot(equify((x-a)^2 +13 * (y-b)^2 < 1), (-5,5), (-5,5))
+....:
+sage: S
+Launched png viewer for Graphics object consisting of 100 graphics primitives
+sage:
+....: for a in srange(-10,10):
+....:     for b in srange(-10,10):
+....:          S += implicit_plot(equify((2*x-a)^2 +13 * (2*y-b)^2 < 1), (-5,5), (-5,5),color="red")
+....:
+S
+sage: S
+```
+---
+```
+sage: from sage.plot.plot3d.shapes import *
+....: def t(s,N=17, M=70):
+....:     S = 0
+....:     for x in range(N):
+....:         for y in range(N):
+....:             for z in range(N):
+....:                 boxpos = (1-s)*vector([x,y,z]) + s*vector([(x + N*y + N^2*z) % M,(x+  N*y + N^2*z)//M,0])
+....:                 S += Box([.45,.45,.45], color='lightgray',axis=False).translate(boxpos)
+....:     return S
+....: animate([t(i) for i in srange(0,1.05, 0.1)])
+Launched gif viewer for Animation with 11 frames
+```
+
+                    </script>
+                </section>
+
+            </div>
+		</div>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/reveal.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/markdown/markdown.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/math/math.min.js"></script>
+        <script src="plugin/chalkboard.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.4.0/plugin/notes/notes.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js"></script>
+
+
+		<script>
+			Reveal.initialize({
+                width: 1600,
+                height: 900,
+				controls: true,
+				progress: false,
+				history: true,
+				center: false,
+				previewLinks: false,
+                transition: 'none',
+                chalkboard: {
+                    toggleChalkboardButton: false,
+                    toggleNotesButton: false, },
+
+				plugins: [ RevealNotes, RevealMarkdown, RevealNotes, RevealChalkboard, RevealMath.KaTeX ]
+			});
+            Reveal.addEventListener('ready', (event) => {
+                hljs.registerLanguage("lean",function(){"use strict";return function(hljs){
+  var LEAN_KEYWORDS = {
+    keyword:
+      'theorem|10 lemma|10 definition def class structure instance ' +
+      'example inductive coinductive ' +
+      'axiom axioms hypothesis constant constants ' +
+      'universe universes variable variables parameter parameters ' +
+      'begin end ' +
+      'import open theory prelude renaming hiding exposing ' +
+      'calc  match do  by let in extends ' +
+      'fun assume ' +
+      '#check #eval #reduce #print',
+    built_in:
+      'Type Prop|10 Sort rw|10 rewrite rwa erw subst substs ' +
+      'simp dsimp simpa simp_intros finish ' +
+      'unfold unfold1 dunfold unfold_projs unfold_coes ' +
+      'delta cc ac_reflexivity ac_refl ' +
+      'existsi|10 cases rcases with intro intros introv by_cases ' +
+      'refl rfl funext propext exact exacts ' +
+      'refine apply eapply fapply apply_with apply_instance ' +
+      'induction rename assumption revert generalize specialize clear ' +
+      'contradiction by_contradiction by_contra trivial exfalso ' +
+      'symmetry transitivity destruct constructor econstructor ' +
+      'left right split injection injections ' +
+      'repeat try continue skip swap solve1 abstract all_goals any_goals done ' +
+      'fail_if_success success_if_fail guard_target guard_hyp ' +
+      'have replace at suffices show from ' +
+      'congr congr_n congr_arg norm_num ring ',
+    literal:
+      'tt ff',
+    meta:
+      'noncomputable|10 private protected meta mutual',
+    section:
+      'section namespace',
+    strong:
+      'sorry admit',
+  };
+
+  var LEAN_IDENT_RE = /[A-Za-z_0-9][\\w\u207F-\u209C\u1D62-\u1D6A\u2079\']*/;
+
+  var DASH_COMMENT = hljs.COMMENT('--', '$');
+  var MULTI_LINE_COMMENT = hljs.COMMENT('/-[^-]', '-/');
+  var DOC_COMMENT = {
+    className: 'doctag',
+    begin: '/-[-!]',
+    end: '-/'
+  };
+
+  var ATTRIBUTE_DECORATOR = {
+    className: 'meta',
+    begin: '@\\[',
+    end: '\\]'
+  };
+
+  var ATTRIBUTE_LINE = {
+    className: 'meta',
+    begin: '^attribute',
+    end: '$'
+  };
+
+  var LEAN_DEFINITION =	{
+    className: 'theorem',
+    beginKeywords: 'def theorem lemma class instance structure',
+    end: ':=',
+    excludeEnd: true,
+    contains: [
+      {
+        className: 'keyword',
+        begin: /extends/
+      },
+      hljs.inherit(hljs.TITLE_MODE, {
+        begin: LEAN_IDENT_RE
+      }),
+      {
+        className: 'params',
+        begin: /[([{]/, end: /[)\]}]/, endsParent: false,
+        keywords: LEAN_KEYWORDS,
+      },
+      {
+        className: 'symbol',
+        begin: /:/,
+        endsParent: true
+      },
+    ],
+    keywords: LEAN_KEYWORDS
+  };
+  return {
+    name: "lean",
+    keywords: LEAN_KEYWORDS,
+    contains: [
+      hljs.QUOTE_STRING_MODE,
+      hljs.NUMBER_MODE,
+      DASH_COMMENT,
+      MULTI_LINE_COMMENT,
+      DOC_COMMENT,
+      LEAN_DEFINITION,
+      ATTRIBUTE_DECORATOR,
+      ATTRIBUTE_LINE,
+      { begin: /⟨/ } // relevance booster
+    ]
+  };
+
+            }}());
+                //hljs.registerLanguage("lean",function(e){var r="([a-zA-Z]|\\.[a-zA-Z.])[a-zA-Z0-9._]*";return {c: [ e.HCM,e.CBCM,{b:r,l:r,k:{keyword:"maximize subject to var ",literal:""},r:90},{cN:"number",b:"\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",r:0}]} });
+
+                // console.log(hljs.listLanguages());
+                document.querySelectorAll('pre code').forEach((block) => { hljs.highlightElement(block); });
+                //hljs.highlightAll();
+            });
+
+
+		</script>
+
+    </body>
+</html>
